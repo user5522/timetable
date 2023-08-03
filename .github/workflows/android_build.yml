@@ -30,10 +30,10 @@ jobs:
       - name: Set up Keystore
         run: |
           mkdir -p $HOME/keystore
-          echo $ANDROID_KEYSTORE_BASE64 | base64 -d > $HOME/keystore/android.keystore
-          echo "storePassword=$ANDROID_KEYSTORE_PASSWORD" >> $GITHUB_ENV
-          echo "keyAlias=$ANDROID_KEYSTORE_ALIAS" >> $GITHUB_ENV
-          echo "keyPassword=$ANDROID_KEYSTORE_KEY_PASSWORD" >> $GITHUB_ENV
+          echo ${{ secrets.ANDROID_KEYSTORE_BASE64 }} | base64 -d > $HOME/keystore/android.keystore
+          echo "storePassword=${{ secrets.ANDROID_KEYSTORE_PASSWORD }}" >> $GITHUB_ENV
+          echo "keyAlias=${{ secrets.ANDROID_KEYSTORE_ALIAS }}" >> $GITHUB_ENV
+          echo "keyPassword=${{ secrets.ANDROID_KEYSTORE_KEY_PASSWORD }}" >> $GITHUB_ENV
 
       - name: Build Android
         run: flutter build apk --release --split-per-abi
