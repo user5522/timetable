@@ -1,13 +1,13 @@
-name: Build for android
+name: Android Build and Artifact
 
 on:
   push:
     branches:
-      - main 
+      - main
 
 jobs:
   build:
-    name: Android build
+    name: Android Build
     runs-on: ubuntu-latest
 
     steps:
@@ -18,23 +18,31 @@ jobs:
         uses: actions/setup-java@v2
         with:
           java-version: '11'
-          distribution: 'zulu'
-          cache: 'gradle'
 
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
-        with:
-          channel: 'stable'
-          cache: true
 
-      - name: Install Flutter deps
+      - name: Get packages
         run: flutter pub get
 
-      - name: Build for Android
-        run: flutter build apk --release
+      - name: Set up Keystore
+        run: |
+          mkdir -p $HOME/keystore
+          echo $ANDROID_KEYSTORE_BASE64 | base64 -d > $HOME/keystore/android.keystore
+          echo "storePassword=$ANDROID_KEYSTORE_PASSWORD" >> $GITHUB_ENV
+          echo "keyAlias=$ANDROID_KEYSTORE_ALIAS" >> $GITHUB_ENV
+          echo "keyPassword=$ANDROID_KEYSTORE_KEY_PASSWORD" >> $GITHUB_ENV
+
+      - name: Build Android
+        run: flutter build apk --release --split-per-abi
+        env:
+          KEYSTORE_FILE: $HOME/keystore/android.keystore
+          STORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.ANDROID_KEYSTORE_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_KEY_PASSWORD }}
 
       - name: Archive artifacts
         uses: actions/upload-artifact@v2
         with:
           name: android-artifact
-          path: build/app/outputs/flutter-apk/app-release.apk
+          path: build/app/outputs/flutter-apk/*
