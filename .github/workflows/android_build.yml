@@ -29,19 +29,14 @@ jobs:
 
       - name: Set up Keystore
         run: |
-          mkdir -p $HOME/keystore
-          echo ${{ secrets.ANDROID_KEYSTORE_BASE64 }} | base64 -d > $HOME/keystore/android.keystore
-          echo "storePassword=${{ secrets.ANDROID_KEYSTORE_PASSWORD }}" >> $GITHUB_ENV
-          echo "keyAlias=${{ secrets.ANDROID_KEYSTORE_ALIAS }}" >> $GITHUB_ENV
-          echo "keyPassword=${{ secrets.ANDROID_KEYSTORE_KEY_PASSWORD }}" >> $GITHUB_ENV
+          echo keyPassword=\${{ secrets.ANDROID_KEYSTORE_KEY_PASSWORD }} > $GITHUB_ENV
+          echo storePassword=\${{ secrets.ANDROID_KEYSTORE_PASSWORD }} >> $GITHUB_ENV
+          echo keyAlias=\${{ secrets.ANDROID_KEYSTORE_ALIAS }} >> $GITHUB_ENV
+          echo storeFile=keystore.jks >> $GITHUB_ENV
+          echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 --decode > android/app/keystore.jks
 
       - name: Build Android
         run: flutter build apk --release --split-per-abi
-        env:
-          KEYSTORE_FILE: $HOME/keystore/android.keystore
-          STORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
-          KEY_ALIAS: ${{ secrets.ANDROID_KEYSTORE_ALIAS }}
-          KEY_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_KEY_PASSWORD }}
 
       - name: Archive artifacts
         uses: actions/upload-artifact@v2
