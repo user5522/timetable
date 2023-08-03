@@ -1,4 +1,4 @@
-# projects
+# timetable
 
 A new Flutter project.
 
