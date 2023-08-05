@@ -161,25 +161,45 @@ class GridScreenState extends State<GridScreen> {
     String? existingCellLabel = cellLabels[cellIndex];
     String? existingCellSubLabel = cellLocations[cellIndex];
 
+    double currentChildSize = 0.415;
+
     String? newCellLabel = await showModalBottomSheet(
       context: context,
+      isScrollControlled: true,
+      isDismissible: true,
       builder: (BuildContext context) {
-        return AddCellModal(
-          key: _addCellModalKey,
-          time: formattedTime,
-          day: days[columnIndex - 1],
-          existingCellLabel: existingCellLabel,
-          existingCellSubLabel: existingCellSubLabel,
-          onCellSaved: (label, location, color) {
-            _addNewCell(
-              rowIndex,
-              columnIndex,
-              label,
-              color,
-              location,
-            );
-          },
-          existingCellColor: cellColors[cellIndex],
+        return DraggableScrollableActuator(
+          child: DraggableScrollableSheet(
+            initialChildSize: 0.415,
+            minChildSize: 0.415,
+            maxChildSize: 1,
+            snap: true,
+            expand: false,
+            builder: (context, scrollController) {
+              return Column(
+                children: [
+                  AddCellModal(
+                    key: _addCellModalKey,
+                    time: formattedTime,
+                    day: days[columnIndex - 1],
+                    existingCellLabel: existingCellLabel,
+                    existingCellSubLabel: existingCellSubLabel,
+                    onCellSaved: (label, location, color) {
+                      _addNewCell(
+                        rowIndex,
+                        columnIndex,
+                        label,
+                        color,
+                        location,
+                      );
+                    },
+                    existingCellColor: cellColors[cellIndex],
+                    scrollController: scrollController,
+                  ),
+                ],
+              );
+            },
+          ),
         );
       },
     );
