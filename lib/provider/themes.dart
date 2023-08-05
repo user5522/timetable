@@ -13,19 +13,19 @@ class ThemeProvider with ChangeNotifier {
   }
 
   Future<void> loadThemeMode() async {
-    ThemeModeOption themeMode = await getThemeMode();
+    final ThemeModeOption themeMode = await getThemeMode();
     _selectedThemeMode = themeMode;
     notifyListeners();
   }
 
   Future<void> saveThemeMode(ThemeModeOption themeMode) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setInt('theme_mode', themeMode.index);
   }
 
   Future<ThemeModeOption> getThemeMode() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    int? themeModeIndex = prefs.getInt('theme_mode');
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final int? themeModeIndex = prefs.getInt('theme_mode');
     return ThemeModeOption.values[themeModeIndex ?? 0];
   }
 }
