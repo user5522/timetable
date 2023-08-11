@@ -73,16 +73,16 @@ class GridScreenState extends State<GridScreen> {
 
         DuplicateDetection detection = DuplicateDetection();
 
-        String? label = cellLabels[cellIndex];
-        String? subLabel = cellLocations[cellIndex];
+        String? label = cellLabels[cellIndex]?.toLowerCase();
+        String? subLabel = cellLocations[cellIndex]?.toLowerCase();
         Color? color = cellColors[cellIndex];
 
         for (int i = rowIndex - 1; i > 0; i--) {
           int aboveCellIndex = i * columns + columnIndex;
 
           if (selectedCellIndices.contains(aboveCellIndex)) {
-            String? aboveLabel = cellLabels[aboveCellIndex];
-            String? aboveSubLabel = cellLocations[aboveCellIndex];
+            String? aboveLabel = cellLabels[aboveCellIndex]?.toLowerCase();
+            String? aboveSubLabel = cellLocations[aboveCellIndex]?.toLowerCase();
             Color? aboveColor = cellColors[aboveCellIndex];
 
             if (label == aboveLabel &&
