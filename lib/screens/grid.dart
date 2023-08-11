@@ -51,6 +51,7 @@ class GridScreenState extends State<GridScreen> {
   Map<int, String> cellLabels = {};
   Map<int, String> cellLocations = {};
   Map<int, Color> cellColors = {};
+  Map<int, DuplicateDetection> duplicateDetections = {};
   late TimeSettings timeSettings;
 
   final _addCellModalKey = GlobalKey<AddCellModalState>();
@@ -59,6 +60,62 @@ class GridScreenState extends State<GridScreen> {
   void initState() {
     super.initState();
     loadSelectedCells();
+  }
+
+  void detectDuplicates() {
+    for (int rowIndex = 1; rowIndex < rows; rowIndex++) {
+      for (int columnIndex = 1; columnIndex < columns; columnIndex++) {
+        int cellIndex = rowIndex * columns + columnIndex;
+
+        if (!selectedCellIndices.contains(cellIndex)) {
+          continue;
+        }
+
+        DuplicateDetection detection = DuplicateDetection();
+
+        String? label = cellLabels[cellIndex];
+        String? subLabel = cellLocations[cellIndex];
+        Color? color = cellColors[cellIndex];
+
+        for (int i = rowIndex - 1; i > 0; i--) {
+          int aboveCellIndex = i * columns + columnIndex;
+
+          if (selectedCellIndices.contains(aboveCellIndex)) {
+            String? aboveLabel = cellLabels[aboveCellIndex];
+            String? aboveSubLabel = cellLocations[aboveCellIndex];
+            Color? aboveColor = cellColors[aboveCellIndex];
+
+            if (label == aboveLabel &&
+                subLabel == aboveSubLabel &&
+                color == aboveColor) {
+              detection.state = DuplicateState.above;
+            }
+          }
+        }
+
+        for (int i = rowIndex + 1; i < rows; i++) {
+          int belowCellIndex = i * columns + columnIndex;
+
+          if (selectedCellIndices.contains(belowCellIndex)) {
+            String? belowLabel = cellLabels[belowCellIndex];
+            String? belowSubLabel = cellLocations[belowCellIndex];
+            Color? belowColor = cellColors[belowCellIndex];
+
+            if (label == belowLabel &&
+                subLabel == belowSubLabel &&
+                color == belowColor) {
+              if (detection.state == DuplicateState.above) {
+                detection.state = DuplicateState.both;
+              } else {
+                detection.state = DuplicateState.below;
+              }
+            }
+          }
+        }
+
+        duplicateDetections[cellIndex] = detection;
+      }
+    }
   }
 
   int calculateRowCount(TimeOfDay startTime, TimeOfDay endTime) {
@@ -161,8 +218,6 @@ class GridScreenState extends State<GridScreen> {
     String? existingCellLabel = cellLabels[cellIndex];
     String? existingCellSubLabel = cellLocations[cellIndex];
 
-    double currentChildSize = 0.415;
-
     String? newCellLabel = await showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -246,49 +301,104 @@ class GridScreenState extends State<GridScreen> {
     );
   }
 
-  Widget _buildIndividualCellWidget(int cellIndex) {
+  Widget _buildCells(int cellIndex) {
     String? label = cellLabels[cellIndex];
     String? subLabel = cellLocations[cellIndex];
     Color? color = cellColors[cellIndex];
+    DuplicateDetection detection =
+        duplicateDetections[cellIndex] ?? DuplicateDetection();
+
+    detectDuplicates();
 
     return GestureDetector(
       onTap: () {
         _showModalBottomSheet(cellIndex ~/ columns - 1, cellIndex % columns);
       },
       child: Align(
-        alignment: Alignment.center,
+        alignment: detection.state == DuplicateState.above
+            ? Alignment.topCenter
+            : detection.state == DuplicateState.below
+                ? Alignment.bottomCenter
+                : Alignment.center,
         child: Container(
           width: 97.0,
-          height: 97.0,
+          height: detection.state == DuplicateState.above ||
+                  detection.state == DuplicateState.below
+              ? 100.0
+              : detection.state == DuplicateState.both
+                  ? 110.0
+                  : 97.0,
           decoration: BoxDecoration(
-            border: Border.all(color: Colors.black),
+            border: Border(
+              top: BorderSide(
+                width: detection.state == DuplicateState.above ||
+                        detection.state == DuplicateState.both
+                    ? 0.0
+                    : 1.0,
+              ),
+              left: const BorderSide(
+                color: Colors.black,
+              ),
+              right: const BorderSide(
+                color: Colors.black,
+              ),
+              bottom: BorderSide(
+                width: detection.state == DuplicateState.below ||
+                        detection.state == DuplicateState.both
+                    ? 0.0
+                    : 1.0,
+              ),
+            ),
             color: color,
-            borderRadius: BorderRadius.circular(5.0),
+            borderRadius: BorderRadius.only(
+              topLeft: detection.state == DuplicateState.above ||
+                      detection.state == DuplicateState.both
+                  ? const Radius.circular(0.0)
+                  : const Radius.circular(5.0),
+              topRight: detection.state == DuplicateState.above ||
+                      detection.state == DuplicateState.both
+                  ? const Radius.circular(0.0)
+                  : const Radius.circular(5.0),
+              bottomLeft: detection.state == DuplicateState.below ||
+                      detection.state == DuplicateState.both
+                  ? const Radius.circular(0.0)
+                  : const Radius.circular(5.0),
+              bottomRight: detection.state == DuplicateState.below ||
+                      detection.state == DuplicateState.both
+                  ? const Radius.circular(0.0)
+                  : const Radius.circular(5.0),
+            ),
           ),
           child:
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Padding(
               padding: const EdgeInsets.fromLTRB(5, 5, 5, 0),
-              child: Text(
-                label.toString(),
-                style: TextStyle(
-                    color: color!.computeLuminance() > .7
-                        ? Colors.black
-                        : Colors.white,
-                    fontWeight: FontWeight.bold),
-              ),
+              child: detection.state == DuplicateState.none ||
+                      detection.state == DuplicateState.below
+                  ? Text(
+                      label.toString(),
+                      style: TextStyle(
+                          color: color!.computeLuminance() > .7
+                              ? Colors.black
+                              : Colors.white,
+                          fontWeight: FontWeight.bold),
+                    )
+                  : null,
             ),
             Padding(
               padding: const EdgeInsets.fromLTRB(5, 0, 5, 5),
-              child: Text(
-                subLabel.toString(),
-                textAlign: TextAlign.left,
-                style: TextStyle(
-                    color: color.computeLuminance() > .7
-                        ? Colors.black.withOpacity(0.6)
-                        : Colors.white.withOpacity(0.75),
-                    fontWeight: FontWeight.bold),
-              ),
+              child: detection.state == DuplicateState.none ||
+                      detection.state == DuplicateState.below
+                  ? Text(
+                      subLabel.toString(),
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                          color: color!.computeLuminance() > .7
+                              ? Colors.black.withOpacity(0.6)
+                              : Colors.white.withOpacity(0.75),
+                          fontWeight: FontWeight.bold),
+                    )
+                  : null,
             ),
           ]),
         ),
@@ -298,6 +408,8 @@ class GridScreenState extends State<GridScreen> {
 
   @override
   Widget build(BuildContext context) {
+    detectDuplicates();
+
     final settingsData = Provider.of<SettingsData>(context, listen: false);
     final timeSettings = Provider.of<TimeSettings>(context, listen: false);
 
@@ -411,7 +523,7 @@ class GridScreenState extends State<GridScreen> {
                                 ),
                         ),
                         if (selectedCellIndices.contains(index))
-                          _buildIndividualCellWidget(index)
+                          _buildCells(index)
                       ],
                     ),
                   );
@@ -423,4 +535,17 @@ class GridScreenState extends State<GridScreen> {
       ),
     );
   }
+}
+
+class DuplicateDetection {
+  DuplicateState state;
+
+  DuplicateDetection({this.state = DuplicateState.none});
+}
+
+enum DuplicateState {
+  none,
+  above,
+  below,
+  both,
 }
