@@ -20,8 +20,8 @@ jobs:
           channel: "stable"
       - name: Set up Flutter
         run: flutter pub get
-      - name: Generate files with Builder
-        run: flutter packages pub run build_runner build --delete-conflicting-outputs
+      - name: Set up Deps
+        run: flutter pub get
       - name: Build with Flutter
         env:
           SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
