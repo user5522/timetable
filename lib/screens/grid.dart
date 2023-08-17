@@ -79,6 +79,8 @@ class GridScreenState extends State<GridScreen> {
                 color == aboveColor) {
               detection.state = DuplicateState.above;
               break;
+            } else {
+              break;
             }
           } else {
             break;
@@ -100,6 +102,8 @@ class GridScreenState extends State<GridScreen> {
               detection.state = detection.state == DuplicateState.above
                   ? DuplicateState.both
                   : DuplicateState.below;
+              break;
+            } else {
               break;
             }
           } else {
@@ -218,36 +222,41 @@ class GridScreenState extends State<GridScreen> {
       isDismissible: true,
       builder: (BuildContext context) {
         return DraggableScrollableActuator(
-          child: DraggableScrollableSheet(
-            initialChildSize: 0.415,
-            minChildSize: 0.415,
-            maxChildSize: 1,
-            snap: true,
-            expand: false,
-            builder: (context, scrollController) {
-              return Column(
-                children: [
-                  AddCellModal(
-                    key: _addCellModalKey,
-                    time: formattedTime,
-                    day: days[columnIndex - 1],
-                    existingCellLabel: existingCellLabel,
-                    existingCellSubLabel: existingCellSubLabel,
-                    onCellSaved: (label, location, color, week) {
-                      _addNewCell(
-                        rowIndex,
-                        columnIndex,
-                        label,
-                        color,
-                        location,
-                      );
-                    },
-                    existingCellColor: cellColors[cellIndex],
-                    scrollController: scrollController,
-                  ),
-                ],
-              );
-            },
+          child: Container(
+            padding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).viewInsets.bottom + 40),
+            child: DraggableScrollableSheet(
+              initialChildSize: 0.425,
+              minChildSize: 0.425,
+              snapSizes: const [0.425, 1.0],
+              maxChildSize: 1,
+              snap: true,
+              expand: false,
+              builder: (context, scrollController) {
+                return Column(
+                  children: [
+                    AddCellModal(
+                      key: _addCellModalKey,
+                      time: formattedTime,
+                      day: days[columnIndex - 1],
+                      existingCellLabel: existingCellLabel,
+                      existingCellSubLabel: existingCellSubLabel,
+                      onCellSaved: (label, location, color, week) {
+                        _addNewCell(
+                          rowIndex,
+                          columnIndex,
+                          label,
+                          color,
+                          location,
+                        );
+                      },
+                      existingCellColor: cellColors[cellIndex],
+                      scrollController: scrollController,
+                    ),
+                  ],
+                );
+              },
+            ),
           ),
         );
       },
