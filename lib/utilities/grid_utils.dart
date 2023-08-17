@@ -1,5 +1,15 @@
 import 'package:flutter/material.dart';
 
+const List<String> days = [
+  'Monday',
+  'Tuesday',
+  'Wednesday',
+  'Thursday',
+  'Friday',
+  'Saturday',
+  'Sunday'
+];
+
 const List<String> times24h = [
   '01',
   '02',

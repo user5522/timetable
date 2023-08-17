@@ -11,11 +11,13 @@ class AddCellModal extends StatefulWidget {
   final String? existingCellLabel;
   final String? existingCellSubLabel;
   final Color? existingCellColor;
+  final String? existingCellWeek;
 
   final void Function(
     String newCellLabel,
     String newCellLocation,
     Color newCellColor,
+    String newCellWeek,
   )? onCellSaved;
 
   const AddCellModal({
@@ -26,6 +28,7 @@ class AddCellModal extends StatefulWidget {
     this.existingCellLabel,
     this.existingCellSubLabel,
     this.existingCellColor,
+    this.existingCellWeek,
     this.onCellSaved,
   }) : super(key: key);
 
@@ -39,6 +42,7 @@ class AddCellModalState extends State<AddCellModal> {
   String newCellLabel = '';
   String newCellLocation = '';
   Color newCellColor = Colors.black;
+  String newCellWeek = '';
 
   @override
   void initState() {
@@ -46,17 +50,21 @@ class AddCellModalState extends State<AddCellModal> {
     newCellLabel = widget.existingCellLabel ?? '';
     newCellLocation = widget.existingCellSubLabel ?? '';
     newCellColor = widget.existingCellColor ?? Colors.black;
+    newCellWeek = widget.existingCellWeek ?? '';
   }
 
   @override
   void didUpdateWidget(AddCellModal oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.existingCellLabel != widget.existingCellLabel ||
-        oldWidget.existingCellSubLabel != widget.existingCellSubLabel) {
+        oldWidget.existingCellSubLabel != widget.existingCellSubLabel ||
+        oldWidget.existingCellColor != widget.existingCellColor ||
+        oldWidget.existingCellWeek != widget.existingCellWeek) {
       setState(() {
         newCellLabel = widget.existingCellLabel ?? '';
         newCellLocation = widget.existingCellSubLabel ?? '';
         newCellColor = widget.existingCellColor ?? Colors.black;
+        newCellWeek = widget.existingCellWeek ?? '';
       });
     }
   }
@@ -183,7 +191,9 @@ class AddCellModalState extends State<AddCellModal> {
                           final label = newCellLabel;
                           final location = newCellLocation;
                           final color = newCellColor;
-                          widget.onCellSaved?.call(label, location, color);
+                          final week = newCellWeek;
+                          widget.onCellSaved
+                              ?.call(label, location, color, week);
                           Navigator.pop(context, label);
                         }
                       },
@@ -203,19 +213,28 @@ class AddCellModalState extends State<AddCellModal> {
 }
 
 enum ColorLabel {
-  white('White', Colors.white),
-  yellow('Yellow', Colors.yellow),
-  pink('Pink', Colors.pink),
-  green('Green', Colors.green),
+  white('White', Color(0xFFFFFFFF)),
+  yellow('Yellow', Color(0xFFFFEB3B)),
+  pink('Pink', Color(0xFFE91E63)),
+  green('Green', Color(0xFF4CAF50)),
   blue('Blue', Color(0xFF2196f3)),
-  purple('Purple', Colors.deepPurple),
-  grey('Grey', Colors.grey),
-  brown('Brown', Colors.brown),
-  orange('Orange', Colors.deepOrange),
-  red('Red', Colors.red),
-  black('Black', Colors.black);
+  purple('Purple', Color(0xFF673AB7)),
+  grey('Grey', Color(0xFF9E9E9E)),
+  brown('Brown', Color(0xFF795548)),
+  orange('Orange', Color(0xFFFF5722)),
+  red('Red', Color(0xF4FF3636)),
+  black('Black', Color(0xFF000000));
 
   const ColorLabel(this.label, this.color);
   final String label;
   final Color color;
+}
+
+enum WeekLabel {
+  all('All'),
+  a('A'),
+  b('B');
+
+  const WeekLabel(this.label);
+  final String label;
 }

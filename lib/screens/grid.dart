@@ -9,16 +9,6 @@ import 'package:timetable/utilities/grid_utils.dart';
 int rows = 11 + 1; // extra for days row
 int columns = 7 + 1; // extra for times column
 
-const List<String> days = [
-  'Monday',
-  'Tuesday',
-  'Wednesday',
-  'Thursday',
-  'Friday',
-  'Saturday',
-  'Sunday'
-];
-
 class GridPage extends StatefulWidget {
   const GridPage({Key? key}) : super(key: key);
 
@@ -63,13 +53,11 @@ class GridScreenState extends State<GridScreen> {
   }
 
   void detectDuplicates() {
+    duplicateDetections.clear();
+
     for (int rowIndex = 1; rowIndex < rows; rowIndex++) {
       for (int columnIndex = 1; columnIndex < columns; columnIndex++) {
         int cellIndex = rowIndex * columns + columnIndex;
-
-        if (!selectedCellIndices.contains(cellIndex)) {
-          continue;
-        }
 
         DuplicateDetection detection = DuplicateDetection();
 
@@ -77,19 +65,23 @@ class GridScreenState extends State<GridScreen> {
         String? subLabel = cellLocations[cellIndex]?.toLowerCase();
         Color? color = cellColors[cellIndex];
 
-        for (int i = rowIndex - 1; i > 0; i--) {
+        for (int i = rowIndex - 1; i >= 0; i--) {
           int aboveCellIndex = i * columns + columnIndex;
 
           if (selectedCellIndices.contains(aboveCellIndex)) {
             String? aboveLabel = cellLabels[aboveCellIndex]?.toLowerCase();
-            String? aboveSubLabel = cellLocations[aboveCellIndex]?.toLowerCase();
+            String? aboveSubLabel =
+                cellLocations[aboveCellIndex]?.toLowerCase();
             Color? aboveColor = cellColors[aboveCellIndex];
 
             if (label == aboveLabel &&
                 subLabel == aboveSubLabel &&
                 color == aboveColor) {
               detection.state = DuplicateState.above;
+              break;
             }
+          } else {
+            break;
           }
         }
 
@@ -97,19 +89,21 @@ class GridScreenState extends State<GridScreen> {
           int belowCellIndex = i * columns + columnIndex;
 
           if (selectedCellIndices.contains(belowCellIndex)) {
-            String? belowLabel = cellLabels[belowCellIndex];
-            String? belowSubLabel = cellLocations[belowCellIndex];
+            String? belowLabel = cellLabels[belowCellIndex]?.toLowerCase();
+            String? belowSubLabel =
+                cellLocations[belowCellIndex]?.toLowerCase();
             Color? belowColor = cellColors[belowCellIndex];
 
             if (label == belowLabel &&
                 subLabel == belowSubLabel &&
                 color == belowColor) {
-              if (detection.state == DuplicateState.above) {
-                detection.state = DuplicateState.both;
-              } else {
-                detection.state = DuplicateState.below;
-              }
+              detection.state = detection.state == DuplicateState.above
+                  ? DuplicateState.both
+                  : DuplicateState.below;
+              break;
             }
+          } else {
+            break;
           }
         }
 
@@ -239,7 +233,7 @@ class GridScreenState extends State<GridScreen> {
                     day: days[columnIndex - 1],
                     existingCellLabel: existingCellLabel,
                     existingCellSubLabel: existingCellSubLabel,
-                    onCellSaved: (label, location, color) {
+                    onCellSaved: (label, location, color, week) {
                       _addNewCell(
                         rowIndex,
                         columnIndex,
@@ -420,118 +414,122 @@ class GridScreenState extends State<GridScreen> {
 
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
-      child: SizedBox(
-        width: columns * 100 + 16,
-        child: Stack(
-          children: [
-            GridView.count(
-              crossAxisCount: columns,
-              crossAxisSpacing: 0.0,
-              mainAxisSpacing: 0.0,
-              children: List.generate((rowCount) * columns + 1, (index) {
-                int rowIndex = (index - columns) ~/ columns;
-                int columnIndex = (index - columns) % columns;
+      child: Row(
+        children: [
+          SizedBox(
+            width: columns * 100 + 16,
+            child: Stack(
+              children: [
+                GridView.count(
+                  crossAxisCount: columns,
+                  crossAxisSpacing: 0.0,
+                  mainAxisSpacing: 0.0,
+                  children: List.generate((rowCount) * columns + 1, (index) {
+                    int rowIndex = (index - columns) ~/ columns;
+                    int columnIndex = (index - columns) % columns;
 
-                BorderSide leftBorder = columnIndex == 1
-                    ? BorderSide.none
-                    : const BorderSide(color: Colors.grey);
-                BorderSide bottomBorder = rowIndex == rowCount - 2
-                    ? BorderSide.none
-                    : const BorderSide(color: Colors.grey);
+                    BorderSide leftBorder = columnIndex == 1
+                        ? BorderSide.none
+                        : const BorderSide(color: Colors.grey);
+                    BorderSide bottomBorder = rowIndex == rowCount - 2
+                        ? BorderSide.none
+                        : const BorderSide(color: Colors.grey);
 
-                if (index == 0) {
-                  return Container();
-                } else if (index < columns) {
-                  // days row
-                  return Container(
-                    width: 100.0,
-                    height: 50.0,
-                    alignment: Alignment.bottomCenter,
-                    padding: const EdgeInsets.only(bottom: 10),
-                    child: Text(
-                      settingsData.isSingleLetterDays
-                          ? days[index - 1][0]
-                          : days[index - 1],
-                      style: const TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                  );
-                } else if (columnIndex == 0) {
-                  // times column
-                  return Transform.translate(
-                    offset: Offset(
-                        -10.0,
-                        MediaQuery.of(context).alwaysUse24HourFormat
-                            ? -7.5
-                            : -16.0),
-                    child: Container(
-                      alignment: Alignment.topRight,
-                      child: Text(
-                        getFormattedTime(rowIndex, context,
-                            startHour: timeSettings.defaultStartTime.hour),
-                        style: const TextStyle(fontWeight: FontWeight.bold),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  );
-                } else {
-                  // main grid
-                  return GestureDetector(
-                    onTap: () {
-                      _showModalBottomSheet(rowIndex, columnIndex);
-                    },
-                    child: Stack(
-                      children: [
-                        Container(
-                          decoration: BoxDecoration(
-                            border: columnIndex == 0
-                                ? null
-                                : rowIndex == rowCount
-                                    ? null
-                                    : Border(
-                                        left: leftBorder,
-                                        bottom: bottomBorder,
-                                      ),
-                          ),
-                          alignment: Alignment.centerRight,
-                          child: columnIndex == 0
-                              ? Align(
-                                  alignment: Alignment.centerRight,
-                                  child: Padding(
-                                    padding: const EdgeInsets.fromLTRB(
-                                        0.0, 0.0, 0.0, 0.0),
-                                    child: Text(
-                                      times[rowIndex],
-                                      style: const TextStyle(
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ),
-                                )
-                              : Align(
-                                  alignment: columnIndex == columns - 1
-                                      ? Alignment.centerLeft
-                                      : Alignment.centerRight,
-                                  child: Container(
-                                    width: columnIndex == 1
-                                        ? 90
-                                        : columnIndex == columns - 1
-                                            ? 80
-                                            : 100,
-                                    height: 1,
-                                    color:
-                                        const Color(0xFFB4B8AB).withOpacity(.5),
-                                  ),
-                                ),
+                    if (index == 0) {
+                      return Container();
+                    } else if (index < columns) {
+                      // days row
+                      return Container(
+                        width: 100.0,
+                        height: 50.0,
+                        alignment: Alignment.bottomCenter,
+                        padding: const EdgeInsets.only(bottom: 10),
+                        child: Text(
+                          settingsData.isSingleLetterDays
+                              ? days[index - 1][0]
+                              : days[index - 1],
+                          style: const TextStyle(fontWeight: FontWeight.bold),
                         ),
-                        if (selectedCellIndices.contains(index))
-                          _buildCells(index)
-                      ],
-                    ),
-                  );
-                }
-              }),
+                      );
+                    } else if (columnIndex == 0) {
+                      // times column
+                      return Transform.translate(
+                        offset: Offset(
+                            -10.0,
+                            MediaQuery.of(context).alwaysUse24HourFormat
+                                ? -7.5
+                                : -16.0),
+                        child: Container(
+                          alignment: Alignment.topRight,
+                          child: Text(
+                            getFormattedTime(rowIndex, context,
+                                startHour: timeSettings.defaultStartTime.hour),
+                            style: const TextStyle(fontWeight: FontWeight.bold),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      );
+                    } else {
+                      // main grid
+                      return GestureDetector(
+                        onTap: () {
+                          _showModalBottomSheet(rowIndex, columnIndex);
+                        },
+                        child: Stack(
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                border: columnIndex == 0
+                                    ? null
+                                    : rowIndex == rowCount
+                                        ? null
+                                        : Border(
+                                            left: leftBorder,
+                                            bottom: bottomBorder,
+                                          ),
+                              ),
+                              alignment: Alignment.centerRight,
+                              child: columnIndex == 0
+                                  ? Align(
+                                      alignment: Alignment.centerRight,
+                                      child: Padding(
+                                        padding: const EdgeInsets.fromLTRB(
+                                            0.0, 0.0, 0.0, 0.0),
+                                        child: Text(
+                                          times[rowIndex],
+                                          style: const TextStyle(
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      ),
+                                    )
+                                  : Align(
+                                      alignment: columnIndex == columns - 1
+                                          ? Alignment.centerLeft
+                                          : Alignment.centerRight,
+                                      child: Container(
+                                        width: columnIndex == 1
+                                            ? 90
+                                            : columnIndex == columns - 1
+                                                ? 80
+                                                : 100,
+                                        height: 1,
+                                        color: const Color(0xFFB4B8AB)
+                                            .withOpacity(0.5),
+                                      ),
+                                    ),
+                            ),
+                            if (selectedCellIndices.contains(index))
+                              _buildCells(index)
+                          ],
+                        ),
+                      );
+                    }
+                  }),
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
