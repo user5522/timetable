@@ -14,11 +14,18 @@ class ThemeChanger with ChangeNotifier {
 
 class SettingsData with ChangeNotifier {
   bool _isSingleLetterDays = false;
+  bool _showDVNavbar = false;
 
   bool get isSingleLetterDays => _isSingleLetterDays;
+  bool get showDVNavbar => _showDVNavbar;
 
   set isSingleLetterDays(bool value) {
     _isSingleLetterDays = value;
+    notifyListeners();
+  }
+
+  set showDVNavbar(bool value) {
+    _showDVNavbar = value;
     notifyListeners();
   }
 }
@@ -33,6 +40,7 @@ class SettingsPage extends StatefulWidget {
 class SettingsPageState extends State<SettingsPage> {
   bool _isCustomTimeEnabled = false;
   bool _isSingleLetterDays = false;
+  bool _showDVNavbar = false;
   ThemeModeOption _selectedThemeMode = ThemeModeOption.auto;
 
   TimeOfDay defaultStartTime = const TimeOfDay(hour: 8, minute: 0);
@@ -47,22 +55,12 @@ class SettingsPageState extends State<SettingsPage> {
   void loadSettings() async {
     await _loadCustomTimePreference();
     await _loadSingleLetterDaysPreference();
+    await _loadDVNavbarPreference();
     _loadThemeMode();
 
     final timeSettings = Provider.of<TimeSettings>(context, listen: false);
     defaultStartTime = timeSettings.defaultStartTime;
     defaultEndTime = timeSettings.defaultEndTime;
-  }
-
-  void _handleCustomTimeToggle(bool value) async {
-    setState(() {
-      _isCustomTimeEnabled = value;
-    });
-    await _saveCustomTimePreference(value);
-
-    if (!value) {
-      await _resetSelectedTimes();
-    }
   }
 
   Future<void> _resetSelectedTimes() async {
@@ -78,11 +76,33 @@ class SettingsPageState extends State<SettingsPage> {
     await prefs.setInt('selectedEndTimeMinute', 0);
   }
 
-  Future<void> _loadThemeMode() async {
-    ThemeModeOption themeMode = await _getThemeMode();
+  void _handleCustomTimeToggle(bool value) async {
     setState(() {
-      _selectedThemeMode = themeMode;
+      _isCustomTimeEnabled = value;
     });
+    await _saveCustomTimePreference(value);
+
+    if (!value) {
+      await _resetSelectedTimes();
+    }
+  }
+
+  void _handleSingleLetterDaysToggle(bool value) async {
+    setState(() {
+      _isSingleLetterDays = value;
+    });
+    _saveSingleLetterDaysPreference(value);
+    Provider.of<SettingsData>(context, listen: false).isSingleLetterDays =
+        value;
+  }
+
+  void _handleDVNavbarToggle(bool value) async {
+    setState(() {
+      _showDVNavbar = value;
+    });
+    _saveDVNavbarPreference(value);
+    Provider.of<SettingsData>(context, listen: false).showDVNavbar =
+        value;
   }
 
   Future<void> _saveThemeMode(ThemeModeOption themeMode) async {
@@ -92,22 +112,6 @@ class SettingsPageState extends State<SettingsPage> {
     setState(() {
       _selectedThemeMode = themeMode;
     });
-  }
-
-  Future<ThemeModeOption> _getThemeMode() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    int? themeModeIndex = prefs.getInt('theme_mode');
-    return ThemeModeOption.values[themeModeIndex ?? 0];
-  }
-
-  Future<void> _loadCustomTimePreference() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    bool? isCustomTimeEnabled = prefs.getBool('customTimeEnabled');
-    if (isCustomTimeEnabled != null) {
-      setState(() {
-        _isCustomTimeEnabled = isCustomTimeEnabled;
-      });
-    }
   }
 
   Future<void> _saveCustomTimePreference(bool value) async {
@@ -121,6 +125,39 @@ class SettingsPageState extends State<SettingsPage> {
     }
   }
 
+  Future<void> _saveSingleLetterDaysPreference(bool value) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('singleLetterDays', value);
+  }
+
+  Future<void> _saveDVNavbarPreference(bool value) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('dvNavbar', value);
+  }
+
+  Future<ThemeModeOption> _loadThemeModePreference() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    int? themeModeIndex = prefs.getInt('theme_mode');
+    return ThemeModeOption.values[themeModeIndex ?? 0];
+  }
+
+  Future<void> _loadThemeMode() async {
+    ThemeModeOption themeMode = await _loadThemeModePreference();
+    setState(() {
+      _selectedThemeMode = themeMode;
+    });
+  }
+
+  Future<void> _loadCustomTimePreference() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool? isCustomTimeEnabled = prefs.getBool('customTimeEnabled');
+    if (isCustomTimeEnabled != null) {
+      setState(() {
+        _isCustomTimeEnabled = isCustomTimeEnabled;
+      });
+    }
+  }
+
   Future<void> _loadSingleLetterDaysPreference() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool? isSingleLetterDays = prefs.getBool('singleLetterDays');
@@ -131,23 +168,27 @@ class SettingsPageState extends State<SettingsPage> {
     }
   }
 
-  void _handleSingleLetterDaysToggle(bool value) async {
-    setState(() {
-      _isSingleLetterDays = value;
-    });
-    _saveSingleLetterDaysPreference(value);
-    Provider.of<SettingsData>(context, listen: false).isSingleLetterDays =
-        value;
-  }
-
-  Future<void> _saveSingleLetterDaysPreference(bool value) async {
+  Future<void> _loadDVNavbarPreference() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('singleLetterDays', value);
+    bool? showDVNavbar = prefs.getBool('dvNavbar');
+    if (showDVNavbar != null) {
+      setState(() {
+        _showDVNavbar = showDVNavbar;
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     final themeChanger = Provider.of<ThemeChanger>(context);
+    final List<DropdownMenuEntry<ThemeModeOption>> themeEntries =
+        <DropdownMenuEntry<ThemeModeOption>>[];
+    for (final ThemeModeOption color in ThemeModeOption.values) {
+      themeEntries.add(
+        DropdownMenuEntry<ThemeModeOption>(
+            value: color, label: getThemeModeLabel(color)),
+      );
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -188,20 +229,17 @@ class SettingsPageState extends State<SettingsPage> {
                   const Text('Theme Mode'),
                   const Spacer(),
                   DropdownMenu<ThemeModeOption>(
-                    value: _selectedThemeMode,
-                    onChanged: (newValue) {
+                    width: 120,
+                    dropdownMenuEntries: themeEntries,
+                    label: const Text("Theme"),
+                    initialSelection: _selectedThemeMode,
+                    onSelected: (value) {
                       setState(() {
-                        _selectedThemeMode = newValue!;
+                        _selectedThemeMode = value!;
                       });
-                      _saveThemeMode(newValue!);
-                      themeChanger.setThemeMode(newValue);
+                      _saveThemeMode(value!);
+                      themeChanger.setThemeMode(value);
                     },
-                    items: ThemeModeOption.values.map((themeMode) {
-                      return DropdownMenuItem<ThemeModeOption>(
-                        value: themeMode,
-                        child: Text(getThemeModeLabel(themeMode)),
-                      );
-                    }).toList(),
                   ),
                 ],
               ),
@@ -209,8 +247,16 @@ class SettingsPageState extends State<SettingsPage> {
             ),
             SwitchListTile(
               title: const Text('Single Letter Days'),
+              subtitle: const Text('Shows \'M\' instead of Monday, etc'),
               value: _isSingleLetterDays,
               onChanged: _handleSingleLetterDaysToggle,
+            ),
+            SwitchListTile(
+              title: const Text('Days View NavBar'),
+              subtitle: const Text(
+                  'Toggles a navigation bar in the days view to navigate faster'),
+              value: _showDVNavbar,
+              onChanged: _handleDVNavbarToggle,
             ),
           ],
         ),
@@ -233,37 +279,3 @@ class SettingsPageState extends State<SettingsPage> {
 }
 
 enum ThemeModeOption { dark, auto, light }
-
-class DropdownMenu<T> extends StatelessWidget {
-  final T value;
-  final void Function(T?)? onChanged;
-  final List<DropdownMenuItem<T>> items;
-
-  const DropdownMenu({
-    Key? key,
-    required this.value,
-    required this.onChanged,
-    required this.items,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 110,
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey),
-        borderRadius: BorderRadius.circular(4.0),
-      ),
-      child: DropdownButtonHideUnderline(
-        child: Align(
-          alignment: Alignment.center,
-          child: DropdownButton<T>(
-            value: value,
-            onChanged: onChanged,
-            items: items,
-          ),
-        ),
-      ),
-    );
-  }
-}
