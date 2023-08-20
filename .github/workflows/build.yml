@@ -22,8 +22,6 @@ jobs:
           cache: true
       - name: Set up Flutter
         run: flutter pub get
-      - name: Set up Deps
-        run: flutter pub get
       - name: Build with Flutter
         env:
           SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
@@ -39,9 +37,21 @@ jobs:
           keyStorePassword: ${{ secrets.SIGNING_KEYSTORE_PASSWORD }}
           alias: ${{ secrets.SIGNING_KEY_ALIAS }}
           keyPassword: ${{ secrets.SIGNING_KEY_PASSWORD }}
-      - name: Archive artifacts
+      - name: Archive arm64-v8a
         uses: actions/upload-artifact@v2
         with:
-          name: android-artifact
+          name: android-arm64-v8a
           path: |
-            build/app/outputs/flutter-apk/*.apk
+            build/app/outputs/flutter-apk/*-arm64-v8a-release-signed.apk
+      - name: Archive armabi-v7a
+        uses: actions/upload-artifact@v2
+        with:
+          name: android-armabi-v7a
+          path: |
+            build/app/outputs/flutter-apk/*-armabi-v7a-release-signed.apk
+      - name: Archive x86_64
+        uses: actions/upload-artifact@v2
+        with:
+          name: android-x86_64
+          path: |
+            build/app/outputs/flutter-apk/*-x86_64-release-signed.apk
