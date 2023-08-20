@@ -4,7 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timetable/screens/day_view.dart';
 import 'package:timetable/screens/select_time.dart';
 import 'package:timetable/screens/settings.dart';
-import 'package:timetable/utilities/add_cell_modal.dart';
+import 'package:timetable/utilities/cell_modal.dart';
 import 'package:timetable/utilities/grid_utils.dart';
 
 int rows = 11 + 1; // extra for days row
