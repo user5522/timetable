@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:timetable/screens/day_view.dart';
 import 'package:timetable/screens/select_time.dart';
 import 'package:timetable/screens/settings.dart';
 import 'package:timetable/utilities/add_cell_modal.dart';
@@ -17,19 +18,59 @@ class GridPage extends StatefulWidget {
 }
 
 class GridPageState extends State<GridPage> {
+  bool showCurrentDayCellsOnly = false;
+
+  @override
+  void initState() {
+    super.initState();
+    loadShowCurrentDayCellsOnly();
+  }
+
+  void loadShowCurrentDayCellsOnly() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      showCurrentDayCellsOnly =
+          prefs.getBool('showCurrentDayCellsOnly') ?? true;
+    });
+  }
+
+  void saveShowCurrentDayCellsOnly(bool value) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('showCurrentDayCellsOnly', value);
+    setState(() {
+      showCurrentDayCellsOnly = value;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Timetable'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.view_agenda_outlined),
+            selectedIcon: const Icon(Icons.grid_view_outlined),
+            isSelected: showCurrentDayCellsOnly,
+            tooltip: "View",
+            onPressed: () {
+              saveShowCurrentDayCellsOnly(!showCurrentDayCellsOnly);
+            },
+          ),
+        ],
       ),
-      body: const GridScreen(),
+      body: GridScreen(showCurrentDayCellsOnly: showCurrentDayCellsOnly),
     );
   }
 }
 
 class GridScreen extends StatefulWidget {
-  const GridScreen({super.key});
+  final bool showCurrentDayCellsOnly;
+
+  const GridScreen({
+    super.key,
+    required this.showCurrentDayCellsOnly,
+  });
 
   @override
   GridScreenState createState() => GridScreenState();
@@ -43,7 +84,7 @@ class GridScreenState extends State<GridScreen> {
   Map<int, Color> cellColors = {};
   Map<int, DuplicateDetection> duplicateDetections = {};
   late TimeSettings timeSettings;
-
+  int currentDayIndex = DateTime.now().weekday;
   final _addCellModalKey = GlobalKey<AddCellModalState>();
 
   @override
@@ -52,10 +93,10 @@ class GridScreenState extends State<GridScreen> {
     loadSelectedCells();
   }
 
-  void detectDuplicates() {
+  void detectDuplicates(int rowCount) {
     duplicateDetections.clear();
 
-    for (int rowIndex = 1; rowIndex < rows; rowIndex++) {
+    for (int rowIndex = 1; rowIndex < rowCount; rowIndex++) {
       for (int columnIndex = 1; columnIndex < columns; columnIndex++) {
         int cellIndex = rowIndex * columns + columnIndex;
 
@@ -65,7 +106,7 @@ class GridScreenState extends State<GridScreen> {
         String? subLabel = cellLocations[cellIndex]?.toLowerCase();
         Color? color = cellColors[cellIndex];
 
-        for (int i = rowIndex - 1; i >= 0; i--) {
+        for (int i = rowIndex - 1; i >= 0;) {
           int aboveCellIndex = i * columns + columnIndex;
 
           if (selectedCellIndices.contains(aboveCellIndex)) {
@@ -87,7 +128,7 @@ class GridScreenState extends State<GridScreen> {
           }
         }
 
-        for (int i = rowIndex + 1; i < rows; i++) {
+        for (int i = rowIndex + 1; i < rowCount;) {
           int belowCellIndex = i * columns + columnIndex;
 
           if (selectedCellIndices.contains(belowCellIndex)) {
@@ -304,14 +345,18 @@ class GridScreenState extends State<GridScreen> {
     );
   }
 
-  Widget _buildCells(int cellIndex) {
+  Widget _buildCell(int cellIndex) {
     String? label = cellLabels[cellIndex];
     String? subLabel = cellLocations[cellIndex];
     Color? color = cellColors[cellIndex];
     DuplicateDetection detection =
         duplicateDetections[cellIndex] ?? DuplicateDetection();
+    final timeSettings = Provider.of<TimeSettings>(context, listen: false);
 
-    detectDuplicates();
+    int rowCount = calculateRowCount(
+        timeSettings.defaultStartTime, timeSettings.defaultEndTime);
+
+    detectDuplicates(rowCount);
 
     return GestureDetector(
       onTap: () {
@@ -379,7 +424,9 @@ class GridScreenState extends State<GridScreen> {
               child: detection.state == DuplicateState.none ||
                       detection.state == DuplicateState.below
                   ? Text(
-                      label.toString(),
+                      label.toString().length > 20
+                          ? "${label.toString().substring(0, 20)}..."
+                          : label.toString(),
                       style: TextStyle(
                           color: color!.computeLuminance() > .7
                               ? Colors.black
@@ -393,7 +440,9 @@ class GridScreenState extends State<GridScreen> {
               child: detection.state == DuplicateState.none ||
                       detection.state == DuplicateState.below
                   ? Text(
-                      subLabel.toString(),
+                      subLabel.toString().length > 20
+                          ? "${subLabel.toString().substring(0, 20)}..."
+                          : subLabel.toString(),
                       textAlign: TextAlign.left,
                       style: TextStyle(
                           color: color!.computeLuminance() > .7
@@ -411,136 +460,146 @@ class GridScreenState extends State<GridScreen> {
 
   @override
   Widget build(BuildContext context) {
-    detectDuplicates();
-
     final settingsData = Provider.of<SettingsData>(context, listen: false);
     final timeSettings = Provider.of<TimeSettings>(context, listen: false);
 
     int rowCount = calculateRowCount(
         timeSettings.defaultStartTime, timeSettings.defaultEndTime);
 
+    detectDuplicates(rowCount);
+
     List<String> times = getTimesList(context);
 
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        children: [
-          SizedBox(
-            width: columns * 100 + 16,
-            child: Stack(
-              children: [
-                GridView.count(
-                  crossAxisCount: columns,
-                  crossAxisSpacing: 0.0,
-                  mainAxisSpacing: 0.0,
-                  children: List.generate((rowCount) * columns + 1, (index) {
-                    int rowIndex = (index - columns) ~/ columns;
-                    int columnIndex = (index - columns) % columns;
+    if (widget.showCurrentDayCellsOnly) {
+      return DayView(
+        cellLabels: cellLabels,
+        cellLocations: cellLocations,
+        cellColors: cellColors,
+      );
+    } else {
+      return SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          children: [
+            SizedBox(
+              width: columns * 100 + 16,
+              child: Stack(
+                children: [
+                  GridView.count(
+                    crossAxisCount: columns,
+                    crossAxisSpacing: 0.0,
+                    mainAxisSpacing: 0.0,
+                    children: List.generate((rowCount) * columns + 1, (index) {
+                      int rowIndex = (index - columns) ~/ columns;
+                      int columnIndex = (index - columns) % columns;
 
-                    BorderSide leftBorder = columnIndex == 1
-                        ? BorderSide.none
-                        : const BorderSide(color: Colors.grey);
-                    BorderSide bottomBorder = rowIndex == rowCount - 2
-                        ? BorderSide.none
-                        : const BorderSide(color: Colors.grey);
+                      BorderSide leftBorder = columnIndex == 1
+                          ? BorderSide.none
+                          : const BorderSide(color: Colors.grey);
+                      BorderSide bottomBorder = rowIndex == rowCount - 2
+                          ? BorderSide.none
+                          : const BorderSide(color: Colors.grey);
 
-                    if (index == 0) {
-                      return Container();
-                    } else if (index < columns) {
-                      // days row
-                      return Container(
-                        width: 100.0,
-                        height: 50.0,
-                        alignment: Alignment.bottomCenter,
-                        padding: const EdgeInsets.only(bottom: 10),
-                        child: Text(
-                          settingsData.isSingleLetterDays
-                              ? days[index - 1][0]
-                              : days[index - 1],
-                          style: const TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                      );
-                    } else if (columnIndex == 0) {
-                      // times column
-                      return Transform.translate(
-                        offset: Offset(
-                            -10.0,
-                            MediaQuery.of(context).alwaysUse24HourFormat
-                                ? -7.5
-                                : -16.0),
-                        child: Container(
-                          alignment: Alignment.topRight,
+                      if (index == 0) {
+                        return Container();
+                      } else if (index < columns) {
+                        // days row
+                        return Container(
+                          width: 100.0,
+                          height: 50.0,
+                          alignment: Alignment.bottomCenter,
+                          padding: const EdgeInsets.only(bottom: 10),
                           child: Text(
-                            getFormattedTime(rowIndex, context,
-                                startHour: timeSettings.defaultStartTime.hour),
+                            settingsData.isSingleLetterDays
+                                ? days[index - 1][0]
+                                : days[index - 1],
                             style: const TextStyle(fontWeight: FontWeight.bold),
-                            textAlign: TextAlign.center,
                           ),
-                        ),
-                      );
-                    } else {
-                      // main grid
-                      return GestureDetector(
-                        onTap: () {
-                          _showModalBottomSheet(rowIndex, columnIndex);
-                        },
-                        child: Stack(
-                          children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                border: columnIndex == 0
-                                    ? null
-                                    : rowIndex == rowCount
-                                        ? null
-                                        : Border(
-                                            left: leftBorder,
-                                            bottom: bottomBorder,
+                        );
+                      } else if (columnIndex == 0) {
+                        // times column
+                        return Transform.translate(
+                          offset: Offset(
+                              -10.0,
+                              MediaQuery.of(context).alwaysUse24HourFormat
+                                  ? -7.5
+                                  : -16.0),
+                          child: Container(
+                            alignment: Alignment.topRight,
+                            child: Text(
+                              getFormattedTime(rowIndex, context,
+                                  startHour:
+                                      timeSettings.defaultStartTime.hour),
+                              style:
+                                  const TextStyle(fontWeight: FontWeight.bold),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        );
+                      } else {
+                        // main grid
+                        return GestureDetector(
+                          onTap: () {
+                            _showModalBottomSheet(rowIndex, columnIndex);
+                          },
+                          child: Stack(
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                  border: columnIndex == 0
+                                      ? null
+                                      : rowIndex == rowCount
+                                          ? null
+                                          : Border(
+                                              left: leftBorder,
+                                              bottom: bottomBorder,
+                                            ),
+                                ),
+                                alignment: Alignment.centerRight,
+                                child: columnIndex == 0
+                                    ? Align(
+                                        alignment: Alignment.centerRight,
+                                        child: Padding(
+                                          padding: const EdgeInsets.fromLTRB(
+                                              0.0, 0.0, 0.0, 0.0),
+                                          child: Text(
+                                            times[rowIndex],
+                                            style: const TextStyle(
+                                                fontWeight: FontWeight.bold),
                                           ),
-                              ),
-                              alignment: Alignment.centerRight,
-                              child: columnIndex == 0
-                                  ? Align(
-                                      alignment: Alignment.centerRight,
-                                      child: Padding(
-                                        padding: const EdgeInsets.fromLTRB(
-                                            0.0, 0.0, 0.0, 0.0),
-                                        child: Text(
-                                          times[rowIndex],
-                                          style: const TextStyle(
-                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      )
+                                    : Align(
+                                        alignment: columnIndex == columns - 1
+                                            ? Alignment.centerLeft
+                                            : Alignment.centerRight,
+                                        child: Container(
+                                          width: columnIndex == 1
+                                              ? 90
+                                              : columnIndex == columns - 1
+                                                  ? 80
+                                                  : 100,
+                                          height: 1,
+                                          color: const Color(0xFFB4B8AB)
+                                              .withOpacity(0.5),
                                         ),
                                       ),
-                                    )
-                                  : Align(
-                                      alignment: columnIndex == columns - 1
-                                          ? Alignment.centerLeft
-                                          : Alignment.centerRight,
-                                      child: Container(
-                                        width: columnIndex == 1
-                                            ? 90
-                                            : columnIndex == columns - 1
-                                                ? 80
-                                                : 100,
-                                        height: 1,
-                                        color: const Color(0xFFB4B8AB)
-                                            .withOpacity(0.5),
-                                      ),
-                                    ),
-                            ),
-                            if (selectedCellIndices.contains(index))
-                              _buildCells(index)
-                          ],
-                        ),
-                      );
-                    }
-                  }),
-                ),
-              ],
+                              ),
+                              if (selectedCellIndices.contains(index))
+                                _buildCell(index)
+                            ],
+                          ),
+                        );
+                      }
+                    }),
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
-      ),
-    );
+          ],
+        ),
+      );
+    }
   }
 }
 
