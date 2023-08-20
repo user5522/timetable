@@ -43,12 +43,12 @@ jobs:
           name: android-arm64-v8a
           path: |
             build/app/outputs/flutter-apk/*-arm64-v8a-release-signed.apk
-      - name: Archive armabi-v7a
+      - name: Archive armeabi-v7a
         uses: actions/upload-artifact@v2
         with:
-          name: android-armabi-v7a
+          name: android-armeabi-v7a
           path: |
-            build/app/outputs/flutter-apk/*-armabi-v7a-release-signed.apk
+            build/app/outputs/flutter-apk/*-armeabi-v7a-release-signed.apk
       - name: Archive x86_64
         uses: actions/upload-artifact@v2
         with:
