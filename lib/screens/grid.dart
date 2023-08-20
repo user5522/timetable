@@ -7,8 +7,20 @@ import 'package:timetable/screens/settings.dart';
 import 'package:timetable/utilities/cell_modal.dart';
 import 'package:timetable/utilities/grid_utils.dart';
 
-int rows = 11 + 1; // extra for days row
-int columns = 7 + 1; // extra for times column
+class GridData extends ChangeNotifier {
+  int rows = 11 + 1; // extra for days row
+  int columns = 7 + 1; // extra for times column
+
+  void setRows(int newRows) {
+    rows = newRows;
+    notifyListeners();
+  }
+
+  void setColumns(int newColumns) {
+    columns = newColumns;
+    notifyListeners();
+  }
+}
 
 class GridPage extends StatefulWidget {
   const GridPage({Key? key}) : super(key: key);
@@ -30,7 +42,7 @@ class GridPageState extends State<GridPage> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       showCurrentDayCellsOnly =
-          prefs.getBool('showCurrentDayCellsOnly') ?? true;
+          prefs.getBool('showCurrentDayCellsOnly') ?? false;
     });
   }
 
@@ -95,10 +107,11 @@ class GridScreenState extends State<GridScreen> {
 
   void detectDuplicates(int rowCount) {
     duplicateDetections.clear();
+    final gridData = Provider.of<GridData>(context, listen: false);
 
     for (int rowIndex = 1; rowIndex < rowCount; rowIndex++) {
-      for (int columnIndex = 1; columnIndex < columns; columnIndex++) {
-        int cellIndex = rowIndex * columns + columnIndex;
+      for (int columnIndex = 1; columnIndex < gridData.columns; columnIndex++) {
+        int cellIndex = rowIndex * gridData.columns + columnIndex;
 
         DuplicateDetection detection = DuplicateDetection();
 
@@ -107,7 +120,7 @@ class GridScreenState extends State<GridScreen> {
         Color? color = cellColors[cellIndex];
 
         for (int i = rowIndex - 1; i >= 0;) {
-          int aboveCellIndex = i * columns + columnIndex;
+          int aboveCellIndex = i * gridData.columns + columnIndex;
 
           if (selectedCellIndices.contains(aboveCellIndex)) {
             String? aboveLabel = cellLabels[aboveCellIndex]?.toLowerCase();
@@ -129,7 +142,7 @@ class GridScreenState extends State<GridScreen> {
         }
 
         for (int i = rowIndex + 1; i < rowCount;) {
-          int belowCellIndex = i * columns + columnIndex;
+          int belowCellIndex = i * gridData.columns + columnIndex;
 
           if (selectedCellIndices.contains(belowCellIndex)) {
             String? belowLabel = cellLabels[belowCellIndex]?.toLowerCase();
@@ -226,7 +239,8 @@ class GridScreenState extends State<GridScreen> {
     Color newCellColor,
     String newCellLocation,
   ) {
-    int cellIndex = (rowIndex + 1) * columns + columnIndex;
+    final gridData = Provider.of<GridData>(context, listen: false);
+    int cellIndex = (rowIndex + 1) * gridData.columns + columnIndex;
 
     setState(() {
       if (selectedCellIndices.contains(cellIndex)) {
@@ -252,7 +266,9 @@ class GridScreenState extends State<GridScreen> {
 
   void _showModalBottomSheet(int rowIndex, int columnIndex) async {
     String formattedTime = getFormattedTime(rowIndex, context);
-    int cellIndex = (rowIndex + 1) * columns + columnIndex;
+    final gridData = Provider.of<GridData>(context, listen: false);
+    final cellModalData = Provider.of<CellModalData>(context, listen: false);
+    int cellIndex = (rowIndex + 1) * gridData.columns + columnIndex;
 
     String? existingCellLabel = cellLabels[cellIndex];
     String? existingCellSubLabel = cellLocations[cellIndex];
@@ -303,7 +319,7 @@ class GridScreenState extends State<GridScreen> {
       },
     );
 
-    if (existingCellLabel != null && isDelete) {
+    if (existingCellLabel != null && cellModalData.isDelete) {
       if (newCellLabel != existingCellLabel) {
         _showDeleteConfirmation(cellIndex);
       }
@@ -311,6 +327,8 @@ class GridScreenState extends State<GridScreen> {
   }
 
   void _showDeleteConfirmation(int cellIndex) {
+    final cellModalData = Provider.of<CellModalData>(context, listen: false);
+
     showDialog(
       context: context,
       builder: (BuildContext dialogContext) {
@@ -320,7 +338,7 @@ class GridScreenState extends State<GridScreen> {
           actions: [
             TextButton(
               onPressed: () {
-                isDelete = false;
+                cellModalData.isDelete = false;
                 Navigator.of(dialogContext).pop();
               },
               child: const Text('Cancel'),
@@ -333,7 +351,7 @@ class GridScreenState extends State<GridScreen> {
                   cellLocations.remove(cellIndex);
                   cellColors.remove(cellIndex);
                 });
-                isDelete = false;
+                cellModalData.isDelete = false;
                 Navigator.pop(dialogContext);
                 saveSelectedCells();
               },
@@ -352,6 +370,7 @@ class GridScreenState extends State<GridScreen> {
     DuplicateDetection detection =
         duplicateDetections[cellIndex] ?? DuplicateDetection();
     final timeSettings = Provider.of<TimeSettings>(context, listen: false);
+    final gridData = Provider.of<GridData>(context, listen: false);
 
     int rowCount = calculateRowCount(
         timeSettings.defaultStartTime, timeSettings.defaultEndTime);
@@ -360,7 +379,8 @@ class GridScreenState extends State<GridScreen> {
 
     return GestureDetector(
       onTap: () {
-        _showModalBottomSheet(cellIndex ~/ columns - 1, cellIndex % columns);
+        _showModalBottomSheet(
+            cellIndex ~/ gridData.columns - 1, cellIndex % gridData.columns);
       },
       child: Align(
         alignment: detection.state == DuplicateState.above
@@ -462,6 +482,7 @@ class GridScreenState extends State<GridScreen> {
   Widget build(BuildContext context) {
     final settingsData = Provider.of<SettingsData>(context, listen: false);
     final timeSettings = Provider.of<TimeSettings>(context, listen: false);
+    final gridData = Provider.of<GridData>(context, listen: false);
 
     int rowCount = calculateRowCount(
         timeSettings.defaultStartTime, timeSettings.defaultEndTime);
@@ -482,16 +503,19 @@ class GridScreenState extends State<GridScreen> {
         child: Row(
           children: [
             SizedBox(
-              width: columns * 100 + 16,
+              width: gridData.columns * 100 + 16,
               child: Stack(
                 children: [
                   GridView.count(
-                    crossAxisCount: columns,
+                    crossAxisCount: gridData.columns,
                     crossAxisSpacing: 0.0,
                     mainAxisSpacing: 0.0,
-                    children: List.generate((rowCount) * columns + 1, (index) {
-                      int rowIndex = (index - columns) ~/ columns;
-                      int columnIndex = (index - columns) % columns;
+                    children: List.generate((rowCount) * gridData.columns + 1,
+                        (index) {
+                      int rowIndex =
+                          (index - gridData.columns) ~/ gridData.columns;
+                      int columnIndex =
+                          (index - gridData.columns) % gridData.columns;
 
                       BorderSide leftBorder = columnIndex == 1
                           ? BorderSide.none
@@ -502,7 +526,7 @@ class GridScreenState extends State<GridScreen> {
 
                       if (index == 0) {
                         return Container();
-                      } else if (index < columns) {
+                      } else if (index < gridData.columns) {
                         // days row
                         return Container(
                           width: 100.0,
@@ -570,13 +594,15 @@ class GridScreenState extends State<GridScreen> {
                                         ),
                                       )
                                     : Align(
-                                        alignment: columnIndex == columns - 1
-                                            ? Alignment.centerLeft
-                                            : Alignment.centerRight,
+                                        alignment:
+                                            columnIndex == gridData.columns - 1
+                                                ? Alignment.centerLeft
+                                                : Alignment.centerRight,
                                         child: Container(
                                           width: columnIndex == 1
                                               ? 90
-                                              : columnIndex == columns - 1
+                                              : columnIndex ==
+                                                      gridData.columns - 1
                                                   ? 80
                                                   : 100,
                                           height: 1,

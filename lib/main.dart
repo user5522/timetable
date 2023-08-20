@@ -6,6 +6,7 @@ import 'package:timetable/screens/grid.dart';
 import 'package:timetable/screens/select_time.dart';
 import 'package:timetable/screens/settings.dart';
 import 'package:animations/animations.dart';
+import 'package:timetable/utilities/cell_modal.dart';
 
 void main() {
   runApp(
@@ -14,6 +15,8 @@ void main() {
         ChangeNotifierProvider(create: (context) => ThemeChanger()),
         ChangeNotifierProvider(create: (context) => SettingsData()),
         ChangeNotifierProvider(create: (context) => TimeSettings()),
+        ChangeNotifierProvider(create: (context) => GridData()),
+        ChangeNotifierProvider(create: (context) => CellModalData()),
       ],
       child: const Timetable(),
     ),

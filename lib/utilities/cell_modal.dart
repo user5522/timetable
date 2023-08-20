@@ -1,6 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-var isDelete = false;
+class CellModalData extends ChangeNotifier {
+  var isDelete = false;
+
+  void setIsDelete(bool newIsDelete) {
+    isDelete = newIsDelete;
+    notifyListeners();
+  }
+}
 
 class AddCellModal extends StatefulWidget {
   final String time;
@@ -88,6 +96,8 @@ class AddCellModalState extends State<AddCellModal> {
         DropdownMenuEntry<ColorLabel>(value: color, label: color.label),
       );
     }
+    final cellModalData = Provider.of<CellModalData>(context, listen: false);
+
 
     return SingleChildScrollView(
       controller: widget.scrollController,
@@ -164,7 +174,7 @@ class AddCellModalState extends State<AddCellModal> {
                       if (widget.existingCellLabel != null)
                         TextButton(
                           onPressed: () {
-                            isDelete = true;
+                            cellModalData.isDelete = true;
                             Navigator.pop(context, null);
                           },
                           child: const Text('Delete'),
@@ -175,7 +185,7 @@ class AddCellModalState extends State<AddCellModal> {
                   ),
                   TextButton(
                     onPressed: () {
-                      isDelete = false;
+                      cellModalData.isDelete = false;
                       Navigator.pop(context);
                     },
                     child: const Text('Cancel'),
