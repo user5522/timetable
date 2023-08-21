@@ -98,7 +98,6 @@ class AddCellModalState extends State<AddCellModal> {
     }
     final cellModalData = Provider.of<CellModalData>(context, listen: false);
 
-
     return SingleChildScrollView(
       controller: widget.scrollController,
       child: Container(
