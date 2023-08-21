@@ -15,9 +15,11 @@ class ThemeChanger with ChangeNotifier {
 class SettingsData with ChangeNotifier {
   bool _isSingleLetterDays = false;
   bool _showDVNavbar = false;
+  bool _defaultToDayView = false;
 
   bool get isSingleLetterDays => _isSingleLetterDays;
   bool get showDVNavbar => _showDVNavbar;
+  bool get defaultToDayView => _defaultToDayView;
 
   set isSingleLetterDays(bool value) {
     _isSingleLetterDays = value;
@@ -26,6 +28,11 @@ class SettingsData with ChangeNotifier {
 
   set showDVNavbar(bool value) {
     _showDVNavbar = value;
+    notifyListeners();
+  }
+
+  set defaultToDayView(bool value) {
+    _defaultToDayView = value;
     notifyListeners();
   }
 }
@@ -41,6 +48,7 @@ class SettingsPageState extends State<SettingsPage> {
   bool _isCustomTimeEnabled = false;
   bool _isSingleLetterDays = false;
   bool _showDVNavbar = false;
+  bool _defaultToDayView = false;
   ThemeModeOption _selectedThemeMode = ThemeModeOption.auto;
 
   TimeOfDay defaultStartTime = const TimeOfDay(hour: 8, minute: 0);
@@ -56,6 +64,7 @@ class SettingsPageState extends State<SettingsPage> {
     await _loadCustomTimePreference();
     await _loadSingleLetterDaysPreference();
     await _loadDVNavbarPreference();
+    await _loadDefaultToDVPreference();
     _loadThemeMode();
 
     final timeSettings = Provider.of<TimeSettings>(context, listen: false);
@@ -101,8 +110,15 @@ class SettingsPageState extends State<SettingsPage> {
       _showDVNavbar = value;
     });
     _saveDVNavbarPreference(value);
-    Provider.of<SettingsData>(context, listen: false).showDVNavbar =
-        value;
+    Provider.of<SettingsData>(context, listen: false).showDVNavbar = value;
+  }
+
+  void _handleDefaultToDVToggle(bool value) async {
+    setState(() {
+      _defaultToDayView = value;
+    });
+    _saveDefaultToDVPreference(value);
+    Provider.of<SettingsData>(context, listen: false).defaultToDayView = value;
   }
 
   Future<void> _saveThemeMode(ThemeModeOption themeMode) async {
@@ -133,6 +149,11 @@ class SettingsPageState extends State<SettingsPage> {
   Future<void> _saveDVNavbarPreference(bool value) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setBool('dvNavbar', value);
+  }
+
+  Future<void> _saveDefaultToDVPreference(bool value) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('defaultToDV', value);
   }
 
   Future<ThemeModeOption> _loadThemeModePreference() async {
@@ -178,6 +199,16 @@ class SettingsPageState extends State<SettingsPage> {
     }
   }
 
+  Future<void> _loadDefaultToDVPreference() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool? defaultToDayView = prefs.getBool('defaultToDV');
+    if (defaultToDayView != null) {
+      setState(() {
+        _defaultToDayView = defaultToDayView;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final themeChanger = Provider.of<ThemeChanger>(context);
@@ -198,31 +229,11 @@ class SettingsPageState extends State<SettingsPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SwitchListTile(
-              title: const Text('Custom Time Period'),
-              subtitle: const Text(
-                'Warning: may or may not break Subjects\' locations',
-              ),
-              value: _isCustomTimeEnabled,
-              onChanged: _handleCustomTimeToggle,
+            ListTile(
+              dense: true,
+              title: const Text("General"),
+              textColor: Theme.of(context).colorScheme.primary,
             ),
-            if (_isCustomTimeEnabled)
-              ListTile(
-                title: const Text('Customize Time Period'),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) =>
-                          CustomTimeSelectionPage.withDefaults(
-                        _isCustomTimeEnabled,
-                        defaultStartTime,
-                        defaultEndTime,
-                      ),
-                    ),
-                  );
-                },
-              ),
             ListTile(
               title: Row(
                 children: [
@@ -245,6 +256,36 @@ class SettingsPageState extends State<SettingsPage> {
               ),
               onTap: () {},
             ),
+            ListTile(
+              dense: true,
+              title: const Text("Customize Timetable"),
+              textColor: Theme.of(context).colorScheme.primary,
+            ),
+            SwitchListTile(
+              title: const Text('Custom Time Period'),
+              subtitle: const Text(
+                'Warning: breaks Subjects\' locations when applied',
+              ),
+              value: _isCustomTimeEnabled,
+              onChanged: _handleCustomTimeToggle,
+            ),
+            if (_isCustomTimeEnabled)
+              ListTile(
+                title: const Text('Customize Time Period'),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          CustomTimeSelectionPage.withDefaults(
+                        _isCustomTimeEnabled,
+                        defaultStartTime,
+                        defaultEndTime,
+                      ),
+                    ),
+                  );
+                },
+              ),
             SwitchListTile(
               title: const Text('Single Letter Days'),
               subtitle: const Text('Shows \'M\' instead of Monday, etc'),
@@ -254,9 +295,16 @@ class SettingsPageState extends State<SettingsPage> {
             SwitchListTile(
               title: const Text('Days View NavBar'),
               subtitle: const Text(
-                  'Toggles a navigation bar in the days view to navigate faster'),
+                  'Toggles a bar in the day view to navigate between days faster'),
               value: _showDVNavbar,
               onChanged: _handleDVNavbarToggle,
+            ),
+            SwitchListTile(
+              title: const Text('Always open in day view'),
+              subtitle: const Text(
+                  'When the app is opened it will always default to the day view instead of the timetable view'),
+              value: _defaultToDayView,
+              onChanged: _handleDefaultToDVToggle,
             ),
           ],
         ),

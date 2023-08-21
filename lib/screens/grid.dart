@@ -34,8 +34,20 @@ class GridPageState extends State<GridPage> {
 
   @override
   void initState() {
+    final settingsData = Provider.of<SettingsData>(context, listen: false);
+
     super.initState();
-    loadShowCurrentDayCellsOnly();
+    if (settingsData.defaultToDayView) {
+      loadShowCurrentDayCellsOnly();
+    }
+    checkSetting();
+  }
+
+  void checkSetting() {
+    final settingsData = Provider.of<SettingsData>(context, listen: false);
+    setState(() {
+      showCurrentDayCellsOnly = settingsData.defaultToDayView ? true : false;
+    });
   }
 
   void loadShowCurrentDayCellsOnly() async {
@@ -66,7 +78,9 @@ class GridPageState extends State<GridPage> {
             isSelected: showCurrentDayCellsOnly,
             tooltip: "View",
             onPressed: () {
-              saveShowCurrentDayCellsOnly(!showCurrentDayCellsOnly);
+              setState(() {
+                showCurrentDayCellsOnly = !showCurrentDayCellsOnly;
+              });
             },
           ),
         ],
