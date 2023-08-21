@@ -37,13 +37,13 @@ class GridPageState extends State<GridPage> {
     final settingsData = Provider.of<SettingsData>(context, listen: false);
 
     super.initState();
-    if (settingsData.defaultToDayView) {
+    checkDefaultToDV();
+    if (!settingsData.defaultToDayView) {
       loadShowCurrentDayCellsOnly();
     }
-    checkSetting();
   }
 
-  void checkSetting() {
+  void checkDefaultToDV() {
     final settingsData = Provider.of<SettingsData>(context, listen: false);
     setState(() {
       showCurrentDayCellsOnly = settingsData.defaultToDayView ? true : false;
