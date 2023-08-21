@@ -118,7 +118,7 @@ class CustomTimeSelectionPageState extends State<CustomTimeSelectionPage> {
             subtitle: Text(
                 "${selectedStartTime.format(context)} | Only Hours are supposed to be chosen!"),
             onTap: () {
-              _selectStartTime(context);
+              _selectStartTime();
             },
           ),
           ListTile(
@@ -134,7 +134,7 @@ class CustomTimeSelectionPageState extends State<CustomTimeSelectionPage> {
     );
   }
 
-  Future<void> _selectStartTime(BuildContext context) async {
+  Future<void> _selectStartTime() async {
     final TimeOfDay? selectedTime = await showTimePicker(
       context: context,
       initialTime: TimeOfDay(
