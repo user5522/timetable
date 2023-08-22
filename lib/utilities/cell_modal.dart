@@ -19,13 +19,11 @@ class AddCellModal extends StatefulWidget {
   final String? existingCellLabel;
   final String? existingCellSubLabel;
   final Color? existingCellColor;
-  final String? existingCellWeek;
 
   final void Function(
     String newCellLabel,
     String newCellLocation,
     Color newCellColor,
-    String newCellWeek,
   )? onCellSaved;
 
   const AddCellModal({
@@ -36,7 +34,6 @@ class AddCellModal extends StatefulWidget {
     this.existingCellLabel,
     this.existingCellSubLabel,
     this.existingCellColor,
-    this.existingCellWeek,
     this.onCellSaved,
   }) : super(key: key);
 
@@ -50,7 +47,6 @@ class AddCellModalState extends State<AddCellModal> {
   String newCellLabel = '';
   String newCellLocation = '';
   Color newCellColor = Colors.black;
-  String newCellWeek = '';
 
   @override
   void initState() {
@@ -58,7 +54,6 @@ class AddCellModalState extends State<AddCellModal> {
     newCellLabel = widget.existingCellLabel ?? '';
     newCellLocation = widget.existingCellSubLabel ?? '';
     newCellColor = widget.existingCellColor ?? Colors.black;
-    newCellWeek = widget.existingCellWeek ?? '';
   }
 
   @override
@@ -66,13 +61,11 @@ class AddCellModalState extends State<AddCellModal> {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.existingCellLabel != widget.existingCellLabel ||
         oldWidget.existingCellSubLabel != widget.existingCellSubLabel ||
-        oldWidget.existingCellColor != widget.existingCellColor ||
-        oldWidget.existingCellWeek != widget.existingCellWeek) {
+        oldWidget.existingCellColor != widget.existingCellColor) {
       setState(() {
         newCellLabel = widget.existingCellLabel ?? '';
         newCellLocation = widget.existingCellSubLabel ?? '';
         newCellColor = widget.existingCellColor ?? Colors.black;
-        newCellWeek = widget.existingCellWeek ?? '';
       });
     }
   }
@@ -98,120 +91,120 @@ class AddCellModalState extends State<AddCellModal> {
     }
     final cellModalData = Provider.of<CellModalData>(context, listen: false);
 
-    return SingleChildScrollView(
-      controller: widget.scrollController,
-      child: Container(
-        padding: const EdgeInsets.fromLTRB(16.0, 48.0, 16.0, 16.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextFormField(
-                initialValue: newCellLabel,
-                decoration: const InputDecoration(
-                  isDense: true,
-                  contentPadding: EdgeInsets.all(10),
-                  labelText: 'Subject*',
-                  border: OutlineInputBorder(),
-                ),
-                validator: (value) {
-                  if (value == null || value.trim().isEmpty) {
-                    return 'Please enter a Subject.';
-                  }
-                  return null;
-                },
-                onChanged: (value) {
-                  setState(() {
-                    newCellLabel = value;
-                  });
-                },
-              ),
-              const SizedBox(height: 15),
-              TextFormField(
-                initialValue: newCellLocation,
-                decoration: const InputDecoration(
-                  isDense: true,
-                  contentPadding: EdgeInsets.all(10),
-                  labelText: 'Location',
-                  border: OutlineInputBorder(),
-                ),
-                onChanged: (value) {
-                  setState(() {
-                    newCellLocation = value;
-                  });
-                },
-              ),
-              const SizedBox(height: 32.0),
-              Row(
-                children: [
-                  const Text('Color: '),
-                  const Spacer(),
-                  Row(
-                    children: [
-                      DropdownMenu<ColorLabel>(
-                        width: 120,
-                        label: const Text('Color'),
-                        initialSelection: findColorLabelFromColor(newCellColor),
-                        dropdownMenuEntries: colorEntries,
-                        onSelected: (value) {
-                          setState(() {
-                            newCellColor = value!.color;
-                          });
-                        },
-                      ),
-                    ],
+     return SingleChildScrollView(
+        controller: widget.scrollController,
+        child: Container(
+          padding: const EdgeInsets.fromLTRB(16.0, 48.0, 16.0, 16.0),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextFormField(
+                  initialValue: newCellLabel,
+                  decoration: const InputDecoration(
+                    isDense: true,
+                    contentPadding: EdgeInsets.all(10),
+                    labelText: 'Subject*',
+                    border: OutlineInputBorder(),
                   ),
-                ],
-              ),
-              const SizedBox(height: 15),
-              Row(
-                children: [
-                  Row(
-                    children: [
-                      if (widget.existingCellLabel != null)
-                        TextButton(
-                          onPressed: () {
-                            cellModalData.isDelete = true;
-                            Navigator.pop(context, null);
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return 'Please enter a Subject.';
+                    }
+                    return null;
+                  },
+                  onChanged: (value) {
+                    setState(() {
+                      newCellLabel = value;
+                    });
+                  },
+                ),
+                const SizedBox(height: 15),
+                TextFormField(
+                  initialValue: newCellLocation,
+                  decoration: const InputDecoration(
+                    isDense: true,
+                    contentPadding: EdgeInsets.all(10),
+                    labelText: 'Location',
+                    border: OutlineInputBorder(),
+                  ),
+                  onChanged: (value) {
+                    setState(() {
+                      newCellLocation = value;
+                    });
+                  },
+                ),
+                const SizedBox(height: 32.0),
+                Row(
+                  children: [
+                    const Text('Color: '),
+                    const Spacer(),
+                    Row(
+                      children: [
+                        DropdownMenu<ColorLabel>(
+                          width: 120,
+                          label: const Text('Color'),
+                          initialSelection:
+                              findColorLabelFromColor(newCellColor),
+                          dropdownMenuEntries: colorEntries,
+                          onSelected: (value) {
+                            setState(() {
+                              newCellColor = value!.color;
+                            });
                           },
-                          child: const Text('Delete'),
                         ),
-                      if (widget.existingCellLabel != null)
-                        const SizedBox(width: 10.0)
-                    ],
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      cellModalData.isDelete = false;
-                      Navigator.pop(context);
-                    },
-                    child: const Text('Cancel'),
-                  ),
-                  const Spacer(),
-                  FilledButton(
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        final label = newCellLabel;
-                        final location = newCellLocation;
-                        final color = newCellColor;
-                        final week = newCellWeek;
-                        widget.onCellSaved?.call(label, location, color, week);
-                        Navigator.pop(context, label);
-                      }
-                    },
-                    child: Text(
-                      widget.existingCellLabel != null ? 'Save' : 'Create',
+                      ],
                     ),
-                  ),
-                ],
-              ),
-            ],
+                  ],
+                ),
+                const SizedBox(height: 15),
+                Row(
+                  children: [
+                    Row(
+                      children: [
+                        if (widget.existingCellLabel != null)
+                          TextButton(
+                            onPressed: () {
+                              cellModalData.isDelete = true;
+                              Navigator.pop(context, null);
+                            },
+                            child: const Text('Delete'),
+                          ),
+                        if (widget.existingCellLabel != null)
+                          const SizedBox(width: 10.0)
+                      ],
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        cellModalData.isDelete = false;
+                        Navigator.pop(context);
+                      },
+                      child: const Text('Cancel'),
+                    ),
+                    const Spacer(),
+                    FilledButton(
+                      onPressed: () {
+                        if (_formKey.currentState!.validate()) {
+                          final label = newCellLabel;
+                          final location = newCellLocation;
+                          final color = newCellColor;
+                          widget.onCellSaved?.call(label, location, color);
+                          Navigator.pop(context, label);
+                        }
+                      },
+                      child: Text(
+                        widget.existingCellLabel != null ? 'Save' : 'Create',
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
-      ),
-    );
+      );
   }
 }
 
@@ -231,13 +224,4 @@ enum ColorLabel {
   const ColorLabel(this.label, this.color);
   final String label;
   final Color color;
-}
-
-enum WeekLabel {
-  all('All'),
-  a('A'),
-  b('B');
-
-  const WeekLabel(this.label);
-  final String label;
 }
