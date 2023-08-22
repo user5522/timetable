@@ -178,9 +178,9 @@ class DayView extends StatelessWidget {
                 ),
               ],
             ),
-            Row(
+            if (subLabel != "")
+              Row(
               children: [
-                if (subLabel != "")
                   Icon(
                     Icons.location_on,
                     color: color.computeLuminance() > .7

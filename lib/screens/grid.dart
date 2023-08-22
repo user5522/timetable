@@ -260,18 +260,12 @@ class GridScreenState extends State<GridScreen> {
       if (selectedCellIndices.contains(cellIndex)) {
         cellLabels[cellIndex] = newCellLabel;
         cellLocations[cellIndex] = newCellLocation;
-
-        if (newCellColor != Colors.blue) {
-          cellColors[cellIndex] = newCellColor;
-        }
+        cellColors[cellIndex] = newCellColor;
       } else {
         selectedCellIndices.add(cellIndex);
         cellLabels[cellIndex] = newCellLabel;
         cellLocations[cellIndex] = newCellLocation;
-
-        if (newCellColor != Colors.blue) {
-          cellColors[cellIndex] = newCellColor;
-        }
+        cellColors[cellIndex] = newCellColor;
       }
     });
 
@@ -286,7 +280,6 @@ class GridScreenState extends State<GridScreen> {
 
     String? existingCellLabel = cellLabels[cellIndex];
     String? existingCellSubLabel = cellLocations[cellIndex];
-
     String? newCellLabel = await showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -312,16 +305,11 @@ class GridScreenState extends State<GridScreen> {
                       day: days[columnIndex - 1],
                       existingCellLabel: existingCellLabel,
                       existingCellSubLabel: existingCellSubLabel,
-                      onCellSaved: (label, location, color, week) {
-                        _addNewCell(
-                          rowIndex,
-                          columnIndex,
-                          label,
-                          color,
-                          location,
-                        );
-                      },
                       existingCellColor: cellColors[cellIndex],
+                      onCellSaved: (label, location, color) {
+                        _addNewCell(
+                            rowIndex, columnIndex, label, color, location);
+                      },
                       scrollController: scrollController,
                     ),
                   ],
@@ -470,7 +458,8 @@ class GridScreenState extends State<GridScreen> {
                   : null,
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(5, 0, 5, 5),
+              padding: EdgeInsets.fromLTRB(subLabel == "" ? 0 : 5, 0,
+                  subLabel == "" ? 0 : 5, subLabel == "" ? 0 : 5),
               child: detection.state == DuplicateState.none ||
                       detection.state == DuplicateState.below
                   ? Text(
