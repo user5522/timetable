@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timetable/screens/grid.dart';
@@ -28,16 +27,6 @@ class Timetable extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(
-      SystemUiOverlayStyle(
-        systemNavigationBarColor: Colors.black.withOpacity(0.002),
-        systemNavigationBarIconBrightness: Brightness.dark,
-      ),
-    );
-
-    SystemChrome.setEnabledSystemUIMode(
-      SystemUiMode.edgeToEdge,
-    );
 
     return FutureBuilder(
       future: loadSettingsData(context),
@@ -85,6 +74,8 @@ class Timetable extends StatelessWidget {
 
     ThemeModeOption themeMode = await _getThemeMode();
     settingsData.isSingleLetterDays = await _getSingleLetterDays();
+    settingsData.defaultToDayView = await _getDefaultToDV();
+    settingsData.showDVNavbar = await _getShowDVNavbar();
     themeChanger.setThemeMode(themeMode);
 
     bool isCustomTimeEnabled = await _getCustomTimeEnabled();
@@ -131,6 +122,18 @@ class Timetable extends StatelessWidget {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool? isSingleLetterDays = prefs.getBool('singleLetterDays');
     return isSingleLetterDays ?? false;
+  }
+
+  Future<bool> _getShowDVNavbar() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool? showDVNavbar = prefs.getBool('dvNavbar');
+    return showDVNavbar ?? false;
+  }
+
+  Future<bool> _getDefaultToDV() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool? defaultToDayView = prefs.getBool('defaultToDV');
+    return defaultToDayView ?? false;
   }
 
   Future<ThemeModeOption> _getThemeMode() async {
