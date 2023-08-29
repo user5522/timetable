@@ -1,14 +1,6 @@
 import 'package:flutter/material.dart';
 
-const List<String> days = [
-  'Monday',
-  'Tuesday',
-  'Wednesday',
-  'Thursday',
-  'Friday',
-  'Saturday',
-  'Sunday'
-];
+const List<String> days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
 const List<String> times24h = [
   '01',
@@ -70,8 +62,7 @@ List<String> getTimesList(BuildContext context) {
   return use24HourFormat ? times24h : timespmam;
 }
 
-String getFormattedTime(int rowIndex, BuildContext context,
-    {int startHour = 0}) {
+String getFormattedTime(int rowIndex, BuildContext context, {int startHour = 0}) {
   List<String> currentTimesList = getTimesList(context);
 
   int totalHours = currentTimesList.length;
