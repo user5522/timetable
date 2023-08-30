@@ -218,7 +218,7 @@ enum ColorLabel {
   grey('Grey', Color(0xFF9E9E9E)),
   brown('Brown', Color(0xFF795548)),
   orange('Orange', Color(0xFFFF5722)),
-  red('Red', Color(0xF4FF3636)),
+  red('Red', Color(0xFFFF3636)),
   black('Black', Color(0xFF000000));
 
   const ColorLabel(this.label, this.color);
