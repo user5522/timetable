@@ -1,33 +1,41 @@
-import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:timetable/constants/theme_options.dart';
 
-class ThemeProvider with ChangeNotifier {
-  ThemeModeOption _selectedThemeMode = ThemeModeOption.auto;
-
-  ThemeModeOption get selectedThemeMode => _selectedThemeMode;
-
-  set selectedThemeMode(ThemeModeOption newValue) {
-    _selectedThemeMode = newValue;
-    saveThemeMode(newValue);
-    notifyListeners();
+class ThemeModeNotifier extends StateNotifier<ThemeModeOption> {
+  ThemeModeNotifier() : super(ThemeModeOption.auto) {
+    _loadThemeFromSharedPreferences();
   }
 
-  Future<void> loadThemeMode() async {
-    final ThemeModeOption themeMode = await getThemeMode();
-    _selectedThemeMode = themeMode;
-    notifyListeners();
+  void changeTheme(ThemeModeOption newThemeMode) {
+    state = newThemeMode;
+    _saveThemePreference(newThemeMode);
   }
 
-  Future<void> saveThemeMode(ThemeModeOption themeMode) async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setInt('theme_mode', themeMode.index);
+  ThemeModeOption getTheme() {
+    return state;
   }
 
-  Future<ThemeModeOption> getThemeMode() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final int? themeModeIndex = prefs.getInt('theme_mode');
-    return ThemeModeOption.values[themeModeIndex ?? 0];
+  Future<void> _loadThemeFromSharedPreferences() async {
+    final prefs = await SharedPreferences.getInstance();
+    final savedTheme = prefs.getString('themeMode');
+    if (savedTheme != null) {
+      state = ThemeModeOption.values.firstWhere(
+        (element) => element.toString() == savedTheme,
+      );
+    }
+  }
+
+  Future<void> _saveThemePreference(ThemeModeOption themeMode) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(
+      'themeMode',
+      themeMode.toString(),
+    );
   }
 }
 
-enum ThemeModeOption { dark, light, auto }
+final themeModeProvider =
+    StateNotifierProvider<ThemeModeNotifier, ThemeModeOption>(
+  (ref) => ThemeModeNotifier(),
+);

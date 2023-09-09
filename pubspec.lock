@@ -94,6 +94,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.3"
+  flutter_hooks:
+    dependency: "direct main"
+    description:
+      name: flutter_hooks
+      sha256: "6ae13b1145c589112cbd5c4fda6c65908993a9cb18d4f82042e9c28dd9fbf611"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.20.1"
   flutter_lints:
     dependency: "direct dev"
     description:
@@ -102,6 +110,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.2"
+  flutter_riverpod:
+    dependency: transitive
+    description:
+      name: flutter_riverpod
+      sha256: b04d4e9435a563673746ccb328d22018c6c9496bb547e11dd56c1b0cc9829fe5
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.3.10"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -112,6 +128,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  hooks_riverpod:
+    dependency: "direct main"
+    description:
+      name: hooks_riverpod
+      sha256: "04a8a526db4c04139f6e5d318ef5079832daa1327a485ad391faf1b6bb203960"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.3.10"
   js:
     dependency: transitive
     description:
@@ -152,11 +176,11 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.9.1"
-  nested:
-    dependency: transitive
+  non_uniform_border:
+    dependency: "direct main"
     description:
-      name: nested
-      sha256: "03bac4c528c64c95c722ec99280375a6f2fc708eec17c7b3f07253b626cd2a20"
+      name: non_uniform_border
+      sha256: a2676d171f7493cb3faf6339552570dba96512a90b5955b921602782153f3c81
       url: "https://pub.dev"
     source: hosted
     version: "1.0.0"
@@ -208,14 +232,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.5"
-  provider:
-    dependency: "direct main"
+  riverpod:
+    dependency: transitive
     description:
-      name: provider
-      sha256: cdbe7530b12ecd9eb455bdaa2fcb8d4dad22e80b8afb4798b41479d5ce26847f
+      name: riverpod
+      sha256: "6c0a2c30c04206ac05494bcccd8148b76866e1a9248a5a8c84ca7b16fbcb3f6a"
       url: "https://pub.dev"
     source: hosted
-    version: "6.0.5"
+    version: "2.3.10"
   shared_preferences:
     dependency: "direct main"
     description:
@@ -293,6 +317,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.11.0"
+  state_notifier:
+    dependency: transitive
+    description:
+      name: state_notifier
+      sha256: b8677376aa54f2d7c58280d5a007f9e8774f1968d1fb1c096adcb4792fba29bb
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0"
   stream_channel:
     dependency: transitive
     description:

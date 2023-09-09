@@ -34,8 +34,10 @@ dependencies:
   flutter_colorpicker: ^1.0.3
   shared_preferences: ^2.0.13
   dynamic_color: ^1.6.6
-  provider: ^6.0.5
   animations: ^2.0.7
+  flutter_hooks: ^0.20.1
+  hooks_riverpod: ^2.3.10
+  non_uniform_border: ^1.0.0
 
 dev_dependencies:
   flutter_test:
