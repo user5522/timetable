@@ -61,7 +61,6 @@ class SubjectNotifier extends StateNotifier<List<Subject>> {
         .toList();
   }
 
-  // void function to change an inputted subject's label
   void changeSubjectLabel(Subject subject, String newLabel) {
     subject.copyWith(label: newLabel);
   }

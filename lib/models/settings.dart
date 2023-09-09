@@ -2,20 +2,24 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class Settings {
   final bool compactMode;
-  final bool showLocation;
+  final bool hideLocation;
+  final bool singleLetterDays;
 
   Settings({
     this.compactMode = false,
-    this.showLocation = false,
+    this.hideLocation = false,
+    this.singleLetterDays = false,
   });
 
   Settings copy({
     bool? compactMode,
-    bool? showLocation,
+    bool? hideLocation,
+    bool? singleLetterDays,
   }) =>
       Settings(
         compactMode: compactMode ?? this.compactMode,
-        showLocation: showLocation ?? this.showLocation,
+        hideLocation: hideLocation ?? this.hideLocation,
+        singleLetterDays: singleLetterDays ?? this.singleLetterDays,
       );
 }
 
@@ -29,9 +33,16 @@ class SettingsNotifier extends StateNotifier<Settings> {
     state = newState;
   }
 
-  void updateShowLocation(bool showLocation) {
+  void updateHideLocation(bool hideLocation) {
     final newState = state.copy(
-      showLocation: showLocation,
+      hideLocation: hideLocation,
+    );
+    state = newState;
+  }
+
+  void updateSingleLetterDays(bool singleLetterDays) {
+    final newState = state.copy(
+      singleLetterDays: singleLetterDays,
     );
     state = newState;
   }

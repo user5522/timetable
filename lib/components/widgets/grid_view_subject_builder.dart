@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:timetable/models/settings.dart';
 import 'package:timetable/models/subjects.dart';
 
-class SubjectBuilder extends StatelessWidget {
+class SubjectBuilder extends ConsumerWidget {
   final Subject subject;
 
   const SubjectBuilder({
@@ -10,7 +12,8 @@ class SubjectBuilder extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final hideLocation = ref.watch(settingsProvider).hideLocation;
     String label = subject.label;
     String? location = subject.location;
     Color color = subject.color;
@@ -45,14 +48,15 @@ class SubjectBuilder extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              if (location != null)
-                Text(
-                  location.toString(),
-                  style: TextStyle(
-                    color: subLabelsColor,
-                    fontWeight: FontWeight.bold,
+              if ((location != null))
+                if (hideLocation == false)
+                  Text(
+                    location.toString(),
+                    style: TextStyle(
+                      color: subLabelsColor,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ),
             ],
           ),
         ),

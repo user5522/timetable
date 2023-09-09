@@ -2,9 +2,9 @@ import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:timetable/constants/theme_options.dart';
-import 'package:timetable/screens/grid_screen.dart';
+import 'package:timetable/screens/timetable_screen.dart';
 import 'package:timetable/provider/themes.dart';
-import 'package:timetable/screens/settings.dart';
+import 'package:timetable/screens/settings_screen.dart';
 
 void main() {
   runApp(const ProviderScope(
@@ -93,11 +93,11 @@ class _NavigationExampleState extends State<NavigationExample> {
   Widget _buildPage(int pageIndex) {
     switch (pageIndex) {
       case 0:
-        return const GridPage();
+        return const TimetablePage();
       case 1:
         return const SettingsPage();
       default:
-        return const GridPage();
+        return const TimetablePage();
     }
   }
 }

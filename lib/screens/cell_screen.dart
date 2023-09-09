@@ -19,6 +19,7 @@ class CellScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // final subject = ref.watch(subjectProvider);
     final startTime = useState(TimeOfDay(hour: rowIndex + 8, minute: 0));
     final endTime = useState(TimeOfDay(hour: rowIndex + 8 + 1, minute: 0));
     const List<Days> days = Days.values;
@@ -28,10 +29,10 @@ class CellScreen extends HookConsumerWidget {
 
     final formKey = GlobalKey<FormState>();
 
-    late String label;
-    late String? location;
+    late String label = "";
+    late String? location = "";
 
-    location = null;
+    final dontAllowIt = useState(false);
 
     return Scaffold(
       appBar: AppBar(
@@ -43,6 +44,18 @@ class CellScreen extends HookConsumerWidget {
                 shadowColor: Colors.transparent,
               ),
               onPressed: () {
+                // for (var s in subject) {
+                //   var list = [
+                //     for (var i = s.startTime.hour; i <= s.endTime.hour; i++) i
+                //   ];
+                //   for (var t in list) {
+                //     if (s.startTime.hour == list[t] && s.day == day.value) {
+                //       dontAllowIt.value = true;
+                //     } else {
+                //       dontAllowIt.value = false;
+                //     }
+                //   }
+                // }
                 if (formKey.currentState!.validate()) {
                   state.addSubject(
                     Subject(
@@ -74,6 +87,7 @@ class CellScreen extends HookConsumerWidget {
                   children: [
                     ListItem(
                       title: TextFormField(
+                        initialValue: label,
                         decoration: const InputDecoration(
                           hintText: "Subject",
                           border: InputBorder.none,
@@ -114,6 +128,7 @@ class CellScreen extends HookConsumerWidget {
                   days: days,
                   startTime: startTime,
                   endTime: endTime,
+                  dontAllowIt: dontAllowIt,
                 )
               ],
             ),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:non_uniform_border/non_uniform_border.dart';
 import 'package:timetable/screens/cell_screen.dart';
-import 'package:timetable/screens/grid_screen.dart';
+import 'package:timetable/screens/timetable_screen.dart';
 
 class SubjectContainerBuilder extends StatelessWidget {
   final int rowIndex;

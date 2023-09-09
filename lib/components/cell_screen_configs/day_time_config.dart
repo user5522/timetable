@@ -8,6 +8,7 @@ class TimeDayConfig extends StatelessWidget {
   final ValueNotifier<TimeOfDay> endTime;
   final List<Days> days;
   final ValueNotifier<Days> day;
+  final ValueNotifier<bool> dontAllowIt;
 
   const TimeDayConfig({
     super.key,
@@ -15,6 +16,7 @@ class TimeDayConfig extends StatelessWidget {
     required this.endTime,
     required this.days,
     required this.day,
+    required this.dontAllowIt,
   });
 
   bool _isBefore(TimeOfDay time1, TimeOfDay time2) {
@@ -160,6 +162,11 @@ class TimeDayConfig extends StatelessWidget {
                   ),
                 ),
               ),
+              if (dontAllowIt.value == true)
+                const Icon(
+                  Icons.error_outline,
+                  color: Colors.red,
+                )
             ],
           ),
         ),

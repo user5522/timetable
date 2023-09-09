@@ -11,6 +11,8 @@ class SettingsPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final themeMode = ref.read(themeModeProvider.notifier);
     final compactMode = ref.watch(settingsProvider).compactMode;
+    final hideLocation = ref.watch(settingsProvider).hideLocation;
+    final singleLetterDays = ref.watch(settingsProvider).singleLetterDays;
     final settings = ref.read(settingsProvider.notifier);
 
     return Scaffold(
@@ -31,11 +33,30 @@ class SettingsPage extends ConsumerWidget {
               ),
               onTap: () {},
             ),
+            ListTile(
+              dense: true,
+              title: const Text("Customize Timetable"),
+              textColor: Theme.of(context).colorScheme.primary,
+            ),
             SwitchListTile(
               title: const Text("Compact Mode"),
               value: compactMode,
               onChanged: (bool value) {
                 settings.updateCompactMode(value);
+              },
+            ),
+            SwitchListTile(
+              title: const Text("Hide Locations"),
+              value: hideLocation,
+              onChanged: (bool value) {
+                settings.updateHideLocation(value);
+              },
+            ),
+            SwitchListTile(
+              title: const Text("Single Letter Days"),
+              value: singleLetterDays,
+              onChanged: (bool value) {
+                settings.updateSingleLetterDays(value);
               },
             ),
           ],
