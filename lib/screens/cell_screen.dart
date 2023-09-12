@@ -56,7 +56,10 @@ class CellScreen extends HookConsumerWidget {
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
                 shadowColor: Colors.transparent,
-                backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+                backgroundColor:
+                    Theme.of(context).colorScheme.onPrimaryContainer,
+                foregroundColor:
+                    Theme.of(context).colorScheme.secondaryContainer,
               ),
               onPressed: () {
                 if (formKey.currentState!.validate()) {
