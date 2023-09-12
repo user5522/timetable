@@ -9,7 +9,6 @@ part 'subjects.g.dart';
 
 @immutable
 @HiveType(typeId: 1)
-// ignore: must_be_immutable
 class Subject {
   @HiveField(0)
   final String label;
@@ -60,9 +59,6 @@ class SubjectNotifier extends StateNotifier<List<Subject>> {
   void loadData() async {
     var box = await Hive.openBox<List<dynamic>>("subjectBox");
 
-    // final box = Hive.box<List<Subject>>('subjectBox');
-    // final subjects = box.get(0) ?? [];
-    // subjects.map((e) => state = [...state, e]);
     final subjects = box.get(0) ?? [];
     state = [...subjects];
   }
@@ -78,7 +74,6 @@ class SubjectNotifier extends StateNotifier<List<Subject>> {
   }
 
   void saveData() async {
-    // final box = Hive.box<List<Subject>>('subjectBox');
     var box = await Hive.openBox<List<dynamic>>("subjectBox");
 
     try {
