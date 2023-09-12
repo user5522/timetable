@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:timetable/components/widgets/day_view_navigation_bar.dart';
 import 'package:timetable/components/widgets/day_view_subject_builder.dart';
+import 'package:timetable/constants/grid_properties.dart';
 import 'package:timetable/models/subjects.dart';
-import 'package:timetable/screens/timetable_screen.dart';
 import 'package:timetable/utilities/grid_utils.dart';
 
 class TimetableDayView extends HookConsumerWidget {
