@@ -8,16 +8,15 @@ class TimeDayConfig extends StatelessWidget {
   final ValueNotifier<TimeOfDay> endTime;
   final List<Days> days;
   final ValueNotifier<Days> day;
-  final ValueNotifier<bool> dontAllowIt;
+  final bool occupied;
 
-  const TimeDayConfig({
-    super.key,
-    required this.startTime,
-    required this.endTime,
-    required this.days,
-    required this.day,
-    required this.dontAllowIt,
-  });
+  const TimeDayConfig(
+      {super.key,
+      required this.startTime,
+      required this.endTime,
+      required this.days,
+      required this.day,
+      required this.occupied});
 
   bool _isBefore(TimeOfDay time1, TimeOfDay time2) {
     return (time1.hour < time2.hour) ||
@@ -162,10 +161,14 @@ class TimeDayConfig extends StatelessWidget {
                   ),
                 ),
               ),
-              if (dontAllowIt.value == true)
+              if (occupied == true)
+                const SizedBox(
+                  width: 10,
+                ),
+              if (occupied == true)
                 const Icon(
-                  Icons.error_outline,
-                  color: Colors.red,
+                  Icons.cancel,
+                  color: Colors.redAccent,
                 )
             ],
           ),

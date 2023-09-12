@@ -32,7 +32,22 @@ class CellScreen extends HookConsumerWidget {
     late String label = "";
     late String? location = "";
 
-    final dontAllowIt = useState(false);
+    final subjectWithSameDay = ref
+        .watch(subjectProvider)
+        .where(
+          (element) => element.day == day.value,
+        )
+        .toList();
+
+    final isOccupied = subjectWithSameDay.any((e) {
+      final eHours = List.generate(e.endTime.hour - e.startTime.hour,
+          (index) => index + e.startTime.hour);
+      final inputHours = List.generate(
+          endTime.value.hour - startTime.value.hour,
+          (index) => index + startTime.value.hour);
+
+      return eHours.any((hour) => inputHours.contains(hour));
+    });
 
     return Scaffold(
       appBar: AppBar(
@@ -42,32 +57,29 @@ class CellScreen extends HookConsumerWidget {
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
                 shadowColor: Colors.transparent,
+                backgroundColor: Theme.of(context).colorScheme.primaryContainer,
               ),
               onPressed: () {
-                // for (var s in subject) {
-                //   var list = [
-                //     for (var i = s.startTime.hour; i <= s.endTime.hour; i++) i
-                //   ];
-                //   for (var t in list) {
-                //     if (s.startTime.hour == list[t] && s.day == day.value) {
-                //       dontAllowIt.value = true;
-                //     } else {
-                //       dontAllowIt.value = false;
-                //     }
-                //   }
-                // }
                 if (formKey.currentState!.validate()) {
-                  state.addSubject(
-                    Subject(
-                      label: label,
-                      location: location,
-                      color: color.value,
-                      startTime: startTime.value,
-                      endTime: endTime.value,
-                      day: day.value,
-                    ),
-                  );
-                  Navigator.pop(context, label);
+                  if (isOccupied == false) {
+                    state.addSubject(
+                      Subject(
+                        label: label,
+                        location: location,
+                        color: color.value,
+                        startTime: startTime.value,
+                        endTime: endTime.value,
+                        day: day.value,
+                      ),
+                    );
+                    Navigator.pop(context, label);
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Time slots are already occupied!'),
+                      ),
+                    );
+                  }
                 }
               },
               child: const Text("Create"),
@@ -128,7 +140,7 @@ class CellScreen extends HookConsumerWidget {
                   days: days,
                   startTime: startTime,
                   endTime: endTime,
-                  dontAllowIt: dontAllowIt,
+                  occupied: isOccupied,
                 )
               ],
             ),
