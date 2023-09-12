@@ -17,17 +17,16 @@ class CellScreen extends HookConsumerWidget {
     required this.columnIndex,
   });
 
+  static final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // final subject = ref.watch(subjectProvider);
     final startTime = useState(TimeOfDay(hour: rowIndex + 8, minute: 0));
     final endTime = useState(TimeOfDay(hour: rowIndex + 8 + 1, minute: 0));
     const List<Days> days = Days.values;
     final state = ref.read(subjectProvider.notifier);
     final day = useState(Days.values[columnIndex]);
     final color = useState(Colors.black);
-
-    final formKey = GlobalKey<FormState>();
 
     late String label = "";
     late String? location = "";
