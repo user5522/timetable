@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:timetable/screens/timetable_screen/day_view.dart';
-import 'package:timetable/screens/timetable_screen/grid_view.dart';
+import 'package:timetable/components/timetable_views/day_view.dart';
+import 'package:timetable/components/timetable_views/grid_view.dart';
 
 const rows = 10;
 const columns = 7;

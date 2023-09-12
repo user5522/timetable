@@ -1,14 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:timetable/constants/days.dart';
+import 'package:hive/hive.dart';
+
+part 'timeOfDay.g.dart';
+part 'days.g.dart';
+part 'subjects.g.dart';
 
 @immutable
+@HiveType(typeId: 1)
+// ignore: must_be_immutable
 class Subject {
+  @HiveField(0)
   final String label;
+  @HiveField(1)
   final String? location;
+  @HiveField(2)
   final Color color;
+  @HiveField(3)
   final TimeOfDay startTime;
+  @HiveField(4)
   final TimeOfDay endTime;
+  @HiveField(5)
   final Days day;
 
   const Subject({
@@ -40,29 +53,39 @@ class Subject {
 }
 
 class SubjectNotifier extends StateNotifier<List<Subject>> {
-  SubjectNotifier() : super([]);
+  SubjectNotifier() : super([]) {
+    loadData();
+  }
+
+  void loadData() async {
+    var box = await Hive.openBox<List<dynamic>>("subjectBox");
+
+    // final box = Hive.box<List<Subject>>('subjectBox');
+    // final subjects = box.get(0) ?? [];
+    // subjects.map((e) => state = [...state, e]);
+    final subjects = box.get(0) ?? [];
+    state = [...subjects];
+  }
 
   void addSubject(Subject subject) {
     state = [...state, subject];
+    saveData();
   }
 
   void removeSubject(Subject subject) {
-    state = state.where((s) => s.label != subject.label).toList();
+    state = state.where((s) => s != subject).toList();
+    saveData();
   }
 
-  void updateSubject(Subject subject, Subject newSubject) {
-    state = state
-        .map(
-          (s) => s.copyWith(
-            startTime: newSubject.startTime,
-            endTime: newSubject.endTime,
-          ),
-        )
-        .toList();
-  }
+  void saveData() async {
+    // final box = Hive.box<List<Subject>>('subjectBox');
+    var box = await Hive.openBox<List<dynamic>>("subjectBox");
 
-  void changeSubjectLabel(Subject subject, String newLabel) {
-    subject.copyWith(label: newLabel);
+    try {
+      box.putAt(0, state);
+    } catch (e) {
+      box.add(state);
+    }
   }
 }
 

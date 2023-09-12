@@ -1,15 +1,23 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:timetable/constants/theme_options.dart';
+import 'package:timetable/models/subjects.dart';
 import 'package:timetable/screens/timetable_screen.dart';
 import 'package:timetable/provider/themes.dart';
 import 'package:timetable/screens/settings_screen.dart';
 
-void main() {
-  runApp(const ProviderScope(
-    child: Timetable(),
-  ));
+void main() async {
+  await Hive.initFlutter();
+  Hive.registerAdapter(TimeOfDayAdapter());
+  Hive.registerAdapter(DaysAdapter());
+  Hive.registerAdapter(SubjectAdapter());
+  runApp(
+    const ProviderScope(
+      child: Timetable(),
+    ),
+  );
 }
 
 class Timetable extends ConsumerWidget {
