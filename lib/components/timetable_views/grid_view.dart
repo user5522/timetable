@@ -4,6 +4,7 @@ import 'package:timetable/components/widgets/days_row.dart';
 import 'package:timetable/components/widgets/grid.dart';
 import 'package:timetable/components/widgets/time_column.dart';
 import 'package:timetable/constants/grid_properties.dart';
+import 'package:timetable/constants/rotation_weeks.dart';
 import 'package:timetable/models/subjects.dart';
 import 'package:timetable/components/widgets/grid_view_subject_builder.dart';
 import 'package:timetable/components/widgets/subject_container_builder.dart';
@@ -11,7 +12,12 @@ import 'package:timetable/components/widgets/tile.dart';
 import 'package:timetable/models/settings.dart';
 
 class TimetableGridView extends HookConsumerWidget {
-  const TimetableGridView({super.key});
+  final ValueNotifier<RotationWeeks> rotationWeek;
+
+  const TimetableGridView({
+    super.key,
+    required this.rotationWeek,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -41,7 +47,8 @@ class TimetableGridView extends HookConsumerWidget {
                       : 100,
                   rows: rows,
                   columns: columns,
-                  grid: generate(subject, columns, rows),
+                  grid: generate(
+                      getFilteredSubject(rotationWeek, subject), columns, rows),
                 ),
               ],
             ),

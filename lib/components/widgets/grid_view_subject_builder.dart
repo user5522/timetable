@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:non_uniform_border/non_uniform_border.dart';
+import 'package:timetable/constants/days.dart';
+import 'package:timetable/constants/rotation_weeks.dart';
 import 'package:timetable/models/settings.dart';
 import 'package:timetable/models/subjects.dart';
 import 'package:timetable/screens/cell_screen.dart';
@@ -25,52 +28,75 @@ class SubjectBuilder extends ConsumerWidget {
         ? Colors.black.withOpacity(.6)
         : Colors.white.withOpacity(.75);
 
-    return Padding(
-      padding: const EdgeInsets.all(2),
-      child: InkWell(
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              settings: const RouteSettings(
-                name: "CellScreen",
-              ),
-              builder: (context) => CellScreen(
-                subject: subject,
-              ),
-            ),
-          );
-        },
-        borderRadius: BorderRadius.circular(5),
-        child: Ink(
-          padding: const EdgeInsets.all(5),
-          decoration: BoxDecoration(
-            color: color,
-            border: Border.all(color: Colors.black, width: 1),
-            borderRadius: const BorderRadius.all(
-              Radius.circular(5),
-            ),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                label,
-                style: TextStyle(
-                  color: labelColor,
-                  fontWeight: FontWeight.bold,
+    final shape = NonUniformBorder(
+      leftWidth: subject.day.index == 0 ? 0 : 1,
+      rightWidth: subject.day.index == (Days.values.length - 1) ? 0 : 1,
+      topWidth: subject.startTime.hour == 0 + 8 ? 0 : 1,
+      bottomWidth: subject.endTime.hour == (8 + 10) ? 0 : 1,
+      strokeAlign: BorderSide.strokeAlignCenter,
+      color: Colors.grey,
+    );
+
+    return Container(
+      decoration: ShapeDecoration(shape: shape),
+      child: Padding(
+        padding: const EdgeInsets.all(2),
+        child: InkWell(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                settings: const RouteSettings(
+                  name: "CellScreen",
+                ),
+                builder: (context) => CellScreen(
+                  subject: subject,
                 ),
               ),
-              if ((location != null))
-                if (hideLocation == false)
-                  Text(
-                    location.toString(),
+            );
+          },
+          borderRadius: BorderRadius.circular(5),
+          child: Ink(
+            padding: const EdgeInsets.all(5),
+            decoration: BoxDecoration(
+              color: color,
+              border: Border.all(color: Colors.black, width: 1),
+              borderRadius: const BorderRadius.all(
+                Radius.circular(5),
+              ),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  label,
+                  style: TextStyle(
+                    color: labelColor,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                if ((location != null))
+                  if (hideLocation == false)
+                    Text(
+                      location.toString(),
+                      style: TextStyle(
+                        color: subLabelsColor,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                const Spacer(),
+                Align(
+                  alignment: Alignment.bottomRight,
+                  child: Text(
+                    getSubjectRotationWeekLabel(subject),
                     style: TextStyle(
                       color: subLabelsColor,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-            ],
+                ),
+              ],
+            ),
           ),
         ),
       ),
