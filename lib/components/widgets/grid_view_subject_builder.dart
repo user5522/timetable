@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:timetable/models/settings.dart';
 import 'package:timetable/models/subjects.dart';
+import 'package:timetable/screens/cell_screen.dart';
 
 class SubjectBuilder extends ConsumerWidget {
   final Subject subject;
@@ -27,7 +28,19 @@ class SubjectBuilder extends ConsumerWidget {
     return Padding(
       padding: const EdgeInsets.all(2),
       child: InkWell(
-        onTap: () {},
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              settings: const RouteSettings(
+                name: "CellScreen",
+              ),
+              builder: (context) => CellScreen(
+                subject: subject,
+              ),
+            ),
+          );
+        },
         borderRadius: BorderRadius.circular(5),
         child: Ink(
           padding: const EdgeInsets.all(5),

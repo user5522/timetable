@@ -8,42 +8,82 @@ import 'package:timetable/constants/days.dart';
 import 'package:timetable/models/subjects.dart';
 
 class CellScreen extends HookConsumerWidget {
-  final int rowIndex;
-  final int columnIndex;
+  final int? rowIndex;
+  final int? columnIndex;
+  final Subject? subject;
 
   const CellScreen({
     super.key,
-    required this.rowIndex,
-    required this.columnIndex,
+    this.rowIndex,
+    this.columnIndex,
+    this.subject,
   });
 
   static final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final startTime = useState(TimeOfDay(hour: rowIndex + 8, minute: 0));
-    final endTime = useState(TimeOfDay(hour: rowIndex + 8 + 1, minute: 0));
+    final bool isSubjectNull = subject == null;
+    final startTime = useState(
+      TimeOfDay(
+        hour: isSubjectNull ? (rowIndex! + 8) : subject!.startTime.hour,
+        minute: 0,
+      ),
+    );
+    final endTime = useState(
+      TimeOfDay(
+        hour: isSubjectNull ? (rowIndex! + 8 + 1) : subject!.endTime.hour,
+        minute: 0,
+      ),
+    );
     const List<Days> days = Days.values;
     final state = ref.read(subjectProvider.notifier);
-    final day = useState(Days.values[columnIndex]);
-    final color = useState(Colors.black);
+    final day = useState(
+        Days.values[isSubjectNull ? columnIndex! : subject!.day.index]);
+    final color = useState(isSubjectNull ? Colors.black : subject!.color);
 
-    final label = useState("");
-    final location = useState("");
+    final label = useState(subject?.label ?? "");
+    final location = useState(subject?.location ?? "");
 
-    final subjectWithSameDay = ref
+    final Subject newSubject = Subject(
+      label: label.value,
+      location: location.value,
+      color: color.value,
+      startTime: startTime.value,
+      endTime: endTime.value,
+      day: day.value,
+    );
+
+    final subjectsInSameDay = ref
         .watch(subjectProvider)
         .where(
-          (element) => element.day == day.value,
+          (e) => e.day == day.value,
         )
         .toList();
 
-    final isOccupied = subjectWithSameDay.any((e) {
-      final eHours = List.generate(e.endTime.hour - e.startTime.hour,
-          (index) => index + e.startTime.hour);
+    final isOccupied = subjectsInSameDay.any((e) {
+      final eHours = List.generate(
+        e.endTime.hour - e.startTime.hour,
+        (index) => index + e.startTime.hour,
+      );
       final inputHours = List.generate(
-          endTime.value.hour - startTime.value.hour,
-          (index) => index + startTime.value.hour);
+        endTime.value.hour - startTime.value.hour,
+        (index) => index + startTime.value.hour,
+      );
+
+      return eHours.any((hour) => inputHours.contains(hour));
+    });
+
+    final isOccupiedExceptSelf =
+        subjectsInSameDay.where((e) => e != subject).any((e) {
+      final eHours = List.generate(
+        e.endTime.hour - e.startTime.hour,
+        (index) => index + e.startTime.hour,
+      );
+      final inputHours = List.generate(
+        endTime.value.hour - startTime.value.hour,
+        (index) => index + startTime.value.hour,
+      );
 
       return eHours.any((hour) => inputHours.contains(hour));
     });
@@ -63,28 +103,32 @@ class CellScreen extends HookConsumerWidget {
               ),
               onPressed: () {
                 if (formKey.currentState!.validate()) {
-                  if (isOccupied == false) {
-                    state.addSubject(
-                      Subject(
-                        label: label.value,
-                        location: location.value,
-                        color: color.value,
-                        startTime: startTime.value,
-                        endTime: endTime.value,
-                        day: day.value,
-                      ),
-                    );
-                    Navigator.pop(context, label);
+                  if (isSubjectNull) {
+                    if (isOccupied == false) {
+                      state.addSubject(newSubject);
+                      Navigator.pop(context, label.value);
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Time slots are already occupied!'),
+                        ),
+                      );
+                    }
                   } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Time slots are already occupied!'),
-                      ),
-                    );
+                    if (isOccupiedExceptSelf == false) {
+                      state.updateSubject(subject!, newSubject);
+                      Navigator.pop(context, label.value);
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Time slots are already occupied!'),
+                        ),
+                      );
+                    }
                   }
                 }
               },
-              child: const Text("Create"),
+              child: Text(isSubjectNull ? "Create" : "Save"),
             ),
           ),
         ],
@@ -119,6 +163,7 @@ class CellScreen extends HookConsumerWidget {
                     ),
                     ListItem(
                       title: TextFormField(
+                        initialValue: location.value,
                         decoration: const InputDecoration(
                           hintText: "Location",
                           border: InputBorder.none,
@@ -142,7 +187,7 @@ class CellScreen extends HookConsumerWidget {
                   days: days,
                   startTime: startTime,
                   endTime: endTime,
-                  occupied: isOccupied,
+                  occupied: isSubjectNull ? isOccupied : isOccupiedExceptSelf,
                 )
               ],
             ),

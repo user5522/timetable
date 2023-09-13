@@ -73,6 +73,23 @@ class SubjectNotifier extends StateNotifier<List<Subject>> {
     saveData();
   }
 
+  void updateSubject(Subject oldSubject, Subject newSubject) {
+    state = [
+      for (final subject in state)
+        if (subject == oldSubject)
+          subject.copyWith(
+            label: newSubject.label,
+            location: newSubject.location,
+            color: newSubject.color,
+            startTime: newSubject.startTime,
+            endTime: newSubject.endTime,
+            day: newSubject.day,
+          )
+        else
+          subject,
+    ];
+  }
+
   void saveData() async {
     var box = await Hive.openBox<List<dynamic>>("subjectBox");
 

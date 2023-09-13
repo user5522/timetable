@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:timetable/models/subjects.dart';
+import 'package:timetable/screens/cell_screen.dart';
 
 class DayViewSubjectBuilder extends StatelessWidget {
   final Subject subject;
@@ -11,7 +12,19 @@ class DayViewSubjectBuilder extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 5),
       child: InkWell(
-        onTap: () {},
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              settings: const RouteSettings(
+                name: "CellScreen",
+              ),
+              builder: (context) => CellScreen(
+                subject: subject,
+              ),
+            ),
+          );
+        },
         borderRadius: BorderRadius.circular(10),
         child: Ink(
           decoration: BoxDecoration(
