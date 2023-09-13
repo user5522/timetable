@@ -96,6 +96,7 @@ class SubjectNotifier extends StateNotifier<List<Subject>> {
         else
           subject,
     ];
+    saveData();
   }
 
   void saveData() async {
