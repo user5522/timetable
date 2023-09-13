@@ -28,8 +28,8 @@ class CellScreen extends HookConsumerWidget {
     final day = useState(Days.values[columnIndex]);
     final color = useState(Colors.black);
 
-    late String label = "";
-    late String? location = "";
+    final label = useState("");
+    final location = useState("");
 
     final subjectWithSameDay = ref
         .watch(subjectProvider)
@@ -66,8 +66,8 @@ class CellScreen extends HookConsumerWidget {
                   if (isOccupied == false) {
                     state.addSubject(
                       Subject(
-                        label: label,
-                        location: location,
+                        label: label.value,
+                        location: location.value,
                         color: color.value,
                         startTime: startTime.value,
                         endTime: endTime.value,
@@ -101,7 +101,7 @@ class CellScreen extends HookConsumerWidget {
                   children: [
                     ListItem(
                       title: TextFormField(
-                        initialValue: label,
+                        initialValue: label.value,
                         decoration: const InputDecoration(
                           hintText: "Subject",
                           border: InputBorder.none,
@@ -113,7 +113,7 @@ class CellScreen extends HookConsumerWidget {
                           return null;
                         },
                         onChanged: (value) {
-                          label = value;
+                          label.value = value;
                         },
                       ),
                     ),
@@ -124,7 +124,7 @@ class CellScreen extends HookConsumerWidget {
                           border: InputBorder.none,
                         ),
                         onChanged: (value) {
-                          location = value;
+                          location.value = value;
                         },
                       ),
                     ),
