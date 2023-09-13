@@ -17,13 +17,14 @@ class SubjectAdapter extends TypeAdapter<Subject> {
       startTime: fields[3] as TimeOfDay,
       endTime: fields[4] as TimeOfDay,
       day: fields[5] as Days,
+      rotationWeek: fields[6] as RotationWeeks,
     );
   }
 
   @override
   void write(BinaryWriter writer, Subject obj) {
     writer
-      ..writeByte(6)
+      ..writeByte(7)
       ..writeByte(0)
       ..write(obj.label)
       ..writeByte(1)
@@ -35,7 +36,9 @@ class SubjectAdapter extends TypeAdapter<Subject> {
       ..writeByte(4)
       ..write(obj.endTime)
       ..writeByte(5)
-      ..write(obj.day);
+      ..write(obj.day)
+      ..writeByte(6)
+      ..write(obj.rotationWeek);
   }
 
   @override

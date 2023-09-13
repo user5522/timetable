@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:timetable/constants/days.dart';
 import 'package:hive/hive.dart';
+import 'package:timetable/constants/rotation_weeks.dart';
 
 part 'timeOfDay.g.dart';
 part 'days.g.dart';
 part 'subjects.g.dart';
+part 'rotationWeeks.g.dart';
 
 @immutable
 @HiveType(typeId: 1)
@@ -22,6 +24,8 @@ class Subject {
   final TimeOfDay endTime;
   @HiveField(5)
   final Days day;
+  @HiveField(6)
+  final RotationWeeks rotationWeek;
 
   const Subject({
     required this.label,
@@ -30,6 +34,7 @@ class Subject {
     required this.startTime,
     required this.endTime,
     required this.day,
+    required this.rotationWeek,
   });
 
   Subject copyWith({
@@ -39,6 +44,7 @@ class Subject {
     TimeOfDay? startTime,
     TimeOfDay? endTime,
     Days? day,
+    RotationWeeks? rotationWeek,
   }) {
     return Subject(
       label: label ?? this.label,
@@ -47,6 +53,7 @@ class Subject {
       startTime: startTime ?? this.startTime,
       endTime: endTime ?? this.endTime,
       day: day ?? this.day,
+      rotationWeek: rotationWeek ?? this.rotationWeek,
     );
   }
 }
@@ -84,6 +91,7 @@ class SubjectNotifier extends StateNotifier<List<Subject>> {
             startTime: newSubject.startTime,
             endTime: newSubject.endTime,
             day: newSubject.day,
+            rotationWeek: newSubject.rotationWeek,
           )
         else
           subject,

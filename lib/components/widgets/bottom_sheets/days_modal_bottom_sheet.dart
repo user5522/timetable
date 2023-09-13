@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:timetable/constants/days.dart';
 
-class DaysModalBottomSheetState extends StatelessWidget {
+class DaysModalBottomSheet extends StatelessWidget {
   final List<Days> days;
   final ValueNotifier<Days> day;
 
-  const DaysModalBottomSheetState(
+  const DaysModalBottomSheet(
       {super.key, required this.days, required this.day});
 
   @override

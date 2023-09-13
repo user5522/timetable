@@ -12,6 +12,7 @@ void main() async {
   await Hive.initFlutter();
   Hive.registerAdapter(TimeOfDayAdapter());
   Hive.registerAdapter(DaysAdapter());
+  Hive.registerAdapter(RotationWeeksAdapter());
   Hive.registerAdapter(SubjectAdapter());
   runApp(
     const ProviderScope(

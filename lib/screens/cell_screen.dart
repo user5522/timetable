@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:timetable/components/cell_screen_configs/colors_config.dart';
-import 'package:timetable/components/cell_screen_configs/day_time_config.dart';
+import 'package:timetable/components/cell_screen_configs/day_time_week_config.dart';
 import 'package:timetable/components/widgets/list_tile_group.dart';
 import 'package:timetable/constants/days.dart';
+import 'package:timetable/constants/rotation_weeks.dart';
 import 'package:timetable/models/subjects.dart';
 
 class CellScreen extends HookConsumerWidget {
@@ -36,10 +37,11 @@ class CellScreen extends HookConsumerWidget {
         minute: 0,
       ),
     );
-    const List<Days> days = Days.values;
     final state = ref.read(subjectProvider.notifier);
     final day = useState(
         Days.values[isSubjectNull ? columnIndex! : subject!.day.index]);
+    final rotationWeek =
+        useState(isSubjectNull ? RotationWeeks.none : subject!.rotationWeek);
     final color = useState(isSubjectNull ? Colors.black : subject!.color);
 
     final label = useState(subject?.label ?? "");
@@ -52,6 +54,7 @@ class CellScreen extends HookConsumerWidget {
       startTime: startTime.value,
       endTime: endTime.value,
       day: day.value,
+      rotationWeek: rotationWeek.value,
     );
 
     final subjectsInSameDay = ref
@@ -202,7 +205,7 @@ class CellScreen extends HookConsumerWidget {
                 ),
                 TimeDayConfig(
                   day: day,
-                  days: days,
+                  rotationWeek: rotationWeek,
                   startTime: startTime,
                   endTime: endTime,
                   occupied: isSubjectNull ? isOccupied : isOccupiedExceptSelf,

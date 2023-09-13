@@ -13,6 +13,7 @@ class SettingsPage extends ConsumerWidget {
     final compactMode = ref.watch(settingsProvider).compactMode;
     final hideLocation = ref.watch(settingsProvider).hideLocation;
     final singleLetterDays = ref.watch(settingsProvider).singleLetterDays;
+    final rotationWeeks = ref.watch(settingsProvider).rotationWeeks;
     final settings = ref.read(settingsProvider.notifier);
 
     return Scaffold(
@@ -57,6 +58,14 @@ class SettingsPage extends ConsumerWidget {
               value: singleLetterDays,
               onChanged: (bool value) {
                 settings.updateSingleLetterDays(value);
+              },
+            ),
+            SwitchListTile(
+              title: const Text("Rotation Weeks"),
+              subtitle: const Text("Experimental"),
+              value: rotationWeeks,
+              onChanged: (bool value) {
+                settings.updateRotationWeeks(value);
               },
             ),
           ],

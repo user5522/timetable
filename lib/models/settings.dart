@@ -5,22 +5,26 @@ class Settings {
   final bool compactMode;
   final bool hideLocation;
   final bool singleLetterDays;
+  final bool rotationWeeks;
 
   Settings({
     this.compactMode = false,
     this.hideLocation = false,
     this.singleLetterDays = false,
+    this.rotationWeeks = false,
   });
 
   Settings copy({
     bool? compactMode,
     bool? hideLocation,
     bool? singleLetterDays,
+    bool? rotationWeeks,
   }) =>
       Settings(
         compactMode: compactMode ?? this.compactMode,
         hideLocation: hideLocation ?? this.hideLocation,
         singleLetterDays: singleLetterDays ?? this.singleLetterDays,
+        rotationWeeks: rotationWeeks ?? this.rotationWeeks,
       );
 }
 
@@ -53,11 +57,20 @@ class SettingsNotifier extends StateNotifier<Settings> {
     _saveSingleLetterDays(singleLetterDays);
   }
 
+  void updateRotationWeeks(bool rotationWeeks) {
+    final newState = state.copy(
+      rotationWeeks: rotationWeeks,
+    );
+    state = newState;
+    _saveRotationWeeks(rotationWeeks);
+  }
+
   Future<void> loadSettings() async {
     final prefs = await SharedPreferences.getInstance();
     await _loadCompactMode(prefs);
     await _loadSingleLetterDays(prefs);
     await _loadHideLocation(prefs);
+    await _loadRotationWeeks(prefs);
   }
 
   Future<void> _loadCompactMode(SharedPreferences prefs) async {
@@ -102,6 +115,21 @@ class SettingsNotifier extends StateNotifier<Settings> {
     await prefs.setBool(
       'singleLetterDays',
       singleLetterDaysValue,
+    );
+  }
+
+  Future<void> _loadRotationWeeks(SharedPreferences prefs) async {
+    final rotationWeeks = prefs.getBool('rotationWeeks');
+    if (rotationWeeks != null) {
+      state = state.copy(rotationWeeks: rotationWeeks);
+    }
+  }
+
+  Future<void> _saveRotationWeeks(bool rotationWeeksValue) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(
+      'rotationWeeks',
+      rotationWeeksValue,
     );
   }
 }
