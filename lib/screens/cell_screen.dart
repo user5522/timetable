@@ -91,6 +91,24 @@ class CellScreen extends HookConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         actions: [
+          if (!isSubjectNull)
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                shadowColor: Colors.transparent,
+                backgroundColor: Theme.of(context).colorScheme.error,
+                foregroundColor: Theme.of(context).colorScheme.errorContainer,
+              ),
+              onPressed: () {
+                state.removeSubject(subject!);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Subject Deleted!'),
+                  ),
+                );
+                Navigator.pop(context);
+              },
+              child: const Text("Delete"),
+            ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10),
             child: ElevatedButton(
