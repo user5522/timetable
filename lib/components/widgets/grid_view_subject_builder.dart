@@ -60,42 +60,59 @@ class SubjectBuilder extends ConsumerWidget {
             padding: const EdgeInsets.all(5),
             decoration: BoxDecoration(
               color: color,
-              border: Border.all(color: Colors.black, width: 1),
+              border: Border.all(
+                color: Colors.black,
+                width: 1,
+              ),
               borderRadius: const BorderRadius.all(
                 Radius.circular(5),
               ),
             ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  label,
-                  style: TextStyle(
-                    color: labelColor,
-                    fontWeight: FontWeight.bold,
+            child: Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    label,
+                    maxLines:
+                        (subject.endTime.hour - subject.startTime.hour == 1
+                            ? 2
+                            : 5),
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: labelColor,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ),
-                if ((location != null))
-                  if (hideLocation == false)
-                    Text(
-                      location.toString(),
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  if ((location != null))
+                    if (hideLocation == false)
+                      Text(
+                        location.toString(),
+                        maxLines:
+                            (subject.endTime.hour - subject.startTime.hour == 1
+                                ? 2
+                                : 3),
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          color: subLabelsColor,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                  Align(
+                    alignment: Alignment.bottomRight,
+                    child: Text(
+                      getSubjectRotationWeekLabel(subject),
                       style: TextStyle(
                         color: subLabelsColor,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                const Spacer(),
-                Align(
-                  alignment: Alignment.bottomRight,
-                  child: Text(
-                    getSubjectRotationWeekLabel(subject),
-                    style: TextStyle(
-                      color: subLabelsColor,
-                      fontWeight: FontWeight.bold,
-                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

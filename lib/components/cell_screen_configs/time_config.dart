@@ -37,7 +37,11 @@ class TimeConfig extends StatelessWidget {
       ),
     );
 
-    if (isStartTime && selectedTime != null) {
+    if (selectedTime != null &&
+        (isStartTime ? selectedTime.hour < 8 : selectedTime.hour > 18)) {
+      // ignore: use_build_context_synchronously
+      _showInvalidTimePeriodDialog(context);
+    } else if (isStartTime && selectedTime != null) {
       if (_isBefore(selectedTime, endTime)) {
         time.value = selectedTime;
       } else {
@@ -53,6 +57,24 @@ class TimeConfig extends StatelessWidget {
         _showInvalidTimeDialog(context, isStartTime);
       }
     }
+  }
+
+  void _showInvalidTimePeriodDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Invalid Time'),
+        content: const Text(
+          'Time period must be between 8:00 and 18:00.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('OK'),
+          ),
+        ],
+      ),
+    );
   }
 
   void _showInvalidTimeDialog(BuildContext context, bool isStartTime) {
