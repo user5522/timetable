@@ -68,51 +68,48 @@ class SubjectBuilder extends ConsumerWidget {
                 Radius.circular(5),
               ),
             ),
-            child: Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    label,
-                    maxLines:
-                        (subject.endTime.hour - subject.startTime.hour == 1
-                            ? 2
-                            : 5),
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      color: labelColor,
-                      fontWeight: FontWeight.bold,
-                    ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  label,
+                  maxLines: (subject.endTime.hour - subject.startTime.hour == 1
+                      ? 2
+                      : 5),
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: labelColor,
+                    fontWeight: FontWeight.bold,
                   ),
-                  const SizedBox(
-                    height: 5,
-                  ),
-                  if ((location != null))
-                    if (hideLocation == false)
-                      Text(
-                        location.toString(),
-                        maxLines:
-                            (subject.endTime.hour - subject.startTime.hour == 1
-                                ? 2
-                                : 3),
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          color: subLabelsColor,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                  Align(
-                    alignment: Alignment.bottomRight,
-                    child: Text(
-                      getSubjectRotationWeekLabel(subject),
+                ),
+                const SizedBox(
+                  height: 5,
+                ),
+                if ((location != null))
+                  if (hideLocation == false)
+                    Text(
+                      location.toString(),
+                      maxLines:
+                          (subject.endTime.hour - subject.startTime.hour == 1
+                              ? 2
+                              : 3),
+                      overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                         color: subLabelsColor,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
+                Align(
+                  alignment: Alignment.bottomRight,
+                  child: Text(
+                    getSubjectRotationWeekLabel(subject),
+                    style: TextStyle(
+                      color: subLabelsColor,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),
