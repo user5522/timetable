@@ -23,6 +23,8 @@ class TimetableGridView extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final subject = ref.watch(subjectProvider);
     final compactMode = ref.watch(settingsProvider).compactMode;
+    final customStartTime = ref.watch(settingsProvider).customStartTime;
+    final customEndTime = ref.watch(settingsProvider).customEndTime;
 
     double screenWidth = MediaQuery.of(context).size.width;
 
@@ -42,13 +44,17 @@ class TimetableGridView extends HookConsumerWidget {
                 Grid(
                   tileHeight: compactMode ? 125 : 100,
                   tileWidth: compactMode
-                      ? (screenWidth / columns -
-                          ((timeColumnWidth + 10) / rows))
+                      ? (screenWidth / columns - (timeColumnWidth / rows(ref)))
                       : 100,
-                  rows: rows,
+                  rows: rows(ref),
                   columns: columns,
                   grid: generate(
-                      getFilteredSubject(rotationWeek, subject), columns, rows),
+                    getFilteredSubject(rotationWeek, subject),
+                    columns,
+                    rows(ref),
+                    customStartTime,
+                    customEndTime,
+                  ),
                 ),
               ],
             ),
@@ -62,6 +68,8 @@ class TimetableGridView extends HookConsumerWidget {
     List<Subject> subjects,
     int totalDays,
     int totalHours,
+    TimeOfDay customStartTime,
+    TimeOfDay customEndTime,
   ) {
     final List<List<Tile?>> grid = List.generate(
       totalDays,
@@ -76,10 +84,14 @@ class TimetableGridView extends HookConsumerWidget {
       ),
     );
 
-    for (final subject in subjects) {
+    for (final subject in subjects.where(
+      (e) =>
+          e.endTime.hour <= customEndTime.hour &&
+          e.startTime.hour >= customStartTime.hour,
+    )) {
       var day = subject.day.index;
-      var start = subject.startTime.hour - 8;
-      var end = subject.endTime.hour - 8;
+      var start = subject.startTime.hour - customStartTime.hour;
+      var end = subject.endTime.hour - customStartTime.hour;
 
       var column = grid[day];
 

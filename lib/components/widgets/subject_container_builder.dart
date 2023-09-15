@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:non_uniform_border/non_uniform_border.dart';
 import 'package:timetable/constants/grid_properties.dart';
 import 'package:timetable/screens/cell_screen.dart';
 
-class SubjectContainerBuilder extends StatelessWidget {
+class SubjectContainerBuilder extends ConsumerWidget {
   final int rowIndex;
   final int columnIndex;
 
@@ -14,12 +15,12 @@ class SubjectContainerBuilder extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final shape = NonUniformBorder(
       leftWidth: columnIndex == 0 ? 0 : 1,
       rightWidth: columnIndex == (columns - 1) ? 0 : 1,
       topWidth: rowIndex == 0 ? 0 : 1,
-      bottomWidth: rowIndex == (rows - 1) ? 0 : 1,
+      bottomWidth: rowIndex == (rows(ref) - 1) ? 0 : 1,
       strokeAlign: BorderSide.strokeAlignCenter,
       color: Colors.grey,
     );

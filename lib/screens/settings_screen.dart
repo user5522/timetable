@@ -3,6 +3,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:timetable/components/settings/theme_options.dart';
 import 'package:timetable/models/settings.dart';
 import 'package:timetable/provider/themes.dart';
+import 'package:timetable/screens/timetable_period_screen.dart';
 
 class SettingsPage extends ConsumerWidget {
   const SettingsPage({super.key});
@@ -38,6 +39,20 @@ class SettingsPage extends ConsumerWidget {
               dense: true,
               title: const Text("Customize Timetable"),
               textColor: Theme.of(context).colorScheme.primary,
+            ),
+            ListTile(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    settings: const RouteSettings(
+                      name: "CellScreen",
+                    ),
+                    builder: (context) => const TimetablePeriodScreen(),
+                  ),
+                );
+              },
+              title: const Text("Time Period Config"),
             ),
             SwitchListTile(
               title: const Text("Compact Mode"),

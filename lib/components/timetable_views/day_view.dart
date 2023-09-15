@@ -23,6 +23,9 @@ class TimetableDayView extends HookConsumerWidget {
 
     return Column(
       children: [
+        DayViewNavigationBar(
+          controller: controller,
+        ),
         Expanded(
           child: PageView.builder(
             itemCount: columns,
@@ -32,12 +35,10 @@ class TimetableDayView extends HookConsumerWidget {
               int startDay = ((DateTime.monday + index - 1) % 7 + 1);
 
               return SingleChildScrollView(
+                scrollDirection: Axis.vertical,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    DayViewNavigationBar(
-                      controller: controller,
-                    ),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 10),
                       child: Column(

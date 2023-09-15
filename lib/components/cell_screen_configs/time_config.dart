@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:timetable/constants/customTimes.dart';
+import 'package:timetable/models/settings.dart';
 
-class TimeConfig extends StatelessWidget {
+class TimeConfig extends ConsumerWidget {
   final bool occupied;
   final ValueNotifier<TimeOfDay> startTime;
   final ValueNotifier<TimeOfDay> endTime;
@@ -22,81 +25,47 @@ class TimeConfig extends StatelessWidget {
         (time1.hour == time2.hour && time1.minute > time2.minute);
   }
 
-  Future<void> _timePicker(
-    BuildContext context,
-    ValueNotifier<TimeOfDay> time,
-    bool isStartTime,
-    TimeOfDay startTime,
-    TimeOfDay endTime,
-  ) async {
-    final TimeOfDay? selectedTime = await showTimePicker(
-      context: context,
-      initialTime: TimeOfDay(
-        hour: time.value.hour,
-        minute: 0,
-      ),
-    );
-
-    if (selectedTime != null &&
-        (isStartTime ? selectedTime.hour < 8 : selectedTime.hour > 18)) {
-      // ignore: use_build_context_synchronously
-      _showInvalidTimePeriodDialog(context);
-    } else if (isStartTime && selectedTime != null) {
-      if (_isBefore(selectedTime, endTime)) {
-        time.value = selectedTime;
-      } else {
-        isStartTime = true;
-        // ignore: use_build_context_synchronously
-        _showInvalidTimeDialog(context, isStartTime);
-      }
-    } else if (selectedTime != null) {
-      if (_isAfter(selectedTime, startTime)) {
-        time.value = selectedTime;
-      } else {
-        // ignore: use_build_context_synchronously
-        _showInvalidTimeDialog(context, isStartTime);
-      }
-    }
-  }
-
-  void _showInvalidTimePeriodDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Invalid Time'),
-        content: const Text(
-          'Time period must be between 8:00 and 18:00.',
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('OK'),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _showInvalidTimeDialog(BuildContext context, bool isStartTime) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Invalid Time'),
-        content: Text(
-          'The ${isStartTime ? "start" : "end"} time must be ${isStartTime ? "before" : "after"} the ${isStartTime ? "end" : "start"} time.',
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('OK'),
-          ),
-        ],
-      ),
-    );
-  }
-
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final customStartTime = ref.watch(settingsProvider).customStartTime;
+    final customEndTime = ref.watch(settingsProvider).customEndTime;
+
+    void showInvalidTimePeriodDialog() {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Invalid Time'),
+          content: Text(
+            'Time period must be between ${getCustomTimeHour(customStartTime)}:${getCustomTimeMinute(customStartTime)} and ${getCustomTimeHour(customEndTime)}:${getCustomTimeMinute(customEndTime)}.',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('OK'),
+            ),
+          ],
+        ),
+      );
+    }
+
+    void showInvalidTimeDialog(bool isStartTime) {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Invalid Time'),
+          content: Text(
+            'The ${isStartTime ? "start" : "end"} time must be ${isStartTime ? "before" : "after"} the ${isStartTime ? "end" : "start"} time.',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('OK'),
+            ),
+          ],
+        ),
+      );
+    }
+
     return Row(
       children: [
         const Text("Time"),
@@ -104,14 +73,26 @@ class TimeConfig extends StatelessWidget {
         ActionChip(
           side: BorderSide.none,
           backgroundColor: const Color(0xffbabcbe),
-          onPressed: () {
-            _timePicker(
-              context,
-              startTime,
-              true,
-              startTime.value,
-              endTime.value,
+          onPressed: () async {
+            final TimeOfDay? selectedTime = await showTimePicker(
+              context: context,
+              initialTime: TimeOfDay(
+                hour: startTime.value.hour,
+                minute: 0,
+              ),
             );
+
+            if (selectedTime != null &&
+                (selectedTime.hour <
+                    getCustomStartTime(customStartTime).hour)) {
+              showInvalidTimePeriodDialog();
+            } else if (selectedTime != null) {
+              if (_isBefore(selectedTime, endTime.value)) {
+                startTime.value = selectedTime;
+              } else {
+                showInvalidTimeDialog(true);
+              }
+            }
           },
           label: Text(
             "${startTime.value.hour}:00",
@@ -130,9 +111,25 @@ class TimeConfig extends StatelessWidget {
         ActionChip(
           side: BorderSide.none,
           backgroundColor: const Color(0xffbabcbe),
-          onPressed: () {
-            _timePicker(
-                context, endTime, false, startTime.value, endTime.value);
+          onPressed: () async {
+            final TimeOfDay? selectedTime = await showTimePicker(
+              context: context,
+              initialTime: TimeOfDay(
+                hour: endTime.value.hour,
+                minute: 0,
+              ),
+            );
+
+            if (selectedTime != null &&
+                (selectedTime.hour > getCustomEndTime(customEndTime).hour)) {
+              showInvalidTimePeriodDialog();
+            } else if (selectedTime != null) {
+              if (_isAfter(selectedTime, startTime.value)) {
+                endTime.value = selectedTime;
+              } else {
+                showInvalidTimeDialog(false);
+              }
+            }
           },
           label: Text(
             "${endTime.value.hour}:00",

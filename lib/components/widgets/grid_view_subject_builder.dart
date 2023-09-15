@@ -18,6 +18,8 @@ class SubjectBuilder extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final hideLocation = ref.watch(settingsProvider).hideLocation;
+    final customStartTime = ref.watch(settingsProvider).customStartTime;
+    final customEndTime = ref.watch(settingsProvider).customEndTime;
     String label = subject.label;
     String? location = subject.location;
     Color color = subject.color;
@@ -31,8 +33,8 @@ class SubjectBuilder extends ConsumerWidget {
     final shape = NonUniformBorder(
       leftWidth: subject.day.index == 0 ? 0 : 1,
       rightWidth: subject.day.index == (Days.values.length - 1) ? 0 : 1,
-      topWidth: subject.startTime.hour == 0 + 8 ? 0 : 1,
-      bottomWidth: subject.endTime.hour == (8 + 10) ? 0 : 1,
+      topWidth: subject.startTime.hour == 0 + customStartTime.hour ? 0 : 1,
+      bottomWidth: subject.endTime.hour == (customEndTime.hour) ? 0 : 1,
       strokeAlign: BorderSide.strokeAlignCenter,
       color: Colors.grey,
     );

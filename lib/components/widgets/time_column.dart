@@ -10,20 +10,38 @@ class TimeColumn extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final compactMode = ref.watch(settingsProvider).compactMode;
+    final customTimePeriod = ref.watch(settingsProvider).customTimePeriod;
+    final customStartTime = ref.watch(settingsProvider).customStartTime;
+    final is24HoursFormat = MediaQuery.of(context).alwaysUse24HourFormat;
 
-    return Column(
-      children: List.generate(
-        10,
-        (i) => Container(
-          alignment: Alignment.topCenter,
-          height: compactMode ? 125 : 100,
-          width: timeColumnWidth,
-          child: Text(
-            times24h[i + (8 - 1)],
-            style: const TextStyle(fontSize: 13),
+    return Column(children: [
+      Column(
+        children: List.generate(
+          rows(ref),
+          (i) => Container(
+            alignment: Alignment.topCenter,
+            height: compactMode ? 125 : 100,
+            width: timeColumnWidth,
+            child: Text(
+              is24HoursFormat
+                  ? times24h[i +
+                      (customStartTime.hour == 0
+                          ? 0
+                          : customTimePeriod
+                              ? customStartTime.hour
+                              : 8)]
+                  : timespmam[i +
+                      (customStartTime.hour == 0
+                          ? 0
+                          : customTimePeriod
+                              ? customStartTime.hour
+                              : 8)],
+              style: const TextStyle(fontSize: 13),
+              textAlign: TextAlign.center,
+            ),
           ),
         ),
       ),
-    );
+    ]);
   }
 }
