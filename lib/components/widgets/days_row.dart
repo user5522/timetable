@@ -20,7 +20,7 @@ class DaysRow extends ConsumerWidget {
           alignment: Alignment.bottomCenter,
           height: 20,
           width: compactMode
-              ? (screenWidth / columns - (timeColumnWidth / rows(ref)))
+              ? (screenWidth / columns - ((timeColumnWidth + 10) / 10))
               : 100,
           child: Text(
             singleLetterDays

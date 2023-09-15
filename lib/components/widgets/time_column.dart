@@ -18,8 +18,7 @@ class TimeColumn extends ConsumerWidget {
       Column(
         children: List.generate(
           rows(ref),
-          (i) => Container(
-            alignment: Alignment.topCenter,
+          (i) => SizedBox(
             height: compactMode ? 125 : 100,
             width: timeColumnWidth,
             child: Text(

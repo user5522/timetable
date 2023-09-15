@@ -44,7 +44,7 @@ class TimetableGridView extends HookConsumerWidget {
                 Grid(
                   tileHeight: compactMode ? 125 : 100,
                   tileWidth: compactMode
-                      ? (screenWidth / columns - (timeColumnWidth / rows(ref)))
+                      ? (screenWidth / columns - ((timeColumnWidth + 10) / 10))
                       : 100,
                   rows: rows(ref),
                   columns: columns,
