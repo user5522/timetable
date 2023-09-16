@@ -88,7 +88,7 @@ class OverlappingSubjBuilder extends ConsumerWidget {
                   },
                   borderRadius: BorderRadius.circular(5),
                   child: Ink(
-                    padding: const EdgeInsets.fromLTRB(2, 5, 2, 5),
+                    padding: const EdgeInsets.fromLTRB(1, 5, 1, 5),
                     decoration: BoxDecoration(
                       color: subjects[i].color,
                       borderRadius: BorderRadius.circular(5),
@@ -101,7 +101,7 @@ class OverlappingSubjBuilder extends ConsumerWidget {
                         ? (((screenWidth / columns -
                                     ((timeColumnWidth + 10) / 10)) /
                                 2) -
-                            4)
+                            3)
                         : ((100 - 2) / 2) - 4,
                     height: ((endTimeHour - startTimeHour) *
                         (compactMode ? 125 - 2 : 100 - 4)),
