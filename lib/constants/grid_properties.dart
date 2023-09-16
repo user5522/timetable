@@ -1,7 +1,10 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:timetable/models/settings.dart';
+import 'package:timetable/models/subjects.dart';
 
 const double timeColumnWidth = 22.5;
+List<List<Subject>> overlappingSubjects = [];
+
 const int columns = 7;
 
 int rows(WidgetRef ref) {

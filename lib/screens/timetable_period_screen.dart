@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:timetable/constants/customTimes.dart';
+import 'package:timetable/constants/custom_times.dart';
 import 'package:timetable/models/settings.dart';
 
 class TimetablePeriodScreen extends ConsumerWidget {

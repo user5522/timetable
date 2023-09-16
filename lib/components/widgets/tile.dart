@@ -9,7 +9,7 @@ class Tile extends StatelessWidget {
   });
 
   final int height;
-  final int width;
+  final double width;
   final Widget child;
 
   @override

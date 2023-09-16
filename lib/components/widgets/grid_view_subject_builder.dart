@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:non_uniform_border/non_uniform_border.dart';
+import 'package:timetable/constants/custom_times.dart';
 import 'package:timetable/constants/days.dart';
 import 'package:timetable/constants/rotation_weeks.dart';
 import 'package:timetable/models/settings.dart';
@@ -20,6 +21,8 @@ class SubjectBuilder extends ConsumerWidget {
     final hideLocation = ref.watch(settingsProvider).hideLocation;
     final customStartTime = ref.watch(settingsProvider).customStartTime;
     final customEndTime = ref.watch(settingsProvider).customEndTime;
+    final rotationWeeks = ref.watch(settingsProvider).rotationWeeks;
+
     String label = subject.label;
     String? location = subject.location;
     Color color = subject.color;
@@ -33,8 +36,14 @@ class SubjectBuilder extends ConsumerWidget {
     final shape = NonUniformBorder(
       leftWidth: subject.day.index == 0 ? 0 : 1,
       rightWidth: subject.day.index == (Days.values.length - 1) ? 0 : 1,
-      topWidth: subject.startTime.hour == 0 + customStartTime.hour ? 0 : 1,
-      bottomWidth: subject.endTime.hour == (customEndTime.hour) ? 0 : 1,
+      topWidth: subject.startTime.hour ==
+              getCustomStartTime(customStartTime, ref).hour
+          ? 0
+          : 1,
+      bottomWidth:
+          subject.endTime.hour == getCustomEndTime(customEndTime, ref).hour
+              ? 0
+              : 1,
       strokeAlign: BorderSide.strokeAlignCenter,
       color: Colors.grey,
     );
@@ -101,16 +110,17 @@ class SubjectBuilder extends ConsumerWidget {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                Align(
-                  alignment: Alignment.bottomRight,
-                  child: Text(
-                    getSubjectRotationWeekLabel(subject),
-                    style: TextStyle(
-                      color: subLabelsColor,
-                      fontWeight: FontWeight.bold,
+                if (rotationWeeks)
+                  Align(
+                    alignment: Alignment.bottomRight,
+                    child: Text(
+                      getSubjectRotationWeekLabel(subject),
+                      style: TextStyle(
+                        color: subLabelsColor,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
-                ),
               ],
             ),
           ),

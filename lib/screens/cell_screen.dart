@@ -5,6 +5,7 @@ import 'package:timetable/components/cell_screen_configs/colors_config.dart';
 import 'package:timetable/components/cell_screen_configs/day_time_week_config.dart';
 import 'package:timetable/components/widgets/list_tile_group.dart';
 import 'package:timetable/constants/days.dart';
+import 'package:timetable/constants/grid_properties.dart';
 import 'package:timetable/constants/rotation_weeks.dart';
 import 'package:timetable/models/subjects.dart';
 
@@ -64,7 +65,9 @@ class CellScreen extends HookConsumerWidget {
         )
         .toList();
 
-    final isOccupied = subjectsInSameDay.any((e) {
+    final isOccupied = subjectsInSameDay
+        .where((e) => overlappingSubjects.any((elem) => elem.contains(e)))
+        .any((e) {
       final eHours = List.generate(
         e.endTime.hour - e.startTime.hour,
         (index) => index + e.startTime.hour,
@@ -77,8 +80,10 @@ class CellScreen extends HookConsumerWidget {
       return eHours.any((hour) => inputHours.contains(hour));
     });
 
-    final isOccupiedExceptSelf =
-        subjectsInSameDay.where((e) => e != subject).any((e) {
+    final isOccupiedExceptSelf = subjectsInSameDay
+        .where((e) => e != subject)
+        .where((e) => !overlappingSubjects.any((elem) => elem.contains(e)))
+        .any((e) {
       final eHours = List.generate(
         e.endTime.hour - e.startTime.hour,
         (index) => index + e.startTime.hour,
@@ -87,9 +92,11 @@ class CellScreen extends HookConsumerWidget {
         endTime.value.hour - startTime.value.hour,
         (index) => index + startTime.value.hour,
       );
-
       return eHours.any((hour) => inputHours.contains(hour));
     });
+
+    // final isOccupied = false;
+    // final isOccupiedExceptSelf = false;
 
     return Scaffold(
       appBar: AppBar(

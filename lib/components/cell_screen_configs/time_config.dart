@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:timetable/constants/customTimes.dart';
+import 'package:timetable/constants/custom_times.dart';
 import 'package:timetable/models/settings.dart';
 
 class TimeConfig extends ConsumerWidget {
@@ -29,14 +29,27 @@ class TimeConfig extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final customStartTime = ref.watch(settingsProvider).customStartTime;
     final customEndTime = ref.watch(settingsProvider).customEndTime;
+    final customTimePeriod = ref.watch(settingsProvider).customTimePeriod;
 
     void showInvalidTimePeriodDialog() {
+      final String customStartTimeHour =
+          customTimePeriod ? getCustomTimeHour(customStartTime) : "08";
+      final String customStartTimeMinute =
+          customTimePeriod ? getCustomTimeMinute(customStartTime) : "00";
+      final String customEndTimeHour =
+          customTimePeriod ? getCustomTimeHour(customEndTime) : "18";
+      final String customEndTimeMinute =
+          customTimePeriod ? getCustomTimeMinute(customEndTime) : "00";
+
+      final String startTime = "$customStartTimeHour:$customStartTimeMinute";
+      final String endTime = "$customEndTimeHour:$customEndTimeMinute";
+
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
           title: const Text('Invalid Time'),
           content: Text(
-            'Time period must be between ${getCustomTimeHour(customStartTime)}:${getCustomTimeMinute(customStartTime)} and ${getCustomTimeHour(customEndTime)}:${getCustomTimeMinute(customEndTime)}.',
+            'Time period must be between $startTime and $endTime.',
           ),
           actions: [
             TextButton(
@@ -84,7 +97,7 @@ class TimeConfig extends ConsumerWidget {
 
             if (selectedTime != null &&
                 (selectedTime.hour <
-                    getCustomStartTime(customStartTime).hour)) {
+                    getCustomStartTime(customStartTime, ref).hour)) {
               showInvalidTimePeriodDialog();
             } else if (selectedTime != null) {
               if (_isBefore(selectedTime, endTime.value)) {
@@ -121,7 +134,8 @@ class TimeConfig extends ConsumerWidget {
             );
 
             if (selectedTime != null &&
-                (selectedTime.hour > getCustomEndTime(customEndTime).hour)) {
+                (selectedTime.hour >
+                    getCustomEndTime(customEndTime, ref).hour)) {
               showInvalidTimePeriodDialog();
             } else if (selectedTime != null) {
               if (_isAfter(selectedTime, startTime.value)) {

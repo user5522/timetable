@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:timetable/constants/rotation_weeks.dart';
+import 'package:timetable/models/settings.dart';
 import 'package:timetable/models/subjects.dart';
 import 'package:timetable/screens/cell_screen.dart';
 
-class DayViewSubjectBuilder extends StatelessWidget {
+class DayViewSubjectBuilder extends ConsumerWidget {
   final Subject subject;
 
   const DayViewSubjectBuilder({super.key, required this.subject});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final rotationWeeks = ref.watch(settingsProvider).rotationWeeks;
     Color labelColor =
         subject.color.computeLuminance() > .7 ? Colors.black : Colors.white;
     Color subLabelsColor = subject.color.computeLuminance() > .7
@@ -48,21 +51,24 @@ class DayViewSubjectBuilder extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      subject.label,
+                      subject.label.length > (27)
+                          ? '${subject.label.substring(0, (27))}..'
+                          : subject.label,
                       style: TextStyle(
                         color: labelColor,
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    Text(
-                      getSubjectRotationWeekLabel(subject),
-                      style: TextStyle(
-                        color: labelColor,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
+                    if (rotationWeeks)
+                      Text(
+                        getSubjectRotationWeekLabel(subject),
+                        style: TextStyle(
+                          color: labelColor,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    ),
                   ],
                 ),
                 Row(
@@ -99,7 +105,9 @@ class DayViewSubjectBuilder extends StatelessWidget {
                         color: subLabelsColor,
                       ),
                       Text(
-                        subject.location.toString(),
+                        subject.location.toString().length > (22)
+                            ? '${subject.location.toString().substring(0, (22))}..'
+                            : subject.location.toString(),
                         style: TextStyle(
                           fontSize: 17,
                           fontWeight: FontWeight.w500,
