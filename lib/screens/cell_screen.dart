@@ -95,9 +95,6 @@ class CellScreen extends HookConsumerWidget {
       return eHours.any((hour) => inputHours.contains(hour));
     });
 
-    // final isOccupied = false;
-    // final isOccupiedExceptSelf = false;
-
     return Scaffold(
       appBar: AppBar(
         actions: [

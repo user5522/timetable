@@ -18,7 +18,7 @@ class SubjectContainerBuilder extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final shape = NonUniformBorder(
       leftWidth: columnIndex == 0 ? 0 : 1,
-      rightWidth: columnIndex == (columns - 1) ? 0 : 1,
+      rightWidth: columnIndex == (columns(ref) - 1) ? 0 : 1,
       topWidth: rowIndex == 0 ? 0 : 1,
       bottomWidth: rowIndex == (rows(ref) - 1) ? 0 : 1,
       strokeAlign: BorderSide.strokeAlignCenter,

@@ -5,7 +5,15 @@ import 'package:timetable/models/subjects.dart';
 const double timeColumnWidth = 22.5;
 List<List<Subject>> overlappingSubjects = [];
 
-const int columns = 7;
+int columns(WidgetRef ref) {
+  final hideSunday = ref.watch(settingsProvider).hideSunday;
+
+  if (hideSunday) {
+    return 6;
+  } else {
+    return 7;
+  }
+}
 
 int rows(WidgetRef ref) {
   final customTimePeriod = ref.watch(settingsProvider).customTimePeriod;

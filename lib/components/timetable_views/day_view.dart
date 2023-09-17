@@ -28,7 +28,7 @@ class TimetableDayView extends HookConsumerWidget {
         ),
         Expanded(
           child: PageView.builder(
-            itemCount: columns,
+            itemCount: columns(ref),
             pageSnapping: true,
             controller: controller,
             itemBuilder: (context, index) {
@@ -36,36 +36,31 @@ class TimetableDayView extends HookConsumerWidget {
 
               return SingleChildScrollView(
                 scrollDirection: Axis.vertical,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            days[startDay - 1],
-                            style: const TextStyle(
-                              fontWeight: FontWeight.w400,
-                              fontSize: 20,
-                            ),
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: getFilteredSubject(rotationWeek, subject)
-                                .where((s) => s.day.index == index)
-                                .map(
-                                  (subject) => DayViewSubjectBuilder(
-                                    subject: subject,
-                                  ),
-                                )
-                                .toList(),
-                          ),
-                        ],
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        days[startDay - 1],
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 20,
+                        ),
                       ),
-                    ),
-                  ],
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: getFilteredSubject(rotationWeek, subject)
+                            .where((s) => s.day.index == index)
+                            .map(
+                              (subject) => DayViewSubjectBuilder(
+                                subject: subject,
+                              ),
+                            )
+                            .toList(),
+                      ),
+                    ],
+                  ),
                 ),
               );
             },

@@ -11,16 +11,17 @@ class DaysRow extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final compactMode = ref.watch(settingsProvider).compactMode;
     final singleLetterDays = ref.watch(settingsProvider).singleLetterDays;
+    final hideSunday = ref.watch(settingsProvider).hideSunday;
     double screenWidth = MediaQuery.of(context).size.width;
 
     return Row(
       children: List.generate(
-        days.length,
+        hideSunday ? days.length - 1 : days.length,
         (i) => Container(
           alignment: Alignment.bottomCenter,
           height: 20,
           width: compactMode
-              ? (screenWidth / columns - ((timeColumnWidth + 10) / 10))
+              ? (screenWidth / columns(ref) - ((timeColumnWidth + 10) / 10))
               : 100,
           child: Text(
             singleLetterDays

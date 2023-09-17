@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:timetable/models/settings.dart';
 import 'package:timetable/utilities/grid_utils.dart';
 
-class DayViewNavigationBar extends StatelessWidget {
+class DayViewNavigationBar extends ConsumerWidget {
   final PageController controller;
 
   const DayViewNavigationBar({
@@ -10,8 +12,10 @@ class DayViewNavigationBar extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     double screenWidth = MediaQuery.of(context).size.width;
+    final hideSunday = ref.watch(settingsProvider).hideSunday;
+    int daysLength = hideSunday ? days.length - 1 : days.length;
 
     return SizedBox(
       height: 50,
@@ -19,33 +23,32 @@ class DayViewNavigationBar extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.only(left: 2.5),
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: days.length,
-                itemBuilder: (context, index) {
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 2.5),
-                    child: SizedBox(
-                      width: 50,
-                      child: TextButton(
-                        onPressed: () {
-                          controller.animateToPage(
-                            index,
-                            duration: const Duration(milliseconds: 300),
-                            curve: Curves.easeInOut,
-                          );
-                        },
-                        style: TextButton.styleFrom(
-                            fixedSize: Size(screenWidth / days.length, 50)),
-                        child: Text(days[index][0]),
+          Container(
+            color: Theme.of(context).colorScheme.background,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: daysLength,
+              shrinkWrap: true,
+              itemBuilder: (context, index) {
+                return SizedBox(
+                  width: screenWidth / daysLength,
+                  child: TextButton(
+                    onPressed: () {
+                      controller.animateToPage(
+                        index,
+                        duration: const Duration(milliseconds: 300),
+                        curve: Curves.easeInOut,
+                      );
+                    },
+                    style: ButtonStyle(
+                      foregroundColor: MaterialStateProperty.all<Color>(
+                        Theme.of(context).colorScheme.onBackground,
                       ),
                     ),
-                  );
-                },
-              ),
+                    child: Text(days[index][0]),
+                  ),
+                );
+              },
             ),
           ),
         ],

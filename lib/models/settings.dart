@@ -10,6 +10,7 @@ class Settings {
   final bool rotationWeeks;
   final TimeOfDay customStartTime;
   final TimeOfDay customEndTime;
+  final bool hideSunday;
 
   Settings({
     this.customTimePeriod = false,
@@ -19,6 +20,7 @@ class Settings {
     this.rotationWeeks = false,
     this.customStartTime = const TimeOfDay(hour: 08, minute: 00),
     this.customEndTime = const TimeOfDay(hour: 18, minute: 00),
+    this.hideSunday = false,
   });
 
   Settings copy({
@@ -29,6 +31,7 @@ class Settings {
     bool? rotationWeeks,
     TimeOfDay? customStartTime,
     TimeOfDay? customEndTime,
+    bool? hideSunday,
   }) =>
       Settings(
         customTimePeriod: customTimePeriod ?? this.customTimePeriod,
@@ -38,6 +41,7 @@ class Settings {
         rotationWeeks: rotationWeeks ?? this.rotationWeeks,
         customStartTime: customStartTime ?? this.customStartTime,
         customEndTime: customEndTime ?? this.customEndTime,
+        hideSunday: hideSunday ?? this.hideSunday,
       );
 }
 
@@ -52,6 +56,14 @@ class SettingsNotifier extends StateNotifier<Settings> {
     );
     state = newState;
     _saveCustomTimePeriod(customTimePeriod);
+  }
+
+  void updateHideSunday(bool hideSunday) {
+    final newState = state.copy(
+      hideSunday: hideSunday,
+    );
+    state = newState;
+    _saveHideSunday(hideSunday);
   }
 
   void updateCompactMode(bool compactMode) {
@@ -105,6 +117,7 @@ class SettingsNotifier extends StateNotifier<Settings> {
   Future<void> loadSettings() async {
     final prefs = await SharedPreferences.getInstance();
     await _loadCompactMode(prefs);
+    await _loadHideSunday(prefs);
     await _loadSingleLetterDays(prefs);
     await _loadHideLocation(prefs);
     await _loadRotationWeeks(prefs);
@@ -125,6 +138,21 @@ class SettingsNotifier extends StateNotifier<Settings> {
     await prefs.setBool(
       'customTimePeriod',
       customTimePeriodValue,
+    );
+  }
+
+  Future<void> _loadHideSunday(SharedPreferences prefs) async {
+    final hideSunday = prefs.getBool('hideSunday');
+    if (hideSunday != null) {
+      state = state.copy(hideSunday: hideSunday);
+    }
+  }
+
+  Future<void> _saveHideSunday(bool hideSundayValue) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(
+      'hideSunday',
+      hideSundayValue,
     );
   }
 

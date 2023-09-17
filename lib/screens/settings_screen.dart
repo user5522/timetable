@@ -15,6 +15,7 @@ class SettingsPage extends ConsumerWidget {
     final hideLocation = ref.watch(settingsProvider).hideLocation;
     final singleLetterDays = ref.watch(settingsProvider).singleLetterDays;
     final rotationWeeks = ref.watch(settingsProvider).rotationWeeks;
+    final hideSunday = ref.watch(settingsProvider).hideSunday;
     final settings = ref.read(settingsProvider.notifier);
 
     return Scaffold(
@@ -81,6 +82,13 @@ class SettingsPage extends ConsumerWidget {
               value: rotationWeeks,
               onChanged: (bool value) {
                 settings.updateRotationWeeks(value);
+              },
+            ),
+            SwitchListTile(
+              title: const Text("Hide Sunday"),
+              value: hideSunday,
+              onChanged: (bool value) {
+                settings.updateHideSunday(value);
               },
             ),
           ],

@@ -98,7 +98,7 @@ class OverlappingSubjBuilder extends ConsumerWidget {
                       ),
                     ),
                     width: compactMode
-                        ? (((screenWidth / columns -
+                        ? (((screenWidth / columns(ref) -
                                     ((timeColumnWidth + 10) / 10)) /
                                 2) -
                             3)

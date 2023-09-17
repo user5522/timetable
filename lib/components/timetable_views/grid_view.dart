@@ -44,13 +44,14 @@ class TimetableGridView extends HookConsumerWidget {
                 Grid(
                   tileHeight: compactMode ? 125 : 100,
                   tileWidth: compactMode
-                      ? (screenWidth / columns - ((timeColumnWidth + 10) / 10))
+                      ? (screenWidth / columns(ref) -
+                          ((timeColumnWidth + 10) / 10))
                       : 100,
                   rows: rows(ref),
-                  columns: columns,
+                  columns: columns(ref),
                   grid: generate(
                     getFilteredSubject(rotationWeek, subject),
-                    columns,
+                    columns(ref),
                     rows(ref),
                     ref,
                   ),
@@ -99,7 +100,8 @@ class TimetableGridView extends HookConsumerWidget {
             overlappingSubjects.add([subjects[i], subjects[j]]);
           }
 
-          if (overlappingSubjects.isNotEmpty) {
+          if (overlappingSubjects.isNotEmpty &&
+              overlappingSubjects.any((e) => e.length > 1)) {
             for (final subjects in overlappingSubjects) {
               Subject getSubjectWithEarlierStartTime() {
                 if (subjects[0].startTime.hour < subjects[1].startTime.hour) {
