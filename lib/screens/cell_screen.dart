@@ -189,7 +189,9 @@ class CellScreen extends HookConsumerWidget {
                           if (autoCompleteColor) {
                             color.value = subjects
                                 .firstWhere(
-                                  (subj) => label.value == subj.label,
+                                  (subj) =>
+                                      label.value.toLowerCase() ==
+                                      subj.label.toLowerCase(),
                                   orElse: () => const Subject(
                                     label: " ",
                                     location: "",
