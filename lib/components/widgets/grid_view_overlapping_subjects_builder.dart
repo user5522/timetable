@@ -33,7 +33,7 @@ class OverlappingSubjBuilder extends ConsumerWidget {
 
     final shape = NonUniformBorder(
       leftWidth: subjects[0].day.index == 0 ? 0 : 1,
-      rightWidth: subjects[0].day.index == (Days.values.length - 1) ? 0 : 1,
+      rightWidth: subjects[0].day.index == (columns(ref) - 1) ? 0 : 1,
       topWidth:
           earlierStartTimeHour == getCustomStartTime(customStartTime, ref).hour
               ? 0
