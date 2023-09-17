@@ -55,7 +55,7 @@ class SettingsNotifier extends StateNotifier<Settings> {
       customTimePeriod: customTimePeriod,
     );
     state = newState;
-    _saveCustomTimePeriod(customTimePeriod);
+    _saveBool(customTimePeriod, 'customTimePeriod');
   }
 
   void updateHideSunday(bool hideSunday) {
@@ -63,7 +63,7 @@ class SettingsNotifier extends StateNotifier<Settings> {
       hideSunday: hideSunday,
     );
     state = newState;
-    _saveHideSunday(hideSunday);
+    _saveBool(hideSunday, 'hideSunday');
   }
 
   void updateCompactMode(bool compactMode) {
@@ -71,7 +71,7 @@ class SettingsNotifier extends StateNotifier<Settings> {
       compactMode: compactMode,
     );
     state = newState;
-    _saveCompactMode(compactMode);
+    _saveBool(compactMode, 'compactMode');
   }
 
   void updateHideLocation(bool hideLocation) {
@@ -79,7 +79,7 @@ class SettingsNotifier extends StateNotifier<Settings> {
       hideLocation: hideLocation,
     );
     state = newState;
-    _saveHideLocation(hideLocation);
+    _saveBool(hideLocation, 'hideLocation');
   }
 
   void updateSingleLetterDays(bool singleLetterDays) {
@@ -87,7 +87,7 @@ class SettingsNotifier extends StateNotifier<Settings> {
       singleLetterDays: singleLetterDays,
     );
     state = newState;
-    _saveSingleLetterDays(singleLetterDays);
+    _saveBool(singleLetterDays, 'singleLetterDays');
   }
 
   void updateRotationWeeks(bool rotationWeeks) {
@@ -95,7 +95,7 @@ class SettingsNotifier extends StateNotifier<Settings> {
       rotationWeeks: rotationWeeks,
     );
     state = newState;
-    _saveRotationWeeks(rotationWeeks);
+    _saveBool(rotationWeeks, 'rotationWeeks');
   }
 
   void updateCustomStartTime(TimeOfDay customStartTime) {
@@ -103,7 +103,7 @@ class SettingsNotifier extends StateNotifier<Settings> {
       customStartTime: customStartTime,
     );
     state = newState;
-    _saveCustomStartTime(customStartTime);
+    _saveTimeOfDay(customStartTime, 'customStartHour', 'customStartMinute');
   }
 
   void updateCustomEndTime(TimeOfDay customEndTime) {
@@ -111,7 +111,7 @@ class SettingsNotifier extends StateNotifier<Settings> {
       customEndTime: customEndTime,
     );
     state = newState;
-    _saveCustomEndTime(customEndTime);
+    _saveTimeOfDay(customEndTime, 'customEndHour', 'customEndMinute');
   }
 
   Future<void> loadSettings() async {
@@ -126,19 +126,32 @@ class SettingsNotifier extends StateNotifier<Settings> {
     await _loadCustomEndTime(prefs);
   }
 
+  Future<void> _saveBool(bool boolValue, String key) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(
+      key,
+      boolValue,
+    );
+  }
+
+  Future<void> _saveTimeOfDay(
+      TimeOfDay timeOfDayValue, String hourKey, String minuteKey) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt(
+      hourKey,
+      timeOfDayValue.hour,
+    );
+    await prefs.setInt(
+      minuteKey,
+      timeOfDayValue.minute,
+    );
+  }
+
   Future<void> _loadCustomTimePeriod(SharedPreferences prefs) async {
     final customTimePeriod = prefs.getBool('customTimePeriod');
     if (customTimePeriod != null) {
       state = state.copy(customTimePeriod: customTimePeriod);
     }
-  }
-
-  Future<void> _saveCustomTimePeriod(bool customTimePeriodValue) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool(
-      'customTimePeriod',
-      customTimePeriodValue,
-    );
   }
 
   Future<void> _loadHideSunday(SharedPreferences prefs) async {
@@ -148,27 +161,11 @@ class SettingsNotifier extends StateNotifier<Settings> {
     }
   }
 
-  Future<void> _saveHideSunday(bool hideSundayValue) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool(
-      'hideSunday',
-      hideSundayValue,
-    );
-  }
-
   Future<void> _loadCompactMode(SharedPreferences prefs) async {
     final compactMode = prefs.getBool('compactMode');
     if (compactMode != null) {
       state = state.copy(compactMode: compactMode);
     }
-  }
-
-  Future<void> _saveCompactMode(bool compactModeValue) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool(
-      'compactMode',
-      compactModeValue,
-    );
   }
 
   Future<void> _loadHideLocation(SharedPreferences prefs) async {
@@ -178,14 +175,6 @@ class SettingsNotifier extends StateNotifier<Settings> {
     }
   }
 
-  Future<void> _saveHideLocation(bool hideLocationValue) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool(
-      'hideLocation',
-      hideLocationValue,
-    );
-  }
-
   Future<void> _loadSingleLetterDays(SharedPreferences prefs) async {
     final singleLetterDays = prefs.getBool('singleLetterDays');
     if (singleLetterDays != null) {
@@ -193,27 +182,11 @@ class SettingsNotifier extends StateNotifier<Settings> {
     }
   }
 
-  Future<void> _saveSingleLetterDays(bool singleLetterDaysValue) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool(
-      'singleLetterDays',
-      singleLetterDaysValue,
-    );
-  }
-
   Future<void> _loadRotationWeeks(SharedPreferences prefs) async {
     final rotationWeeks = prefs.getBool('rotationWeeks');
     if (rotationWeeks != null) {
       state = state.copy(rotationWeeks: rotationWeeks);
     }
-  }
-
-  Future<void> _saveRotationWeeks(bool rotationWeeksValue) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool(
-      'rotationWeeks',
-      rotationWeeksValue,
-    );
   }
 
   Future<void> _loadCustomStartTime(SharedPreferences prefs) async {
@@ -229,18 +202,6 @@ class SettingsNotifier extends StateNotifier<Settings> {
     }
   }
 
-  Future<void> _saveCustomStartTime(TimeOfDay customStartTimeValue) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setInt(
-      'customStartHour',
-      customStartTimeValue.hour,
-    );
-    await prefs.setInt(
-      'customStartMinute',
-      customStartTimeValue.minute,
-    );
-  }
-
   Future<void> _loadCustomEndTime(SharedPreferences prefs) async {
     final customEndHour = prefs.getInt('customEndHour');
     final customEndMinute = prefs.getInt('customEndMinute');
@@ -252,18 +213,6 @@ class SettingsNotifier extends StateNotifier<Settings> {
         ),
       );
     }
-  }
-
-  Future<void> _saveCustomEndTime(TimeOfDay customEndTimeValue) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setInt(
-      'customEndHour',
-      customEndTimeValue.hour,
-    );
-    await prefs.setInt(
-      'customEndMinute',
-      customEndTimeValue.minute,
-    );
   }
 }
 
