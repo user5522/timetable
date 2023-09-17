@@ -16,6 +16,9 @@ class SettingsPage extends ConsumerWidget {
     final singleLetterDays = ref.watch(settingsProvider).singleLetterDays;
     final rotationWeeks = ref.watch(settingsProvider).rotationWeeks;
     final hideSunday = ref.watch(settingsProvider).hideSunday;
+    final hideTransparentSubject =
+        ref.watch(settingsProvider).hideTransparentSubject;
+    final autoCompleteColor = ref.watch(settingsProvider).autoCompleteColor;
     final settings = ref.read(settingsProvider.notifier);
 
     return Scaffold(
@@ -41,20 +44,6 @@ class SettingsPage extends ConsumerWidget {
               title: const Text("Customize Timetable"),
               textColor: Theme.of(context).colorScheme.primary,
             ),
-            ListTile(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    settings: const RouteSettings(
-                      name: "CellScreen",
-                    ),
-                    builder: (context) => const TimetablePeriodScreen(),
-                  ),
-                );
-              },
-              title: const Text("Time Period Config"),
-            ),
             SwitchListTile(
               title: const Text("Compact Mode"),
               value: compactMode,
@@ -77,6 +66,39 @@ class SettingsPage extends ConsumerWidget {
               },
             ),
             SwitchListTile(
+              title: const Text("Hide Sunday"),
+              value: hideSunday,
+              onChanged: (bool value) {
+                settings.updateHideSunday(value);
+              },
+            ),
+            SwitchListTile(
+              title: const Text("Hide Transparent Subjects"),
+              value: hideTransparentSubject,
+              onChanged: (bool value) {
+                settings.updateHideTransparentSubject(value);
+              },
+            ),
+            ListTile(
+              dense: true,
+              title: const Text("Timetable Features"),
+              textColor: Theme.of(context).colorScheme.primary,
+            ),
+            ListTile(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    settings: const RouteSettings(
+                      name: "CellScreen",
+                    ),
+                    builder: (context) => const TimetablePeriodScreen(),
+                  ),
+                );
+              },
+              title: const Text("Time Period Config"),
+            ),
+            SwitchListTile(
               title: const Text("Rotation Weeks"),
               subtitle: const Text("Experimental"),
               value: rotationWeeks,
@@ -85,10 +107,10 @@ class SettingsPage extends ConsumerWidget {
               },
             ),
             SwitchListTile(
-              title: const Text("Hide Sunday"),
-              value: hideSunday,
+              title: const Text("AutoComplete Colors"),
+              value: autoCompleteColor,
               onChanged: (bool value) {
-                settings.updateHideSunday(value);
+                settings.updateAutoCompleteColor(value);
               },
             ),
           ],

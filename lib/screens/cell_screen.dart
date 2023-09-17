@@ -7,6 +7,7 @@ import 'package:timetable/components/widgets/list_tile_group.dart';
 import 'package:timetable/constants/days.dart';
 import 'package:timetable/constants/grid_properties.dart';
 import 'package:timetable/constants/rotation_weeks.dart';
+import 'package:timetable/models/settings.dart';
 import 'package:timetable/models/subjects.dart';
 
 class CellScreen extends HookConsumerWidget {
@@ -39,6 +40,7 @@ class CellScreen extends HookConsumerWidget {
       ),
     );
     final state = ref.read(subjectProvider.notifier);
+    final autoCompleteColor = ref.watch(settingsProvider).autoCompleteColor;
     final day = useState(
         Days.values[isSubjectNull ? columnIndex! : subject!.day.index]);
     final rotationWeek =
@@ -58,8 +60,9 @@ class CellScreen extends HookConsumerWidget {
       rotationWeek: rotationWeek.value,
     );
 
-    final subjectsInSameDay = ref
-        .watch(subjectProvider)
+    final subjects = ref.watch(subjectProvider);
+
+    final subjectsInSameDay = subjects
         .where(
           (e) => e.day == day.value,
         )
@@ -183,6 +186,22 @@ class CellScreen extends HookConsumerWidget {
                         },
                         onChanged: (value) {
                           label.value = value;
+                          if (autoCompleteColor) {
+                            color.value = subjects
+                                .firstWhere(
+                                  (subj) => label.value == subj.label,
+                                  orElse: () => const Subject(
+                                    label: " ",
+                                    location: "",
+                                    color: Colors.black,
+                                    startTime: TimeOfDay(hour: 8, minute: 0),
+                                    endTime: TimeOfDay(hour: 18, minute: 0),
+                                    day: Days.monday,
+                                    rotationWeek: RotationWeeks.all,
+                                  ),
+                                )
+                                .color;
+                          }
                         },
                       ),
                     ),

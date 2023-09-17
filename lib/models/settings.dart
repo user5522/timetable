@@ -11,6 +11,8 @@ class Settings {
   final TimeOfDay customStartTime;
   final TimeOfDay customEndTime;
   final bool hideSunday;
+  final bool autoCompleteColor;
+  final bool hideTransparentSubject;
 
   Settings({
     this.customTimePeriod = false,
@@ -21,6 +23,8 @@ class Settings {
     this.customStartTime = const TimeOfDay(hour: 08, minute: 00),
     this.customEndTime = const TimeOfDay(hour: 18, minute: 00),
     this.hideSunday = false,
+    this.autoCompleteColor = true,
+    this.hideTransparentSubject = true,
   });
 
   Settings copy({
@@ -32,6 +36,8 @@ class Settings {
     TimeOfDay? customStartTime,
     TimeOfDay? customEndTime,
     bool? hideSunday,
+    bool? autoCompleteColor,
+    bool? hideTransparentSubject,
   }) =>
       Settings(
         customTimePeriod: customTimePeriod ?? this.customTimePeriod,
@@ -42,6 +48,9 @@ class Settings {
         customStartTime: customStartTime ?? this.customStartTime,
         customEndTime: customEndTime ?? this.customEndTime,
         hideSunday: hideSunday ?? this.hideSunday,
+        autoCompleteColor: autoCompleteColor ?? this.autoCompleteColor,
+        hideTransparentSubject:
+            hideTransparentSubject ?? this.hideTransparentSubject,
       );
 }
 
@@ -50,12 +59,28 @@ class SettingsNotifier extends StateNotifier<Settings> {
     loadSettings();
   }
 
+  void updateHideTransparentSubject(bool hideTransparentSubject) {
+    final newState = state.copy(
+      hideTransparentSubject: hideTransparentSubject,
+    );
+    state = newState;
+    _saveBool(hideTransparentSubject, 'hideTransparentSubject');
+  }
+
   void updateCustomTimePeriod(bool customTimePeriod) {
     final newState = state.copy(
       customTimePeriod: customTimePeriod,
     );
     state = newState;
     _saveBool(customTimePeriod, 'customTimePeriod');
+  }
+
+  void updateAutoCompleteColor(bool autoCompleteColor) {
+    final newState = state.copy(
+      autoCompleteColor: autoCompleteColor,
+    );
+    state = newState;
+    _saveBool(autoCompleteColor, 'autoCompleteColor');
   }
 
   void updateHideSunday(bool hideSunday) {
@@ -117,6 +142,7 @@ class SettingsNotifier extends StateNotifier<Settings> {
   Future<void> loadSettings() async {
     final prefs = await SharedPreferences.getInstance();
     await _loadCompactMode(prefs);
+    await _loadAutoCompleteColor(prefs);
     await _loadHideSunday(prefs);
     await _loadSingleLetterDays(prefs);
     await _loadHideLocation(prefs);
@@ -124,6 +150,7 @@ class SettingsNotifier extends StateNotifier<Settings> {
     await _loadCustomTimePeriod(prefs);
     await _loadCustomStartTime(prefs);
     await _loadCustomEndTime(prefs);
+    await _loadHideTransparentSubject(prefs);
   }
 
   Future<void> _saveBool(bool boolValue, String key) async {
@@ -145,6 +172,20 @@ class SettingsNotifier extends StateNotifier<Settings> {
       minuteKey,
       timeOfDayValue.minute,
     );
+  }
+
+  Future<void> _loadHideTransparentSubject(SharedPreferences prefs) async {
+    final hideTransparentSubject = prefs.getBool('hideTransparentSubject');
+    if (hideTransparentSubject != null) {
+      state = state.copy(hideTransparentSubject: hideTransparentSubject);
+    }
+  }
+
+  Future<void> _loadAutoCompleteColor(SharedPreferences prefs) async {
+    final autoCompleteColor = prefs.getBool('autoCompleteColor');
+    if (autoCompleteColor != null) {
+      state = state.copy(autoCompleteColor: autoCompleteColor);
+    }
   }
 
   Future<void> _loadCustomTimePeriod(SharedPreferences prefs) async {

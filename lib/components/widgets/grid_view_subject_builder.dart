@@ -22,10 +22,15 @@ class SubjectBuilder extends ConsumerWidget {
     final customStartTime = ref.watch(settingsProvider).customStartTime;
     final customEndTime = ref.watch(settingsProvider).customEndTime;
     final rotationWeeks = ref.watch(settingsProvider).rotationWeeks;
+    final hideTransparentSubject =
+        ref.watch(settingsProvider).hideTransparentSubject;
 
     String label = subject.label;
     String? location = subject.location;
     Color color = subject.color;
+
+    final hideTransparentSubjects =
+        hideTransparentSubject && color.opacity == Colors.transparent.opacity;
 
     Color labelColor =
         color.computeLuminance() > .7 ? Colors.black : Colors.white;
@@ -72,7 +77,8 @@ class SubjectBuilder extends ConsumerWidget {
             decoration: BoxDecoration(
               color: color,
               border: Border.all(
-                color: Colors.black,
+                color:
+                    hideTransparentSubjects ? Colors.transparent : Colors.black,
                 width: 1,
               ),
               borderRadius: const BorderRadius.all(
@@ -82,45 +88,49 @@ class SubjectBuilder extends ConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  label,
-                  maxLines: (subject.endTime.hour - subject.startTime.hour == 1
-                      ? 2
-                      : 5),
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    color: labelColor,
-                    fontWeight: FontWeight.bold,
+                if (!hideTransparentSubjects)
+                  Text(
+                    label,
+                    maxLines:
+                        (subject.endTime.hour - subject.startTime.hour == 1
+                            ? 2
+                            : 5),
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: labelColor,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ),
                 const SizedBox(
                   height: 5,
                 ),
                 if ((location != null))
                   if (hideLocation == false)
-                    Text(
-                      location.toString(),
-                      maxLines:
-                          (subject.endTime.hour - subject.startTime.hour == 1
-                              ? 2
-                              : 3),
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        color: subLabelsColor,
-                        fontWeight: FontWeight.bold,
+                    if (!hideTransparentSubjects)
+                      Text(
+                        location.toString(),
+                        maxLines:
+                            (subject.endTime.hour - subject.startTime.hour == 1
+                                ? 2
+                                : 3),
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          color: subLabelsColor,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    ),
                 if (rotationWeeks)
-                  Align(
-                    alignment: Alignment.bottomRight,
-                    child: Text(
-                      getSubjectRotationWeekLabel(subject),
-                      style: TextStyle(
-                        color: subLabelsColor,
-                        fontWeight: FontWeight.bold,
+                  if (!hideTransparentSubjects)
+                    Align(
+                      alignment: Alignment.bottomRight,
+                      child: Text(
+                        getSubjectRotationWeekLabel(subject),
+                        style: TextStyle(
+                          color: subLabelsColor,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
-                  ),
               ],
             ),
           ),

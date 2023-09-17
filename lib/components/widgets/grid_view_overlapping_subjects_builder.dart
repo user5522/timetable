@@ -27,6 +27,8 @@ class OverlappingSubjBuilder extends ConsumerWidget {
     final compactMode = ref.watch(settingsProvider).compactMode;
     final hideLocation = ref.watch(settingsProvider).hideLocation;
     final rotationWeeks = ref.watch(settingsProvider).rotationWeeks;
+    final hideTransparentSubject =
+        ref.watch(settingsProvider).hideTransparentSubject;
 
     double screenWidth = MediaQuery.of(context).size.width;
 
@@ -60,8 +62,12 @@ class OverlappingSubjBuilder extends ConsumerWidget {
           int startTimeHour = subjects[i].startTime.hour;
           String label = subjects[i].label;
           String? location = subjects[i].location;
+          Color color = subjects[i].color;
 
           int subjHeight = endTimeHour - startTimeHour;
+
+          final hideTransparentSubjects = hideTransparentSubject &&
+              color.opacity == Colors.transparent.opacity;
 
           return Column(
             children: [
@@ -89,10 +95,12 @@ class OverlappingSubjBuilder extends ConsumerWidget {
                   child: Ink(
                     padding: const EdgeInsets.fromLTRB(1, 5, 1, 5),
                     decoration: BoxDecoration(
-                      color: subjects[i].color,
+                      color: color,
                       borderRadius: BorderRadius.circular(5),
                       border: Border.all(
-                        color: Colors.black,
+                        color: hideTransparentSubjects
+                            ? Colors.transparent
+                            : Colors.black,
                         width: 1,
                       ),
                     ),
@@ -107,58 +115,61 @@ class OverlappingSubjBuilder extends ConsumerWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        RotatedBox(
-                          quarterTurns: compactMode ? 1 : 0,
-                          child: Text(
-                            compactMode
-                                ? label.length > (subjHeight * 5)
-                                    ? '${label.substring(0, (subjHeight * 5))}..'
-                                    : label
-                                : label,
-                            maxLines: compactMode ? 1 : subjHeight * 2,
-                            style: TextStyle(
-                              color: labelColor,
-                              fontWeight: FontWeight.bold,
-                              overflow: TextOverflow.ellipsis,
+                        if (!hideTransparentSubjects)
+                          RotatedBox(
+                            quarterTurns: compactMode ? 1 : 0,
+                            child: Text(
+                              compactMode
+                                  ? label.length > (subjHeight * 5)
+                                      ? '${label.substring(0, (subjHeight * 5))}..'
+                                      : label
+                                  : label,
+                              maxLines: compactMode ? 1 : subjHeight * 2,
+                              style: TextStyle(
+                                color: labelColor,
+                                fontWeight: FontWeight.bold,
+                                overflow: TextOverflow.ellipsis,
+                              ),
                             ),
                           ),
-                        ),
                         SizedBox(
                           height: compactMode ? 8 : 5,
                         ),
                         if ((location != null))
                           if (!hideLocation)
-                            RotatedBox(
-                              quarterTurns: compactMode ? 1 : 0,
-                              child: Text(
-                                compactMode
-                                    ? location.length > (subjHeight * 5)
-                                        ? '${location.substring(0, (subjHeight * 5))}..'
-                                        : location
-                                    : location,
-                                maxLines: compactMode ? 1 : subjHeight,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  color: subLabelsColor,
-                                  fontWeight: FontWeight.bold,
+                            if (!hideTransparentSubjects)
+                              RotatedBox(
+                                quarterTurns: compactMode ? 1 : 0,
+                                child: Text(
+                                  compactMode
+                                      ? location.length > (subjHeight * 5)
+                                          ? '${location.substring(0, (subjHeight * 5))}..'
+                                          : location
+                                      : location,
+                                  maxLines: compactMode ? 1 : subjHeight,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    color: subLabelsColor,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                               ),
-                            ),
                         if (rotationWeeks) const Spacer(),
                         if (rotationWeeks)
-                          Align(
-                            alignment: Alignment.bottomRight,
-                            child: RotatedBox(
-                              quarterTurns: compactMode ? 1 : 0,
-                              child: Text(
-                                getSubjectRotationWeekLabel(subjects[i]),
-                                style: TextStyle(
-                                  color: subLabelsColor,
-                                  fontWeight: FontWeight.bold,
+                          if (!hideTransparentSubjects)
+                            Align(
+                              alignment: Alignment.bottomRight,
+                              child: RotatedBox(
+                                quarterTurns: compactMode ? 1 : 0,
+                                child: Text(
+                                  getSubjectRotationWeekLabel(subjects[i]),
+                                  style: TextStyle(
+                                    color: subLabelsColor,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
                       ],
                     ),
                   ),
