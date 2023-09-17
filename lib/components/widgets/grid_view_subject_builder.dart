@@ -7,6 +7,7 @@ import 'package:timetable/constants/rotation_weeks.dart';
 import 'package:timetable/models/settings.dart';
 import 'package:timetable/models/subjects.dart';
 import 'package:timetable/screens/cell_screen.dart';
+import 'package:timetable/constants/grid_properties.dart';
 
 class SubjectBuilder extends ConsumerWidget {
   final Subject subject;
@@ -35,7 +36,7 @@ class SubjectBuilder extends ConsumerWidget {
 
     final shape = NonUniformBorder(
       leftWidth: subject.day.index == 0 ? 0 : 1,
-      rightWidth: subject.day.index == (Days.values.length - 1) ? 0 : 1,
+      rightWidth: subject.day.index == (columns(ref) - 1) ? 0 : 1,
       topWidth: subject.startTime.hour ==
               getCustomStartTime(customStartTime, ref).hour
           ? 0
