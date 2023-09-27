@@ -24,6 +24,7 @@ class DayViewSubjectBuilder extends ConsumerWidget {
     String label = subject.label;
     String? location = subject.location;
     Color color = subject.color;
+    String? note = subject.note;
 
     final hideTransparentSubjects =
         hideTransparentSubject && color.opacity == Colors.transparent.opacity;
@@ -62,15 +63,20 @@ class DayViewSubjectBuilder extends ConsumerWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        label.length > (27)
-                            ? '${label.substring(0, (27))}..'
-                            : label,
-                        style: TextStyle(
-                          color: labelColor,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
+                      Expanded(
+                        child: Text(
+                          label,
+                          maxLines: 3,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            color: labelColor,
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
+                      ),
+                      const SizedBox(
+                        width: 20,
                       ),
                       if (rotationWeeks)
                         Text(
@@ -108,7 +114,7 @@ class DayViewSubjectBuilder extends ConsumerWidget {
                       ),
                     ],
                   ),
-                  if (location != "")
+                  if (location != null && location.isNotEmpty)
                     Row(
                       children: [
                         Icon(
@@ -116,18 +122,48 @@ class DayViewSubjectBuilder extends ConsumerWidget {
                           size: 19,
                           color: subLabelsColor,
                         ),
-                        Text(
-                          location.toString().length > (22)
-                              ? '${location.toString().substring(0, (22))}..'
-                              : location.toString(),
-                          style: TextStyle(
-                            fontSize: 17,
-                            fontWeight: FontWeight.w500,
-                            color: subLabelsColor,
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        Expanded(
+                          child: Text(
+                            location.toString(),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontSize: 17,
+                              fontWeight: FontWeight.w500,
+                              color: subLabelsColor,
+                            ),
                           ),
                         ),
                       ],
                     ),
+                  if (note != null && note.isNotEmpty)
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.sticky_note_2_outlined,
+                          size: 19,
+                          color: subLabelsColor,
+                        ),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        Expanded(
+                          child: Text(
+                            note.toString(),
+                            maxLines: 4,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontSize: 17,
+                              fontWeight: FontWeight.w500,
+                              color: subLabelsColor,
+                            ),
+                          ),
+                        ),
+                      ],
+                    )
                 ],
               ),
             ),
