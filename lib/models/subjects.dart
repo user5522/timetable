@@ -26,6 +26,8 @@ class Subject {
   final Days day;
   @HiveField(6)
   final RotationWeeks rotationWeek;
+  @HiveField(7)
+  final String? note;
 
   const Subject({
     required this.label,
@@ -35,6 +37,7 @@ class Subject {
     required this.endTime,
     required this.day,
     required this.rotationWeek,
+    required this.note,
   });
 
   Subject copyWith({
@@ -45,6 +48,7 @@ class Subject {
     TimeOfDay? endTime,
     Days? day,
     RotationWeeks? rotationWeek,
+    String? note,
   }) {
     return Subject(
       label: label ?? this.label,
@@ -54,6 +58,7 @@ class Subject {
       endTime: endTime ?? this.endTime,
       day: day ?? this.day,
       rotationWeek: rotationWeek ?? this.rotationWeek,
+      note: note ?? this.note,
     );
   }
 }
@@ -94,6 +99,7 @@ class SubjectNotifier extends StateNotifier<List<Subject>> {
             endTime: newSubject.endTime,
             day: newSubject.day,
             rotationWeek: newSubject.rotationWeek,
+            note: newSubject.note,
           )
         else
           subject,

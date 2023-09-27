@@ -3,7 +3,9 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:timetable/components/cell_screen_configs/colors_config.dart';
 import 'package:timetable/components/cell_screen_configs/day_time_week_config.dart';
+import 'package:timetable/components/cell_screen_configs/note_tile.dart';
 import 'package:timetable/components/widgets/list_tile_group.dart';
+import 'package:timetable/constants/basic_subject.dart';
 import 'package:timetable/constants/days.dart';
 import 'package:timetable/constants/rotation_weeks.dart';
 import 'package:timetable/models/overlapping_subjects.dart';
@@ -50,6 +52,7 @@ class CellScreen extends HookConsumerWidget {
 
     final label = useState(subject?.label ?? "");
     final location = useState(subject?.location ?? "");
+    final note = useState(subject?.note ?? "");
 
     final Subject newSubject = Subject(
       label: label.value,
@@ -59,6 +62,7 @@ class CellScreen extends HookConsumerWidget {
       endTime: endTime.value,
       day: day.value,
       rotationWeek: rotationWeek.value,
+      note: note.value,
     );
 
     final subjects = ref.watch(subjectProvider);
@@ -193,15 +197,7 @@ class CellScreen extends HookConsumerWidget {
                                   (subj) =>
                                       label.value.toLowerCase() ==
                                       subj.label.toLowerCase(),
-                                  orElse: () => const Subject(
-                                    label: " ",
-                                    location: "",
-                                    color: Colors.black,
-                                    startTime: TimeOfDay(hour: 8, minute: 0),
-                                    endTime: TimeOfDay(hour: 18, minute: 0),
-                                    day: Days.monday,
-                                    rotationWeek: RotationWeeks.all,
-                                  ),
+                                  orElse: () => basicSubject,
                                 )
                                 .color;
                           }
@@ -235,6 +231,12 @@ class CellScreen extends HookConsumerWidget {
                   startTime: startTime,
                   endTime: endTime,
                   occupied: isSubjectNull ? isOccupied : isOccupiedExceptSelf,
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                NotesTile(
+                  note: note,
                 )
               ],
             ),
