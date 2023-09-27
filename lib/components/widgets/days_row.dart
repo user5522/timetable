@@ -12,7 +12,16 @@ class DaysRow extends ConsumerWidget {
     final compactMode = ref.watch(settingsProvider).compactMode;
     final singleLetterDays = ref.watch(settingsProvider).singleLetterDays;
     final hideSunday = ref.watch(settingsProvider).hideSunday;
+
     double screenWidth = MediaQuery.of(context).size.width;
+    bool isPortrait =
+        MediaQuery.of(context).orientation == Orientation.portrait;
+
+    double tileWidth = compactMode
+        ? (screenWidth / columns(ref) - ((timeColumnWidth + 10) / 10))
+        : isPortrait
+            ? 100
+            : (screenWidth / columns(ref) - ((timeColumnWidth + 10) / 10));
 
     return Row(
       children: List.generate(
@@ -20,13 +29,11 @@ class DaysRow extends ConsumerWidget {
         (i) => Container(
           alignment: Alignment.bottomCenter,
           height: 20,
-          width: compactMode
-              ? (screenWidth / columns(ref) - ((timeColumnWidth + 10) / 10))
-              : 100,
+          width: tileWidth,
           child: Text(
             singleLetterDays
                 ? days[i][0]
-                : compactMode
+                : isPortrait && compactMode
                     ? days[i].substring(0, 3)
                     : days[i],
           ),

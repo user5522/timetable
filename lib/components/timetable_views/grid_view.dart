@@ -26,8 +26,19 @@ class TimetableGridView extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final subject = ref.watch(subjectProvider);
     final compactMode = ref.watch(settingsProvider).compactMode;
+    final customStartTime = ref.watch(settingsProvider).customStartTime;
+    final customEndTime = ref.watch(settingsProvider).customEndTime;
 
     double screenWidth = MediaQuery.of(context).size.width;
+    bool isPortrait =
+        MediaQuery.of(context).orientation == Orientation.portrait;
+
+    double tileHeight = compactMode ? 125 : 100;
+    double tileWidth = compactMode
+        ? (screenWidth / columns(ref) - ((timeColumnWidth + 10) / 10))
+        : isPortrait
+            ? 100
+            : (screenWidth / columns(ref) - ((timeColumnWidth + 10) / 10));
 
     return SingleChildScrollView(
       scrollDirection: Axis.vertical,
@@ -43,15 +54,20 @@ class TimetableGridView extends HookConsumerWidget {
               children: [
                 const DaysRow(),
                 Grid(
-                  tileHeight: compactMode ? 125 : 100,
-                  tileWidth: compactMode
-                      ? (screenWidth / columns(ref) -
-                          ((timeColumnWidth + 10) / 10))
-                      : 100,
+                  tileHeight: tileHeight,
+                  tileWidth: tileWidth,
                   rows: rows(ref),
                   columns: columns(ref),
                   grid: generate(
-                    getFilteredSubject(rotationWeek, subject),
+                    getFilteredSubject(rotationWeek, subject)
+                        .where(
+                          (e) =>
+                              e.endTime.hour <=
+                                  getCustomEndTime(customEndTime, ref).hour &&
+                              e.startTime.hour >=
+                                  getCustomStartTime(customStartTime, ref).hour,
+                        )
+                        .toList(),
                     columns(ref),
                     rows(ref),
                     ref,
@@ -73,7 +89,6 @@ class TimetableGridView extends HookConsumerWidget {
   ) {
     final overlappingSubjects = ref.watch(overlappingSubjectsProvider);
     final customStartTime = ref.watch(settingsProvider).customStartTime;
-    final customEndTime = ref.watch(settingsProvider).customEndTime;
 
     final List<List<Tile?>> grid = List.generate(
       totalDays,
@@ -103,7 +118,7 @@ class TimetableGridView extends HookConsumerWidget {
           }
 
           if (overlappingSubjects.isNotEmpty &&
-              overlappingSubjects.any((e) => e.length > 1)) {
+              overlappingSubjects.any((e) => e.length == 2)) {
             for (final subjects in overlappingSubjects) {
               Subject getSubjectWithEarlierStartTime() {
                 if (subjects[0].startTime.hour < subjects[1].startTime.hour) {
@@ -151,15 +166,9 @@ class TimetableGridView extends HookConsumerWidget {
       }
     }
 
-    for (final subject in subjects
-        .where(
-          (e) =>
-              e.endTime.hour <= getCustomEndTime(customEndTime, ref).hour &&
-              e.startTime.hour >= getCustomStartTime(customStartTime, ref).hour,
-        )
-        .where(
-          (e) => !overlappingSubjects.any((elem) => elem.contains(e)),
-        )) {
+    for (final subject in subjects.where(
+      (e) => !overlappingSubjects.any((elem) => elem.contains(e)),
+    )) {
       var day = subject.day.index;
       var start = subject.startTime.hour -
           getCustomStartTime(customStartTime, ref).hour;

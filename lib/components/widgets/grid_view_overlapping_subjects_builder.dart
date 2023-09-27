@@ -31,6 +31,15 @@ class OverlappingSubjBuilder extends ConsumerWidget {
         ref.watch(settingsProvider).hideTransparentSubject;
 
     double screenWidth = MediaQuery.of(context).size.width;
+    bool isPortrait =
+        MediaQuery.of(context).orientation == Orientation.portrait;
+
+    double tileHeight = compactMode ? 125 : 100;
+    double tileWidth = compactMode
+        ? (screenWidth / columns(ref) - ((timeColumnWidth + 10) / 10))
+        : isPortrait
+            ? 100
+            : (screenWidth / columns(ref) - ((timeColumnWidth + 10) / 10));
 
     final shape = NonUniformBorder(
       leftWidth: subjects[0].day.index == 0 ? 0 : 1,
@@ -47,8 +56,12 @@ class OverlappingSubjBuilder extends ConsumerWidget {
       color: Colors.grey,
     );
 
+    const double outerPadding = 2;
+
     return Container(
-      decoration: ShapeDecoration(shape: shape),
+      decoration: ShapeDecoration(
+        shape: shape,
+      ),
       child: Row(
         children: List.generate(subjects.length, (i) {
           Color labelColor = subjects[i].color.computeLuminance() > .7
@@ -66,17 +79,16 @@ class OverlappingSubjBuilder extends ConsumerWidget {
 
           int subjHeight = endTimeHour - startTimeHour;
 
-          final hideTransparentSubjects = hideTransparentSubject &&
-              color.opacity == Colors.transparent.opacity;
+          final hideTransparentSubjects =
+              hideTransparentSubject && color.opacity == 0;
 
           return Column(
             children: [
-              SizedBox(
-                height: ((startTimeHour - earlierStartTimeHour) *
-                    (compactMode ? 125 - 2 : 100 - 1)),
+              Container(
+                height: (startTimeHour - earlierStartTimeHour) * (tileHeight),
               ),
               Padding(
-                padding: EdgeInsets.all(compactMode ? 1 : 2),
+                padding: const EdgeInsets.all(outerPadding),
                 child: InkWell(
                   onTap: () {
                     Navigator.push(
@@ -93,7 +105,8 @@ class OverlappingSubjBuilder extends ConsumerWidget {
                   },
                   borderRadius: BorderRadius.circular(5),
                   child: Ink(
-                    padding: const EdgeInsets.fromLTRB(1, 5, 1, 5),
+                    padding: EdgeInsets.fromLTRB(
+                        compactMode ? 1 : 2, 5, compactMode ? 1 : 2, 5),
                     decoration: BoxDecoration(
                       color: color,
                       borderRadius: BorderRadius.circular(5),
@@ -101,17 +114,13 @@ class OverlappingSubjBuilder extends ConsumerWidget {
                         color: hideTransparentSubjects
                             ? Colors.transparent
                             : Colors.black,
-                        width: 1,
+                        width: 0,
                       ),
                     ),
-                    width: compactMode
-                        ? (((screenWidth / columns(ref) -
-                                    ((timeColumnWidth + 10) / 10)) /
-                                2) -
-                            3)
-                        : ((100 - 2) / 2) - 4,
-                    height: ((endTimeHour - startTimeHour) *
-                        (compactMode ? 125 - 2 : 100 - 4)),
+                    width: ((tileWidth / 2) - .75) - (outerPadding * 2),
+                    height:
+                        (((endTimeHour - startTimeHour) * (tileHeight)) - 1) -
+                            (outerPadding * 2),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [

@@ -46,7 +46,6 @@ class SubjectContainerBuilder extends ConsumerWidget {
         ),
         child: Align(
           child: Container(
-            width: 100,
             height: 1,
             color: const Color(0xFFB4B8AB).withOpacity(0.5),
           ),
