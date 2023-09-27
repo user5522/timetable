@@ -77,9 +77,11 @@ List<Subject> getFilteredSubject(
 String getSubjectRotationWeekLabel(Subject subject) {
   switch (subject.rotationWeek) {
     case RotationWeeks.a:
-      return "/A";
+      return "A";
     case RotationWeeks.b:
-      return "/B";
+      return "B";
+    case RotationWeeks.none:
+      return "";
     default:
       return "";
   }
