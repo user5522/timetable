@@ -7,6 +7,7 @@ import 'package:timetable/components/widgets/time_column.dart';
 import 'package:timetable/constants/custom_times.dart';
 import 'package:timetable/constants/grid_properties.dart';
 import 'package:timetable/constants/rotation_weeks.dart';
+import 'package:timetable/models/overlapping_subjects.dart';
 import 'package:timetable/models/subjects.dart';
 import 'package:timetable/components/widgets/grid_view_subject_builder.dart';
 import 'package:timetable/components/widgets/subject_container_builder.dart';
@@ -70,6 +71,7 @@ class TimetableGridView extends HookConsumerWidget {
     int totalHours,
     WidgetRef ref,
   ) {
+    final overlappingSubjects = ref.watch(overlappingSubjectsProvider);
     final customStartTime = ref.watch(settingsProvider).customStartTime;
     final customEndTime = ref.watch(settingsProvider).customEndTime;
 

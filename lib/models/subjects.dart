@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:timetable/constants/days.dart';
 import 'package:hive/hive.dart';
-import 'package:timetable/constants/grid_properties.dart';
 import 'package:timetable/constants/rotation_weeks.dart';
 
 part 'timeOfDay.g.dart';
@@ -76,7 +75,7 @@ class SubjectNotifier extends StateNotifier<List<Subject>> {
     saveData();
   }
 
-  void removeSubject(Subject subject) {
+  void removeSubject(Subject subject, List<List<Subject>> overlappingSubjects) {
     state = state.where((s) => s != subject).toList();
     overlappingSubjects =
         overlappingSubjects.where((list) => !list.contains(subject)).toList();

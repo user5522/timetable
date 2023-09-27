@@ -5,8 +5,8 @@ import 'package:timetable/components/cell_screen_configs/colors_config.dart';
 import 'package:timetable/components/cell_screen_configs/day_time_week_config.dart';
 import 'package:timetable/components/widgets/list_tile_group.dart';
 import 'package:timetable/constants/days.dart';
-import 'package:timetable/constants/grid_properties.dart';
 import 'package:timetable/constants/rotation_weeks.dart';
+import 'package:timetable/models/overlapping_subjects.dart';
 import 'package:timetable/models/settings.dart';
 import 'package:timetable/models/subjects.dart';
 
@@ -39,6 +39,7 @@ class CellScreen extends HookConsumerWidget {
         minute: 0,
       ),
     );
+    final overlappingSubjects = ref.watch(overlappingSubjectsProvider);
     final state = ref.read(subjectProvider.notifier);
     final autoCompleteColor = ref.watch(settingsProvider).autoCompleteColor;
     final day = useState(
@@ -109,7 +110,7 @@ class CellScreen extends HookConsumerWidget {
                 foregroundColor: Theme.of(context).colorScheme.errorContainer,
               ),
               onPressed: () {
-                state.removeSubject(subject!);
+                state.removeSubject(subject!, overlappingSubjects);
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
                     content: Text('Subject Deleted!'),
