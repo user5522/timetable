@@ -119,6 +119,7 @@ class SubjectBuilder extends ConsumerWidget {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
+                if (rotationWeeks) const Spacer(),
                 if (rotationWeeks)
                   if (!hideTransparentSubjects)
                     Align(
