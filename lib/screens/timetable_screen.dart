@@ -12,6 +12,9 @@ class TimetablePage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final rotationWeeks = ref.watch(settingsProvider).rotationWeeks;
+    final navbarToggle = ref.watch(settingsProvider).navbarVisible;
+    final settings = ref.read(settingsProvider.notifier);
+
     final isGridView = useState(true);
     final rotationWeek = useState(RotationWeeks.all);
 
@@ -30,37 +33,64 @@ class TimetablePage extends HookConsumerWidget {
     }
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Timetable'), actions: [
-        if (rotationWeeks)
-          InkWell(
-            onTap: () {
-              changeLabel();
-              rotationWeek.value = labels[clickCount.value];
-            },
-            borderRadius: BorderRadius.circular(50),
-            child: Ink(
-              width: 40,
-              height: 40,
-              child: Center(
-                child: Text(
-                  getRotationWeekButtonLabel(labels[clickCount.value]),
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
+      appBar: AppBar(
+          title: Row(
+            children: [
+              InkWell(
+                onTap: () {
+                  settings.updateNavbarVisible(!navbarToggle);
+                },
+                borderRadius: BorderRadius.circular(50),
+                child: Ink(
+                  width: 40,
+                  height: 40,
+                  child: Center(
+                    child: Icon(
+                      navbarToggle
+                          ? Icons.fullscreen
+                          : Icons.close_fullscreen_outlined,
+                      size: navbarToggle ? 25 : 20,
+                    ),
                   ),
                 ),
               ),
-            ),
+              const SizedBox(
+                width: 10,
+              ),
+              const Text('Timetable'),
+            ],
           ),
-        IconButton(
-          onPressed: () {
-            isGridView.value = !isGridView.value;
-          },
-          selectedIcon: const Icon(Icons.view_agenda_outlined),
-          icon: const Icon(Icons.grid_view_outlined),
-          isSelected: isGridView.value,
-        )
-      ]),
+          actions: [
+            if (rotationWeeks)
+              InkWell(
+                onTap: () {
+                  changeLabel();
+                  rotationWeek.value = labels[clickCount.value];
+                },
+                borderRadius: BorderRadius.circular(50),
+                child: Ink(
+                  width: 40,
+                  height: 40,
+                  child: Center(
+                    child: Text(
+                      getRotationWeekButtonLabel(labels[clickCount.value]),
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            IconButton(
+              onPressed: () {
+                isGridView.value = !isGridView.value;
+              },
+              selectedIcon: const Icon(Icons.view_agenda_outlined),
+              icon: const Icon(Icons.grid_view_outlined),
+              isSelected: isGridView.value,
+            )
+          ]),
       body: isGridView.value
           ? TimetableGridView(
               rotationWeek: rotationWeek,

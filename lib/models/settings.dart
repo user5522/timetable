@@ -13,6 +13,7 @@ class Settings {
   final bool hideSunday;
   final bool autoCompleteColor;
   final bool hideTransparentSubject;
+  final bool navbarVisible;
 
   Settings({
     this.customTimePeriod = false,
@@ -25,6 +26,7 @@ class Settings {
     this.hideSunday = false,
     this.autoCompleteColor = true,
     this.hideTransparentSubject = true,
+    this.navbarVisible = true,
   });
 
   Settings copy({
@@ -38,6 +40,7 @@ class Settings {
     bool? hideSunday,
     bool? autoCompleteColor,
     bool? hideTransparentSubject,
+    bool? navbarVisible,
   }) =>
       Settings(
         customTimePeriod: customTimePeriod ?? this.customTimePeriod,
@@ -51,12 +54,21 @@ class Settings {
         autoCompleteColor: autoCompleteColor ?? this.autoCompleteColor,
         hideTransparentSubject:
             hideTransparentSubject ?? this.hideTransparentSubject,
+        navbarVisible: navbarVisible ?? this.navbarVisible,
       );
 }
 
 class SettingsNotifier extends StateNotifier<Settings> {
   SettingsNotifier() : super(Settings()) {
     loadSettings();
+  }
+
+  void updateNavbarVisible(bool navbarVisible) {
+    final newState = state.copy(
+      navbarVisible: navbarVisible,
+    );
+    state = newState;
+    _saveBool(navbarVisible, 'navbarVisible');
   }
 
   void updateHideTransparentSubject(bool hideTransparentSubject) {
@@ -151,6 +163,7 @@ class SettingsNotifier extends StateNotifier<Settings> {
     await _loadCustomStartTime(prefs);
     await _loadCustomEndTime(prefs);
     await _loadHideTransparentSubject(prefs);
+    await _loadNavbarVisible(prefs);
   }
 
   Future<void> _saveBool(bool boolValue, String key) async {
@@ -172,6 +185,13 @@ class SettingsNotifier extends StateNotifier<Settings> {
       minuteKey,
       timeOfDayValue.minute,
     );
+  }
+
+  Future<void> _loadNavbarVisible(SharedPreferences prefs) async {
+    final navbarVisible = prefs.getBool('navbarVisible');
+    if (navbarVisible != null) {
+      state = state.copy(navbarVisible: navbarVisible);
+    }
   }
 
   Future<void> _loadHideTransparentSubject(SharedPreferences prefs) async {

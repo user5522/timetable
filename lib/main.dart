@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:timetable/constants/theme_options.dart';
+import 'package:timetable/models/settings.dart';
 import 'package:timetable/models/subjects.dart';
 import 'package:timetable/screens/timetable_screen.dart';
 import 'package:timetable/provider/themes.dart';
@@ -48,34 +49,39 @@ class Timetable extends ConsumerWidget {
   }
 }
 
-class Navigation extends StatefulWidget {
+class Navigation extends ConsumerStatefulWidget {
   const Navigation({super.key});
 
   @override
-  State<Navigation> createState() => _NavigationState();
+  ConsumerState<Navigation> createState() => _NavigationState();
 }
 
-class _NavigationState extends State<Navigation> {
+class _NavigationState extends ConsumerState<Navigation> {
   int currentPageIndex = 0;
 
   @override
   Widget build(BuildContext context) {
+    final navbarToggle = ref.watch(settingsProvider).navbarVisible;
+
     return Scaffold(
-      bottomNavigationBar: NavigationBar(
-        onDestinationSelected: _onTabTapped,
-        selectedIndex: currentPageIndex,
-        destinations: const <Widget>[
-          NavigationDestination(
-            selectedIcon: Icon(Icons.table_chart),
-            icon: Icon(Icons.table_chart_outlined),
-            label: 'Timetable',
-          ),
-          NavigationDestination(
-            selectedIcon: Icon(Icons.settings),
-            icon: Icon(Icons.settings_outlined),
-            label: 'Settings',
-          ),
-        ],
+      bottomNavigationBar: Visibility(
+        visible: navbarToggle,
+        child: NavigationBar(
+          onDestinationSelected: _onTabTapped,
+          selectedIndex: currentPageIndex,
+          destinations: const <Widget>[
+            NavigationDestination(
+              selectedIcon: Icon(Icons.table_chart),
+              icon: Icon(Icons.table_chart_outlined),
+              label: 'Timetable',
+            ),
+            NavigationDestination(
+              selectedIcon: Icon(Icons.settings),
+              icon: Icon(Icons.settings_outlined),
+              label: 'Settings',
+            ),
+          ],
+        ),
       ),
       body: PageTransitionSwitcher(
         duration: const Duration(milliseconds: 500),
