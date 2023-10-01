@@ -36,26 +36,22 @@ class TimetablePage extends HookConsumerWidget {
       appBar: AppBar(
           title: Row(
             children: [
-              InkWell(
-                onTap: () {
+              IconButton(
+                onPressed: () {
                   settings.updateNavbarVisible(!navbarToggle);
                 },
-                borderRadius: BorderRadius.circular(50),
-                child: Ink(
-                  width: 40,
-                  height: 40,
-                  child: Center(
-                    child: Icon(
-                      navbarToggle
-                          ? Icons.fullscreen
-                          : Icons.close_fullscreen_outlined,
-                      size: navbarToggle ? 25 : 20,
-                    ),
-                  ),
+                selectedIcon: const Icon(
+                  Icons.fullscreen,
+                  size: 25,
                 ),
+                icon: const Icon(
+                  Icons.close_fullscreen_outlined,
+                  size: 20,
+                ),
+                isSelected: navbarToggle,
               ),
               const SizedBox(
-                width: 10,
+                width: 5,
               ),
               const Text('Timetable'),
             ],

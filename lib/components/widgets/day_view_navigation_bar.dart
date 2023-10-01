@@ -15,6 +15,7 @@ class DayViewNavigationBar extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     double screenWidth = MediaQuery.of(context).size.width;
     final hideSunday = ref.watch(settingsProvider).hideSunday;
+    final singleLetterDays = ref.watch(settingsProvider).singleLetterDays;
     int daysLength = hideSunday ? days.length - 1 : days.length;
 
     return SizedBox(
@@ -45,7 +46,13 @@ class DayViewNavigationBar extends ConsumerWidget {
                         Theme.of(context).colorScheme.onBackground,
                       ),
                     ),
-                    child: Text(days[index][0]),
+                    child: Text(
+                      singleLetterDays
+                          ? days[index][0]
+                          : hideSunday
+                              ? days[index].substring(0, 3)
+                              : days[index].substring(0, 2),
+                    ),
                   ),
                 );
               },
