@@ -1,4 +1,5 @@
 import 'package:animations/animations.dart';
+import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -27,24 +28,40 @@ class Timetable extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var themeMode = ref.watch(themeModeProvider);
+    final themeMode = ref.watch(themeModeProvider);
+    final monetTheming = ref.watch(settingsProvider).monetTheming;
     final Brightness systemBrightness =
         MediaQuery.of(context).platformBrightness;
 
-    return MaterialApp(
-      color: Colors.white,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.deepPurple,
-          brightness: themeMode == ThemeModeOption.auto
-              ? systemBrightness
-              : themeMode == ThemeModeOption.dark
-                  ? Brightness.dark
-                  : Brightness.light,
-        ),
-        useMaterial3: true,
-      ),
-      home: const Navigation(),
+    return DynamicColorBuilder(
+      builder: (
+        ColorScheme? lightDynamic,
+        ColorScheme? darkDynamic,
+      ) {
+        return MaterialApp(
+          color: Colors.white,
+          theme: ThemeData(
+            colorScheme: monetTheming
+                ? themeMode == ThemeModeOption.auto
+                    ? systemBrightness == Brightness.light
+                        ? lightDynamic
+                        : darkDynamic
+                    : themeMode == ThemeModeOption.light
+                        ? lightDynamic
+                        : darkDynamic
+                : ColorScheme.fromSeed(
+                    seedColor: Colors.deepPurple,
+                    brightness: themeMode == ThemeModeOption.auto
+                        ? systemBrightness
+                        : themeMode == ThemeModeOption.dark
+                            ? Brightness.dark
+                            : Brightness.light,
+                  ),
+            useMaterial3: true,
+          ),
+          home: const Navigation(),
+        );
+      },
     );
   }
 }

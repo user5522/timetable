@@ -17,7 +17,6 @@ class CustomsScreen extends HookWidget {
   Widget build(BuildContext context) {
     void changeColor(Color color) {
       this.color.value = color;
-      print(color);
     }
 
     return Scaffold(

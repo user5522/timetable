@@ -1,3 +1,4 @@
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:timetable/components/settings/theme_options.dart';
@@ -8,6 +9,12 @@ import 'package:timetable/screens/timetable_period_screen.dart';
 class SettingsPage extends ConsumerWidget {
   const SettingsPage({super.key});
 
+  Future<int> getAndroidVersion() async {
+    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+    AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+    return androidInfo.version.sdkInt;
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final themeMode = ref.read(themeModeProvider.notifier);
@@ -16,6 +23,7 @@ class SettingsPage extends ConsumerWidget {
     final singleLetterDays = ref.watch(settingsProvider).singleLetterDays;
     final rotationWeeks = ref.watch(settingsProvider).rotationWeeks;
     final hideSunday = ref.watch(settingsProvider).hideSunday;
+    final monetTheming = ref.watch(settingsProvider).monetTheming;
     final hideTransparentSubject =
         ref.watch(settingsProvider).hideTransparentSubject;
     final autoCompleteColor = ref.watch(settingsProvider).autoCompleteColor;
@@ -38,6 +46,28 @@ class SettingsPage extends ConsumerWidget {
                 themeMode: themeMode,
               ),
               onTap: () {},
+            ),
+            FutureBuilder<AndroidDeviceInfo>(
+              future: DeviceInfoPlugin().androidInfo,
+              builder: (
+                BuildContext context,
+                AsyncSnapshot<AndroidDeviceInfo> snapshot,
+              ) {
+                final androidDeviceInfo = snapshot.data;
+
+                if (androidDeviceInfo != null &&
+                    androidDeviceInfo.version.sdkInt >= 31) {
+                  return SwitchListTile(
+                    title: const Text("Monet Theming"),
+                    subtitle: const Text("Android 12+"),
+                    value: monetTheming,
+                    onChanged: (bool value) {
+                      settings.updateMonetThemeing(value);
+                    },
+                  );
+                }
+                return Container();
+              },
             ),
             ListTile(
               dense: true,

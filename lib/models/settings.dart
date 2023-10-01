@@ -14,6 +14,7 @@ class Settings {
   final bool autoCompleteColor;
   final bool hideTransparentSubject;
   final bool navbarVisible;
+  final bool monetTheming;
 
   Settings({
     this.customTimePeriod = false,
@@ -27,6 +28,7 @@ class Settings {
     this.autoCompleteColor = true,
     this.hideTransparentSubject = true,
     this.navbarVisible = true,
+    this.monetTheming = false,
   });
 
   Settings copy({
@@ -41,6 +43,7 @@ class Settings {
     bool? autoCompleteColor,
     bool? hideTransparentSubject,
     bool? navbarVisible,
+    bool? monetTheming,
   }) =>
       Settings(
         customTimePeriod: customTimePeriod ?? this.customTimePeriod,
@@ -55,12 +58,21 @@ class Settings {
         hideTransparentSubject:
             hideTransparentSubject ?? this.hideTransparentSubject,
         navbarVisible: navbarVisible ?? this.navbarVisible,
+        monetTheming: monetTheming ?? this.monetTheming,
       );
 }
 
 class SettingsNotifier extends StateNotifier<Settings> {
   SettingsNotifier() : super(Settings()) {
     loadSettings();
+  }
+
+  void updateMonetThemeing(bool monetTheming) {
+    final newState = state.copy(
+      monetTheming: monetTheming,
+    );
+    state = newState;
+    _saveBool(monetTheming, 'monetTheming');
   }
 
   void updateNavbarVisible(bool navbarVisible) {
@@ -164,6 +176,7 @@ class SettingsNotifier extends StateNotifier<Settings> {
     await _loadCustomEndTime(prefs);
     await _loadHideTransparentSubject(prefs);
     await _loadNavbarVisible(prefs);
+    await _loadMonetTheming(prefs);
   }
 
   Future<void> _saveBool(bool boolValue, String key) async {
@@ -185,6 +198,13 @@ class SettingsNotifier extends StateNotifier<Settings> {
       minuteKey,
       timeOfDayValue.minute,
     );
+  }
+
+  Future<void> _loadMonetTheming(SharedPreferences prefs) async {
+    final monetTheming = prefs.getBool('monetTheming');
+    if (monetTheming != null) {
+      state = state.copy(monetTheming: monetTheming);
+    }
   }
 
   Future<void> _loadNavbarVisible(SharedPreferences prefs) async {
