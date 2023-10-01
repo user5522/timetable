@@ -82,8 +82,11 @@ class SubjectNotifier extends StateNotifier<List<Subject>> {
 
   void removeSubject(Subject subject, List<List<Subject>> overlappingSubjects) {
     state = state.where((s) => s != subject).toList();
-    overlappingSubjects =
-        overlappingSubjects.where((list) => !list.contains(subject)).toList();
+    overlappingSubjects = overlappingSubjects
+        .where(
+          (list) => !list.contains(subject),
+        )
+        .toList();
     saveData();
   }
 

@@ -6,6 +6,6 @@ class OverlappingSubjects extends StateNotifier<List<List<Subject>>> {
 }
 
 final overlappingSubjectsProvider =
-    StateNotifierProvider<OverlappingSubjects, List<List<Subject>>>((ref) {
-  return OverlappingSubjects();
-});
+    StateNotifierProvider<OverlappingSubjects, List<List<Subject>>>(
+  (ref) => OverlappingSubjects(),
+);

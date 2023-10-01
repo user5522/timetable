@@ -119,6 +119,20 @@ class TimetableGridView extends HookConsumerWidget {
 
           if (overlappingSubjects.isNotEmpty &&
               overlappingSubjects.any((e) => e.length == 2)) {
+            overlappingSubjects.removeWhere(
+              (elem) => elem.any(
+                (e) {
+                  if (rotationWeek.value == RotationWeeks.a) {
+                    return e.rotationWeek == RotationWeeks.b;
+                  } else if (rotationWeek.value == RotationWeeks.b) {
+                    return e.rotationWeek == RotationWeeks.a;
+                  } else {
+                    return false;
+                  }
+                },
+              ),
+            );
+
             for (final subjects in overlappingSubjects) {
               Subject getSubjectWithEarlierStartTime() {
                 if (subjects[0].startTime.hour < subjects[1].startTime.hour) {

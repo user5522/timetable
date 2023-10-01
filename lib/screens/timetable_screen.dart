@@ -21,8 +21,9 @@ class TimetablePage extends HookConsumerWidget {
     List<RotationWeeks> labels = [
       RotationWeeks.all,
       RotationWeeks.a,
-      RotationWeeks.b
+      RotationWeeks.b,
     ];
+
     final clickCount = useState(0);
 
     void changeLabel() {
