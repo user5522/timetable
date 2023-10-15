@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+/// Custom Widget to handle the look of a List of ListTiles.
 class ListTileGroup extends StatelessWidget {
   final List<ListItem> children;
 

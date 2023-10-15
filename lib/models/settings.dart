@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+/// Settings data model.
 class Settings {
   final bool customTimePeriod;
   final bool compactMode;
@@ -62,6 +63,7 @@ class Settings {
       );
 }
 
+/// Settings' [StateNotifier].
 class SettingsNotifier extends StateNotifier<Settings> {
   SettingsNotifier() : super(Settings()) {
     loadSettings();
@@ -162,6 +164,8 @@ class SettingsNotifier extends StateNotifier<Settings> {
     state = newState;
     _saveTimeOfDay(customEndTime, 'customEndHour', 'customEndMinute');
   }
+
+// TODO: find a better system for saving settings to SharedPreferences.
 
   Future<void> loadSettings() async {
     final prefs = await SharedPreferences.getInstance();

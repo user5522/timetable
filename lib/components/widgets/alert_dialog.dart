@@ -1,0 +1,36 @@
+import 'package:flutter/material.dart';
+
+/// Alert dialog widget to use instead of rewriting the same code every time.
+class ShowAlertDialog extends StatelessWidget {
+  final String? title;
+  final Widget content;
+  final String approveButtonText;
+  final void Function()? onApprove;
+
+  const ShowAlertDialog({
+    super.key,
+    this.title,
+    required this.content,
+    required this.approveButtonText,
+    this.onApprove,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      content: content,
+      actions: <Widget>[
+        TextButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          child: const Text("Cancel"),
+        ),
+        TextButton(
+          onPressed: onApprove,
+          child: Text(approveButtonText),
+        ),
+      ],
+    );
+  }
+}

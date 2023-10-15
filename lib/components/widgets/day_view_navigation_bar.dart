@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:timetable/constants/days.dart';
 import 'package:timetable/models/settings.dart';
-import 'package:timetable/utilities/grid_utils.dart';
 
+/// Top navigation bar in the day view that allows to switch between days quickly.
 class DayViewNavigationBar extends ConsumerWidget {
   final PageController controller;
 

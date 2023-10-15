@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:timetable/components/cell_screen_configs/colors_config.dart';
-import 'package:timetable/components/cell_screen_configs/day_time_week_config.dart';
-import 'package:timetable/components/cell_screen_configs/note_tile.dart';
+import 'package:timetable/components/subject_management/subject_configs/colors_config.dart';
+import 'package:timetable/components/subject_management/subject_configs/day_time_week_config.dart';
+import 'package:timetable/components/subject_management/subject_configs/note_tile.dart';
 import 'package:timetable/components/widgets/list_tile_group.dart';
 import 'package:timetable/constants/basic_subject.dart';
 import 'package:timetable/constants/days.dart';
@@ -12,12 +12,14 @@ import 'package:timetable/models/overlapping_subjects.dart';
 import 'package:timetable/models/settings.dart';
 import 'package:timetable/models/subjects.dart';
 
-class CellScreen extends HookConsumerWidget {
+/// The Subject creation/modification screen.
+/// Uses [TimeDayRotationWeekConfig], [NotesTile] and [ColorsConfig]
+class SubjectScreen extends HookConsumerWidget {
   final int? rowIndex;
   final int? columnIndex;
   final Subject? subject;
 
-  const CellScreen({
+  const SubjectScreen({
     super.key,
     this.rowIndex,
     this.columnIndex,
@@ -225,7 +227,7 @@ class CellScreen extends HookConsumerWidget {
                 const SizedBox(
                   height: 10,
                 ),
-                TimeDayConfig(
+                TimeDayRotationWeekConfig(
                   day: day,
                   rotationWeek: rotationWeek,
                   startTime: startTime,

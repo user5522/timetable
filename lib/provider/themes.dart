@@ -2,6 +2,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timetable/constants/theme_options.dart';
 
+/// Themes' [StateNotifier].
 class ThemeModeNotifier extends StateNotifier<ThemeModeOption> {
   ThemeModeNotifier() : super(ThemeModeOption.auto) {
     _loadThemeFromSharedPreferences();

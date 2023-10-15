@@ -14,6 +14,7 @@ import 'package:timetable/components/widgets/subject_container_builder.dart';
 import 'package:timetable/components/widgets/tile.dart';
 import 'package:timetable/models/settings.dart';
 
+/// Timetable view that shows All the days' subjects in a grid form.
 class TimetableGridView extends HookConsumerWidget {
   final ValueNotifier<RotationWeeks> rotationWeek;
 
@@ -59,7 +60,7 @@ class TimetableGridView extends HookConsumerWidget {
                   rows: rows(ref),
                   columns: columns(ref),
                   grid: generate(
-                    getFilteredSubject(rotationWeek, subject)
+                    getFilteredSubjects(rotationWeek, subject)
                         .where(
                           (e) =>
                               e.endTime.hour <=

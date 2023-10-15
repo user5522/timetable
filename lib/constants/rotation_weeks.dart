@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:timetable/models/subjects.dart';
 
+/// Basic Rotation Weeks.
 enum RotationWeeks {
   all,
   none,
@@ -8,6 +9,7 @@ enum RotationWeeks {
   b,
 }
 
+/// Rotation Weeks button label. (used in the rotation week modal bottom sheet)
 String getRotationWeekLabel(RotationWeeks rotationWeek) {
   switch (rotationWeek) {
     case RotationWeeks.none:
@@ -21,6 +23,7 @@ String getRotationWeekLabel(RotationWeeks rotationWeek) {
   }
 }
 
+/// Rotation Weeks action button label. (used in the rotation week selection action button)
 String getRotationWeekButtonLabel(RotationWeeks rotationWeek) {
   switch (rotationWeek) {
     case RotationWeeks.none:
@@ -34,7 +37,8 @@ String getRotationWeekButtonLabel(RotationWeeks rotationWeek) {
   }
 }
 
-List<Subject> getFilteredSubject(
+/// Filters the list of subjects based on the selected rotation week.
+List<Subject> getFilteredSubjects(
     ValueNotifier<RotationWeeks> rotationWeek, List<Subject> allSubjects) {
   switch (rotationWeek.value) {
     case RotationWeeks.all:
@@ -74,6 +78,7 @@ List<Subject> getFilteredSubject(
   }
 }
 
+/// Returns rotation week label of a Subject.
 String getSubjectRotationWeekLabel(Subject subject) {
   switch (subject.rotationWeek) {
     case RotationWeeks.a:

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:timetable/components/widgets/bottom_sheets/rotation_week_modal_bottom_sheet.dart';
 import 'package:timetable/constants/rotation_weeks.dart';
 
+/// Rotation Week config part of the Subject creation screen.
 class RotationWeekConfig extends StatelessWidget {
   final ValueNotifier<RotationWeeks> rotationWeek;
 

@@ -3,6 +3,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:timetable/constants/custom_times.dart';
 import 'package:timetable/models/settings.dart';
 
+/// Time config part of the Subject creation screen.
 class TimeConfig extends ConsumerWidget {
   final bool occupied;
   final ValueNotifier<TimeOfDay> startTime;

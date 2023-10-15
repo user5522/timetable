@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
-class CustomsScreen extends HookWidget {
-  const CustomsScreen({
+/// Custom color picker screen for the color config screen.
+class ColorPickerScreen extends HookWidget {
+  const ColorPickerScreen({
     Key? key,
     required this.color,
   }) : super(key: key);

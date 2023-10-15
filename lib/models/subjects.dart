@@ -9,6 +9,7 @@ part 'days.g.dart';
 part 'subjects.g.dart';
 part 'rotationWeeks.g.dart';
 
+/// Subject data model.
 @immutable
 @HiveType(typeId: 1)
 class Subject {
@@ -63,6 +64,7 @@ class Subject {
   }
 }
 
+/// Subject's [StateNotifier].
 class SubjectNotifier extends StateNotifier<List<Subject>> {
   SubjectNotifier() : super([]) {
     loadData();
@@ -88,6 +90,13 @@ class SubjectNotifier extends StateNotifier<List<Subject>> {
         )
         .toList();
     saveData();
+  }
+
+  void resetData() async {
+    var box = await Hive.openBox<List<dynamic>>("subjectBox");
+
+    box.deleteAll(box.keys);
+    state = [];
   }
 
   void updateSubject(Subject oldSubject, Subject newSubject) {

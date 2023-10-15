@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:timetable/components/cell_screen_configs/colors_screen/customs_screen.dart';
-import 'package:timetable/components/cell_screen_configs/colors_screen/presets_scren.dart';
+import 'package:timetable/components/subject_management/subject_configs/colors_config_screens/color_picker_screen.dart';
+import 'package:timetable/components/subject_management/subject_configs/colors_config_screens/preset_colors_scren.dart';
 
+/// Colors Configuration screen, groups [ColorPickerScreen] and [PresetColorsScreen].
 class ColorsScreen extends StatefulWidget {
   final ValueNotifier<Color> color;
 
@@ -53,12 +54,12 @@ class _ColorsScreenState extends State<ColorsScreen>
         controller: _tabController,
         children: <Widget>[
           Center(
-            child: PresetsScreen(
+            child: PresetColorsScreen(
               color: widget.color,
             ),
           ),
           Center(
-            child: CustomsScreen(
+            child: ColorPickerScreen(
               color: widget.color,
             ),
           ),

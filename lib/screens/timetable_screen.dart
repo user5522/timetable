@@ -6,8 +6,10 @@ import 'package:timetable/components/timetable_views/grid_view.dart';
 import 'package:timetable/constants/rotation_weeks.dart';
 import 'package:timetable/models/settings.dart';
 
-class TimetablePage extends HookConsumerWidget {
-  const TimetablePage({super.key});
+/// The main screen, displays the default timetable view.
+/// groups [TimetableGridView] & [TimetableDayView].
+class TimetableScreen extends HookConsumerWidget {
+  const TimetableScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

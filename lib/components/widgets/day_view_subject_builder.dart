@@ -3,8 +3,9 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:timetable/constants/rotation_weeks.dart';
 import 'package:timetable/models/settings.dart';
 import 'package:timetable/models/subjects.dart';
-import 'package:timetable/screens/cell_screen.dart';
+import 'package:timetable/components/subject_management/subject_screen.dart';
 
+/// Subject builder for the day view.
 class DayViewSubjectBuilder extends ConsumerWidget {
   final Subject subject;
 
@@ -40,7 +41,7 @@ class DayViewSubjectBuilder extends ConsumerWidget {
                 settings: const RouteSettings(
                   name: "CellScreen",
                 ),
-                builder: (context) => CellScreen(
+                builder: (context) => SubjectScreen(
                   subject: subject,
                 ),
               ),

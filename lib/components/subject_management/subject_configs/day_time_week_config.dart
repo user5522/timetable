@@ -1,21 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:timetable/components/cell_screen_configs/day_config.dart';
-import 'package:timetable/components/cell_screen_configs/rotation_week_config.dart';
-import 'package:timetable/components/cell_screen_configs/time_config.dart';
+import 'package:timetable/components/subject_management/subject_configs/day_config.dart';
+import 'package:timetable/components/subject_management/subject_configs/rotation_week_config.dart';
+import 'package:timetable/components/subject_management/subject_configs/time_config.dart';
 import 'package:timetable/components/widgets/list_tile_group.dart';
 import 'package:timetable/constants/days.dart';
 import 'package:timetable/constants/rotation_weeks.dart';
 import 'package:timetable/models/settings.dart';
 
-class TimeDayConfig extends ConsumerWidget {
+/// Day, Time & Rotation Week config part of the Subject creation screen.
+class TimeDayRotationWeekConfig extends ConsumerWidget {
   final ValueNotifier<TimeOfDay> startTime;
   final ValueNotifier<TimeOfDay> endTime;
   final ValueNotifier<Days> day;
   final ValueNotifier<RotationWeeks> rotationWeek;
   final bool occupied;
 
-  const TimeDayConfig({
+  const TimeDayRotationWeekConfig({
     super.key,
     required this.startTime,
     required this.endTime,

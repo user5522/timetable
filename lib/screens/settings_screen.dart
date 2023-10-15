@@ -1,13 +1,17 @@
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:timetable/components/settings/customize_timetable.dart';
 import 'package:timetable/components/settings/theme_options.dart';
+import 'package:timetable/components/settings/timetable_data.dart';
+import 'package:timetable/components/settings/timetable_features.dart';
 import 'package:timetable/models/settings.dart';
 import 'package:timetable/provider/themes.dart';
-import 'package:timetable/screens/timetable_period_screen.dart';
 
-class SettingsPage extends ConsumerWidget {
-  const SettingsPage({super.key});
+/// Settings Screen, groups all settings ([CustomizeTimetableOptions], [TimetableDataOptions],
+///  [TimetableFeaturesOptions] and [ThemeOptions]) together.
+class SettingsScreen extends ConsumerWidget {
+  const SettingsScreen({super.key});
 
   Future<int> getAndroidVersion() async {
     DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
@@ -18,15 +22,7 @@ class SettingsPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final themeMode = ref.read(themeModeProvider.notifier);
-    final compactMode = ref.watch(settingsProvider).compactMode;
-    final hideLocation = ref.watch(settingsProvider).hideLocation;
-    final singleLetterDays = ref.watch(settingsProvider).singleLetterDays;
-    final rotationWeeks = ref.watch(settingsProvider).rotationWeeks;
-    final hideSunday = ref.watch(settingsProvider).hideSunday;
     final monetTheming = ref.watch(settingsProvider).monetTheming;
-    final hideTransparentSubject =
-        ref.watch(settingsProvider).hideTransparentSubject;
-    final autoCompleteColor = ref.watch(settingsProvider).autoCompleteColor;
     final settings = ref.read(settingsProvider.notifier);
 
     return Scaffold(
@@ -74,75 +70,19 @@ class SettingsPage extends ConsumerWidget {
               title: const Text("Customize Timetable"),
               textColor: Theme.of(context).colorScheme.primary,
             ),
-            SwitchListTile(
-              title: const Text("Compact Mode"),
-              value: compactMode,
-              onChanged: (bool value) {
-                settings.updateCompactMode(value);
-              },
-            ),
-            SwitchListTile(
-              title: const Text("Hide Locations"),
-              value: hideLocation,
-              onChanged: (bool value) {
-                settings.updateHideLocation(value);
-              },
-            ),
-            SwitchListTile(
-              title: const Text("Single Letter Days"),
-              value: singleLetterDays,
-              onChanged: (bool value) {
-                settings.updateSingleLetterDays(value);
-              },
-            ),
-            SwitchListTile(
-              title: const Text("Hide Sunday"),
-              value: hideSunday,
-              onChanged: (bool value) {
-                settings.updateHideSunday(value);
-              },
-            ),
-            SwitchListTile(
-              title: const Text("Hide Transparent Subjects"),
-              value: hideTransparentSubject,
-              onChanged: (bool value) {
-                settings.updateHideTransparentSubject(value);
-              },
-            ),
+            const CustomizeTimetableOptions(),
             ListTile(
               dense: true,
               title: const Text("Timetable Features"),
               textColor: Theme.of(context).colorScheme.primary,
             ),
+            const TimetableFeaturesOptions(),
             ListTile(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    settings: const RouteSettings(
-                      name: "CellScreen",
-                    ),
-                    builder: (context) => const TimetablePeriodScreen(),
-                  ),
-                );
-              },
-              title: const Text("Time Period Config"),
+              dense: true,
+              title: const Text("Timetable Data"),
+              textColor: Theme.of(context).colorScheme.primary,
             ),
-            SwitchListTile(
-              title: const Text("Rotation Weeks"),
-              subtitle: const Text("Experimental"),
-              value: rotationWeeks,
-              onChanged: (bool value) {
-                settings.updateRotationWeeks(value);
-              },
-            ),
-            SwitchListTile(
-              title: const Text("AutoComplete Colors"),
-              value: autoCompleteColor,
-              onChanged: (bool value) {
-                settings.updateAutoCompleteColor(value);
-              },
-            ),
+            const TimetableDataOptions(),
           ],
         ),
       ),

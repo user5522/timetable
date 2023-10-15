@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:timetable/components/widgets/tile.dart';
 
+/// Grid for the grid view of the Timetable screen.
 class Grid extends StatelessWidget {
   const Grid({
     super.key,

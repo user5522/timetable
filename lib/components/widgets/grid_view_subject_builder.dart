@@ -5,9 +5,10 @@ import 'package:timetable/constants/custom_times.dart';
 import 'package:timetable/constants/rotation_weeks.dart';
 import 'package:timetable/models/settings.dart';
 import 'package:timetable/models/subjects.dart';
-import 'package:timetable/screens/cell_screen.dart';
+import 'package:timetable/components/subject_management/subject_screen.dart';
 import 'package:timetable/constants/grid_properties.dart';
 
+/// Subject builder for the grid view.
 class SubjectBuilder extends ConsumerWidget {
   final Subject subject;
 
@@ -65,7 +66,7 @@ class SubjectBuilder extends ConsumerWidget {
                 settings: const RouteSettings(
                   name: "CellScreen",
                 ),
-                builder: (context) => CellScreen(
+                builder: (context) => SubjectScreen(
                   subject: subject,
                 ),
               ),

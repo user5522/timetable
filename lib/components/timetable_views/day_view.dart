@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:timetable/components/widgets/day_view_navigation_bar.dart';
 import 'package:timetable/components/widgets/day_view_subject_builder.dart';
+import 'package:timetable/constants/days.dart';
 import 'package:timetable/constants/grid_properties.dart';
 import 'package:timetable/constants/rotation_weeks.dart';
 import 'package:timetable/models/subjects.dart';
-import 'package:timetable/utilities/grid_utils.dart';
 
+/// Timetable view that shows each day's subjects in a single screen.
 class TimetableDayView extends HookConsumerWidget {
   final ValueNotifier<RotationWeeks> rotationWeek;
 
@@ -50,7 +51,7 @@ class TimetableDayView extends HookConsumerWidget {
                       ),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: getFilteredSubject(rotationWeek, subject)
+                        children: getFilteredSubjects(rotationWeek, subject)
                             .where((s) => s.day.index == index)
                             .map(
                               (subject) => DayViewSubjectBuilder(

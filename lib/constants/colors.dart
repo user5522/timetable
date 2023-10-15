@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+/// List of the preset colors.
 enum ColorsList {
   lightYellow('Light Yellow', Color(0xFFFFEB3B)),
   yellow('Yellow', Color(0xFFFFb700)),

@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:non_uniform_border/non_uniform_border.dart';
 import 'package:timetable/constants/grid_properties.dart';
-import 'package:timetable/screens/cell_screen.dart';
+import 'package:timetable/components/subject_management/subject_screen.dart';
 
+/// Builds the tile that you click on to create a Subject in the grid view.
 class SubjectContainerBuilder extends ConsumerWidget {
   final int rowIndex;
   final int columnIndex;
@@ -33,7 +34,7 @@ class SubjectContainerBuilder extends ConsumerWidget {
             settings: const RouteSettings(
               name: "CellScreen",
             ),
-            builder: (context) => CellScreen(
+            builder: (context) => SubjectScreen(
               rowIndex: rowIndex,
               columnIndex: columnIndex,
             ),

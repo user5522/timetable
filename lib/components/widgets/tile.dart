@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+/// A tile that can be used to display a single child.
 class Tile extends StatelessWidget {
   const Tile({
     super.key,

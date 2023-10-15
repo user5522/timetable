@@ -6,8 +6,9 @@ import 'package:timetable/constants/grid_properties.dart';
 import 'package:timetable/constants/rotation_weeks.dart';
 import 'package:timetable/models/settings.dart';
 import 'package:timetable/models/subjects.dart';
-import 'package:timetable/screens/cell_screen.dart';
+import 'package:timetable/components/subject_management/subject_screen.dart';
 
+/// Overlapping Subjects Builder for the grid view.
 class OverlappingSubjBuilder extends ConsumerWidget {
   final List<Subject> subjects;
   final int earlierStartTimeHour;
@@ -97,7 +98,7 @@ class OverlappingSubjBuilder extends ConsumerWidget {
                         settings: const RouteSettings(
                           name: "CellScreen",
                         ),
-                        builder: (context) => CellScreen(
+                        builder: (context) => SubjectScreen(
                           subject: subjects[i],
                         ),
                       ),
