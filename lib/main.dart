@@ -38,6 +38,7 @@ class Timetable extends ConsumerWidget {
         ColorScheme? darkDynamic,
       ) {
         return MaterialApp(
+          title: 'Timetable',
           color: Colors.white,
           theme: ThemeData(
             colorScheme: monetTheming
