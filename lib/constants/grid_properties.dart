@@ -17,6 +17,7 @@ int columns(WidgetRef ref) {
 
 /// Number of rows in the grid view based on the custom start time and custom end time (if customTimePeriod is true),
 /// otherwise uses the default time period. (8:00 -> 18:00)
+/// if hour difference is 0, there will be 24 rows
 int rows(WidgetRef ref) {
   final customTimePeriod = ref.watch(settingsProvider).customTimePeriod;
   final customStartTime = ref.watch(settingsProvider).customStartTime;
