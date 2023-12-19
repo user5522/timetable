@@ -25,8 +25,8 @@ int rows(WidgetRef ref) {
   if (customTimePeriod && (customEndTime.hour - customStartTime.hour != 0)) {
     return (customEndTime.hour - customStartTime.hour).abs();
   } else if (customTimePeriod &&
-      (customEndTime.minute - customStartTime.minute == 0)) {
-    return 23;
+      (customEndTime.hour - customStartTime.hour == 0)) {
+    return 24;
   } else {
     return 10;
   }
