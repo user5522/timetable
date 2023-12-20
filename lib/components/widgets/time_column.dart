@@ -17,29 +17,19 @@ class TimeColumn extends ConsumerWidget {
 
     return Column(children: [
       Column(
-        children: List.generate(
-          rows(ref),
-          (i) => SizedBox(
+        children: List.generate(rows(ref), (i) {
+          return SizedBox(
             height: compactMode ? 125 : 100,
             child: Text(
               is24HoursFormat
-                  ? times24h[i +
-                      (customStartTime.hour == 0
-                          ? 0
-                          : customTimePeriod
-                              ? customStartTime.hour
-                              : 8)]
-                  : timespmam[i +
-                      (customStartTime.hour == 0
-                          ? 0
-                          : customTimePeriod
-                              ? customStartTime.hour
-                              : 8)],
+                  ? times24h[i + (customTimePeriod ? customStartTime.hour : 8)]
+                  : timespmam[
+                      i + (customTimePeriod ? customStartTime.hour : 8)],
               style: const TextStyle(fontSize: 13),
               textAlign: TextAlign.center,
             ),
-          ),
-        ),
+          );
+        }),
       ),
     ]);
   }

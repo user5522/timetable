@@ -74,7 +74,7 @@ class SubjectBuilder extends ConsumerWidget {
           },
           borderRadius: BorderRadius.circular(5),
           child: Ink(
-            padding: const EdgeInsets.all(5),
+            padding: const EdgeInsets.all(3),
             decoration: BoxDecoration(
               color: color,
               border: Border.all(
