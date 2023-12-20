@@ -21,7 +21,7 @@ class RotationWeekToggle extends HookWidget {
 
     void changeLabel() {
       clickCount.value++;
-      if (clickCount.value >= 3) {
+      if (clickCount.value >= labels.length) {
         clickCount.value = 0;
       }
     }

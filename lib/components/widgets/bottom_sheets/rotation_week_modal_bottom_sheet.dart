@@ -6,8 +6,11 @@ class RotationWeekModalBottomSheet extends StatelessWidget {
   final List<RotationWeeks> rotationWeeks;
   final ValueNotifier<RotationWeeks> rotationWeek;
 
-  const RotationWeekModalBottomSheet(
-      {super.key, required this.rotationWeeks, required this.rotationWeek});
+  const RotationWeekModalBottomSheet({
+    super.key,
+    required this.rotationWeeks,
+    required this.rotationWeek,
+  });
 
   @override
   Widget build(BuildContext context) {

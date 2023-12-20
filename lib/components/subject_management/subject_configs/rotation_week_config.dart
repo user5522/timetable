@@ -29,12 +29,9 @@ class RotationWeekConfig extends StatelessWidget {
               isDismissible: true,
               context: context,
               builder: (context) {
-                return SizedBox(
-                  height: 200,
-                  child: RotationWeekModalBottomSheet(
-                    rotationWeek: rotationWeek,
-                    rotationWeeks: rotationWeeks,
-                  ),
+                return RotationWeekModalBottomSheet(
+                  rotationWeek: rotationWeek,
+                  rotationWeeks: rotationWeeks,
                 );
               },
             );

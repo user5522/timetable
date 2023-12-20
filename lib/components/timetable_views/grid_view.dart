@@ -60,7 +60,7 @@ class TimetableGridView extends HookConsumerWidget {
                   rows: rows(ref),
                   columns: columns(ref),
                   grid: generate(
-                    getFilteredSubjects(rotationWeek, subject)
+                    getFilteredByRotationWeeksSubjects(rotationWeek, subject)
                         .where(
                           (e) =>
                               e.endTime.hour <=
@@ -172,7 +172,7 @@ class TimetableGridView extends HookConsumerWidget {
                 child: OverlappingSubjBuilder(
                   subjects: subjects,
                   earlierStartTimeHour: earlierStartTimeHour,
-                  lateerEndTimeHour: laterEndTimeHour,
+                  laterEndTimeHour: laterEndTimeHour,
                 ),
               );
             }

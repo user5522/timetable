@@ -51,7 +51,8 @@ class TimetableDayView extends HookConsumerWidget {
                       ),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: getFilteredSubjects(rotationWeek, subject)
+                        children: getFilteredByRotationWeeksSubjects(
+                                rotationWeek, subject)
                             .where((s) => s.day.index == index)
                             .map(
                               (subject) => DayViewSubjectBuilder(

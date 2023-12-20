@@ -12,13 +12,13 @@ import 'package:timetable/components/subject_management/subject_screen.dart';
 class OverlappingSubjBuilder extends ConsumerWidget {
   final List<Subject> subjects;
   final int earlierStartTimeHour;
-  final int lateerEndTimeHour;
+  final int laterEndTimeHour;
 
   const OverlappingSubjBuilder({
     Key? key,
     required this.subjects,
     required this.earlierStartTimeHour,
-    required this.lateerEndTimeHour,
+    required this.laterEndTimeHour,
   }) : super(key: key);
 
   @override
@@ -50,9 +50,7 @@ class OverlappingSubjBuilder extends ConsumerWidget {
               ? 0
               : 1,
       bottomWidth:
-          lateerEndTimeHour == getCustomEndTime(customEndTime, ref).hour
-              ? 0
-              : 1,
+          laterEndTimeHour == getCustomEndTime(customEndTime, ref).hour ? 0 : 1,
       strokeAlign: BorderSide.strokeAlignCenter,
       color: Colors.grey,
     );
