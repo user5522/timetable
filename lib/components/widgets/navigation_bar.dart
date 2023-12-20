@@ -62,7 +62,7 @@ class Navigation extends HookConsumerWidget {
       case 0:
         return const TimetableScreen();
       case 1:
-        return SettingsScreen();
+        return const SettingsScreen();
       default:
         return const TimetableScreen();
     }

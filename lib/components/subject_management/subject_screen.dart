@@ -139,7 +139,7 @@ class SubjectScreen extends HookConsumerWidget {
               onPressed: () {
                 if (formKey.currentState!.validate()) {
                   if (isSubjectNull) {
-                    if (isOccupied == false) {
+                    if (!isOccupied) {
                       state.addSubject(newSubject);
                       Navigator.pop(context, label.value);
                     } else {
@@ -150,7 +150,7 @@ class SubjectScreen extends HookConsumerWidget {
                       );
                     }
                   } else {
-                    if (isOccupiedExceptSelf == false) {
+                    if (!isOccupiedExceptSelf) {
                       state.updateSubject(subject!, newSubject);
                       Navigator.pop(context, label.value);
                     } else {
@@ -220,12 +220,9 @@ class SubjectScreen extends HookConsumerWidget {
                     ),
                   ],
                 ),
-                const SizedBox(
-                  height: 10,
-                ),
-                ColorsConfig(color: color),
-                const SizedBox(
-                  height: 10,
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  child: ColorsConfig(color: color),
                 ),
                 TimeDayRotationWeekConfig(
                   day: day,
@@ -234,12 +231,12 @@ class SubjectScreen extends HookConsumerWidget {
                   endTime: endTime,
                   occupied: isSubjectNull ? isOccupied : isOccupiedExceptSelf,
                 ),
-                const SizedBox(
-                  height: 10,
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  child: NotesTile(
+                    note: note,
+                  ),
                 ),
-                NotesTile(
-                  note: note,
-                )
               ],
             ),
           ),

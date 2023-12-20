@@ -76,6 +76,7 @@ class DayViewSubjectBuilder extends ConsumerWidget {
                           ),
                         ),
                       ),
+                      // SizedBox is for incase the label is too long
                       const SizedBox(
                         width: 20,
                       ),
@@ -123,9 +124,6 @@ class DayViewSubjectBuilder extends ConsumerWidget {
                           size: 19,
                           color: subLabelsColor,
                         ),
-                        const SizedBox(
-                          width: 10,
-                        ),
                         Expanded(
                           child: Text(
                             location.toString(),
@@ -143,13 +141,13 @@ class DayViewSubjectBuilder extends ConsumerWidget {
                   if (note != null && note.isNotEmpty)
                     Row(
                       children: [
-                        Icon(
-                          Icons.sticky_note_2_outlined,
-                          size: 19,
-                          color: subLabelsColor,
-                        ),
-                        const SizedBox(
-                          width: 10,
+                        Padding(
+                          padding: const EdgeInsets.only(right: 10),
+                          child: Icon(
+                            Icons.sticky_note_2_outlined,
+                            size: 19,
+                            color: subLabelsColor,
+                          ),
                         ),
                         Expanded(
                           child: Text(

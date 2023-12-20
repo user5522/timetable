@@ -87,7 +87,12 @@ class OverlappingSubjBuilder extends ConsumerWidget {
                 height: (startTimeHour - earlierStartTimeHour) * (tileHeight),
               ),
               Padding(
-                padding: const EdgeInsets.all(outerPadding),
+                padding: const EdgeInsets.fromLTRB(
+                  outerPadding,
+                  outerPadding,
+                  outerPadding,
+                  outerPadding - 1,
+                ),
                 child: InkWell(
                   onTap: () {
                     Navigator.push(
@@ -116,7 +121,7 @@ class OverlappingSubjBuilder extends ConsumerWidget {
                         width: 0,
                       ),
                     ),
-                    width: ((tileWidth / 2) - .75) - (outerPadding * 2),
+                    width: ((tileWidth / 2) - .75) - (outerPadding * 2.25),
                     height:
                         (((endTimeHour - startTimeHour) * (tileHeight)) - 1) -
                             (outerPadding * 2),

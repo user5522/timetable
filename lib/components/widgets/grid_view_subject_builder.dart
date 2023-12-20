@@ -106,7 +106,7 @@ class SubjectBuilder extends ConsumerWidget {
                   height: 5,
                 ),
                 if ((location != null))
-                  if (hideLocation == false)
+                  if (!hideLocation)
                     if (!hideTransparentSubjects)
                       Text(
                         location.toString(),
