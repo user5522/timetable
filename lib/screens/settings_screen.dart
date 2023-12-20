@@ -5,13 +5,16 @@ import 'package:timetable/components/settings/customize_timetable.dart';
 import 'package:timetable/components/settings/theme_options.dart';
 import 'package:timetable/components/settings/timetable_data.dart';
 import 'package:timetable/components/settings/timetable_features.dart';
+import 'package:timetable/components/widgets/navigation_bar_toggle.dart';
 import 'package:timetable/models/settings.dart';
 import 'package:timetable/provider/themes.dart';
 
 /// Settings Screen, groups all settings ([CustomizeTimetableOptions], [TimetableDataOptions],
 ///  [TimetableFeaturesOptions] and [ThemeOptions]) together.
 class SettingsScreen extends ConsumerWidget {
-  const SettingsScreen({super.key});
+  const SettingsScreen({
+    super.key,
+  });
 
   Future<int> getAndroidVersion() async {
     DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
@@ -24,10 +27,12 @@ class SettingsScreen extends ConsumerWidget {
     final themeMode = ref.read(themeModeProvider.notifier);
     final monetTheming = ref.watch(settingsProvider).monetTheming;
     final settings = ref.read(settingsProvider.notifier);
+    final navbarToggle = ref.watch(settingsProvider).navbarVisible;
 
     return Scaffold(
       appBar: AppBar(
         title: const Text("Settings"),
+        leading: navbarToggle ? null : const NavbarToggle(),
       ),
       body: SingleChildScrollView(
         child: Column(

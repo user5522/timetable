@@ -29,7 +29,6 @@ class DaysRow extends ConsumerWidget {
         hideSunday ? days.length - 1 : days.length,
         (i) => Container(
           alignment: Alignment.bottomCenter,
-          height: 20,
           width: tileWidth,
           child: Text(
             singleLetterDays

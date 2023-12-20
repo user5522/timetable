@@ -22,15 +22,8 @@ class TimetableScreen extends HookConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Row(
-          children: [
-            NavbarToggle(),
-            SizedBox(
-              width: 5,
-            ),
-            Text('Timetable'),
-          ],
-        ),
+        leading: const NavbarToggle(),
+        title: const Text('Timetable'),
         actions: [
           if (rotationWeeks)
             RotationWeekToggle(

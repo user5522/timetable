@@ -40,7 +40,6 @@ class RotationWeekToggle extends HookWidget {
             getRotationWeekButtonLabel(labels[clickCount.value]),
             style: const TextStyle(
               fontWeight: FontWeight.bold,
-              fontSize: 16,
             ),
           ),
         ),

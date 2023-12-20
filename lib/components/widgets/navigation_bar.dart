@@ -1,31 +1,34 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:timetable/models/settings.dart';
 import 'package:timetable/screens/settings_screen.dart';
 import 'package:timetable/screens/timetable_screen.dart';
 
 /// The navigation bar.
-class Navigation extends ConsumerStatefulWidget {
-  const Navigation({super.key});
+class Navigation extends HookConsumerWidget {
+  const Navigation({
+    super.key,
+  });
 
   @override
-  ConsumerState<Navigation> createState() => _NavigationState();
-}
-
-class _NavigationState extends ConsumerState<Navigation> {
-  int currentPageIndex = 0;
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final navbarToggle = ref.watch(settingsProvider).navbarVisible;
+    final currentPageIndex = useState(0);
+
+    void onTabTapped(int index) {
+      if (currentPageIndex.value != index) {
+        currentPageIndex.value = index;
+      }
+    }
 
     return Scaffold(
       bottomNavigationBar: Visibility(
         visible: navbarToggle,
         child: NavigationBar(
-          onDestinationSelected: _onTabTapped,
-          selectedIndex: currentPageIndex,
+          onDestinationSelected: onTabTapped,
+          selectedIndex: currentPageIndex.value,
           destinations: const <Widget>[
             NavigationDestination(
               selectedIcon: Icon(Icons.table_chart),
@@ -49,17 +52,9 @@ class _NavigationState extends ConsumerState<Navigation> {
               transitionType: SharedAxisTransitionType.horizontal,
               child: child);
         },
-        child: _buildPage(currentPageIndex),
+        child: _buildPage(currentPageIndex.value),
       ),
     );
-  }
-
-  void _onTabTapped(int index) {
-    if (currentPageIndex != index) {
-      setState(() {
-        currentPageIndex = index;
-      });
-    }
   }
 
   Widget _buildPage(int pageIndex) {
@@ -67,7 +62,7 @@ class _NavigationState extends ConsumerState<Navigation> {
       case 0:
         return const TimetableScreen();
       case 1:
-        return const SettingsScreen();
+        return SettingsScreen();
       default:
         return const TimetableScreen();
     }

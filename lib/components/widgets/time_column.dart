@@ -21,7 +21,6 @@ class TimeColumn extends ConsumerWidget {
           rows(ref),
           (i) => SizedBox(
             height: compactMode ? 125 : 100,
-            width: timeColumnWidth,
             child: Text(
               is24HoursFormat
                   ? times24h[i +

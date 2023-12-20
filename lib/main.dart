@@ -59,7 +59,7 @@ class Timetable extends ConsumerWidget {
                   ),
             useMaterial3: true,
           ),
-          home: const Navigation(),
+          home: Navigation(),
         );
       },
     );
