@@ -7,6 +7,7 @@ import 'package:timetable/components/widgets/grid_day_views_toggle.dart';
 import 'package:timetable/components/widgets/navigation_bar_toggle.dart';
 import 'package:timetable/components/widgets/rotation_week_toggle.dart';
 import 'package:timetable/constants/rotation_weeks.dart';
+import 'package:timetable/db/models.dart';
 import 'package:timetable/models/settings.dart';
 
 /// The main screen, displays the default timetable view.
@@ -19,6 +20,8 @@ class TimetableScreen extends HookConsumerWidget {
     final rotationWeeks = ref.watch(settingsProvider).rotationWeeks;
     final isGridView = useState(true);
     final rotationWeek = useState(RotationWeeks.all);
+
+    final subject = ref.watch(subjProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -37,9 +40,11 @@ class TimetableScreen extends HookConsumerWidget {
       body: isGridView.value
           ? TimetableGridView(
               rotationWeek: rotationWeek,
+              subject: subject,
             )
           : TimetableDayView(
               rotationWeek: rotationWeek,
+              subject: subject,
             ),
     );
   }
