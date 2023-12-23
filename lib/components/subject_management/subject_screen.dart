@@ -202,8 +202,8 @@ class SubjectScreen extends HookConsumerWidget {
                             color.value = Color(subjects
                                 .firstWhere(
                                   (subj) =>
-                                      label.value.toLowerCase() ==
-                                      subj.label.toLowerCase(),
+                                      label.value.toLowerCase().trim() ==
+                                      subj.label.toLowerCase().trim(),
                                   orElse: () => basicSubject,
                                 )
                                 .color);
