@@ -4,6 +4,7 @@ import 'package:timetable/constants/days.dart';
 import 'package:timetable/constants/rotation_weeks.dart';
 import 'package:timetable/db/converters/time_of_day_converter.dart';
 import 'package:timetable/db/database.dart';
+import 'package:timetable/models/overlapping_subjects.dart';
 
 class Subject extends Table {
   IntColumn get id => integer().autoIncrement()();
@@ -19,8 +20,12 @@ class Subject extends Table {
 
 class SubjNotifier extends StateNotifier<List<SubjectData>> {
   AppDatabase db;
+  List<List<SubjectData>> overlappingSubjects;
 
-  SubjNotifier(this.db) : super([]) {
+  SubjNotifier(
+    this.db,
+    this.overlappingSubjects,
+  ) : super([]) {
     getSubjects();
   }
 
@@ -55,6 +60,7 @@ class SubjNotifier extends StateNotifier<List<SubjectData>> {
 
   Future deleteSubject(SubjectData entry) async {
     db.subject.deleteWhere((t) => t.id.equals(entry.id));
+    overlappingSubjects.removeWhere((e) => e.contains(entry));
 
     state = await getSubjects();
   }
@@ -67,5 +73,6 @@ class SubjNotifier extends StateNotifier<List<SubjectData>> {
 }
 
 final subjProvider = StateNotifierProvider<SubjNotifier, List<SubjectData>>(
-  (ref) => SubjNotifier(ref.watch(AppDatabase.provider)),
+  (ref) => SubjNotifier(
+      ref.watch(AppDatabase.provider), ref.watch(overlappingSubjectsProvider)),
 );
