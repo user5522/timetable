@@ -31,14 +31,16 @@ class TimetableFeaturesOptions extends ConsumerWidget {
         ),
         SwitchListTile(
           title: const Text("Rotation Weeks"),
-          subtitle: const Text("Experimental"),
           value: rotationWeeks,
           onChanged: (bool value) {
             settings.updateRotationWeeks(value);
           },
         ),
         SwitchListTile(
-          title: const Text("AutoComplete Colors"),
+          title: const Text("Auto Complete Colors"),
+          subtitle: const Text(
+            "auto assigns colors from previously made subjects that have matching names",
+          ),
           value: autoCompleteColor,
           onChanged: (bool value) {
             settings.updateAutoCompleteColor(value);
