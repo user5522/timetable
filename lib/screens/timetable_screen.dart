@@ -7,8 +7,8 @@ import 'package:timetable/components/widgets/grid_day_views_toggle.dart';
 import 'package:timetable/components/widgets/navigation_bar_toggle.dart';
 import 'package:timetable/components/widgets/rotation_week_toggle.dart';
 import 'package:timetable/constants/rotation_weeks.dart';
-import 'package:timetable/db/models.dart';
 import 'package:timetable/models/settings.dart';
+import 'package:timetable/provider/subjects.dart';
 
 /// The main screen, displays the default timetable view.
 /// basically groups [TimetableGridView] & [TimetableDayView].

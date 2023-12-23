@@ -2,7 +2,7 @@ import 'package:drift/drift.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:timetable/constants/rotation_weeks.dart';
 import 'package:timetable/constants/days.dart';
-import 'package:timetable/db/models.dart';
+import 'package:timetable/db/models/subject.dart';
 import 'package:timetable/db/connection/native.dart';
 import 'package:timetable/db/converters/time_of_day_converter.dart';
 import 'package:flutter/material.dart' as material;
