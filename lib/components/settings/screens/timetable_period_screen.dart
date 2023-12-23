@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:timetable/constants/custom_times.dart';
-import 'package:timetable/models/settings.dart';
+import 'package:timetable/provider/settings.dart';
 
-/// 
+/// Screen to manage the period of the timetable.
+/// Changes the start time and end time of the timetable.
 class TimetablePeriodScreen extends ConsumerWidget {
   const TimetablePeriodScreen({super.key});
 

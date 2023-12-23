@@ -5,21 +5,23 @@ import 'package:timetable/components/widgets/day_view_subject_builder.dart';
 import 'package:timetable/constants/days.dart';
 import 'package:timetable/constants/grid_properties.dart';
 import 'package:timetable/constants/rotation_weeks.dart';
-import 'package:timetable/models/subjects.dart';
+import 'package:timetable/helpers/rotation_weeks.dart';
+import 'package:timetable/db/database.dart';
 
 /// Timetable view that shows each day's subjects in a single screen.
 class TimetableDayView extends HookConsumerWidget {
   final ValueNotifier<RotationWeeks> rotationWeek;
+  final List<SubjectData> subject;
 
   const TimetableDayView({
     super.key,
     required this.rotationWeek,
+    required this.subject,
   });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     PageController controller;
-    final subject = ref.watch(subjectProvider);
     controller = PageController(initialPage: DateTime.now().weekday - 1);
 
     return Column(
@@ -51,7 +53,10 @@ class TimetableDayView extends HookConsumerWidget {
                       ),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: getFilteredSubjects(rotationWeek, subject)
+                        children: getFilteredByRotationWeeksSubjects(
+                          rotationWeek,
+                          subject,
+                        )
                             .where((s) => s.day.index == index)
                             .map(
                               (subject) => DayViewSubjectBuilder(

@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:non_uniform_border/non_uniform_border.dart';
 import 'package:timetable/constants/custom_times.dart';
-import 'package:timetable/constants/rotation_weeks.dart';
-import 'package:timetable/models/settings.dart';
-import 'package:timetable/models/subjects.dart';
+import 'package:timetable/helpers/rotation_weeks.dart';
+import 'package:timetable/db/database.dart';
+import 'package:timetable/provider/settings.dart';
 import 'package:timetable/components/subject_management/subject_screen.dart';
 import 'package:timetable/constants/grid_properties.dart';
 
 /// Subject builder for the grid view.
 class SubjectBuilder extends ConsumerWidget {
-  final Subject subject;
+  final SubjectData subject;
 
   const SubjectBuilder({
     super.key,
@@ -74,7 +74,7 @@ class SubjectBuilder extends ConsumerWidget {
           },
           borderRadius: BorderRadius.circular(5),
           child: Ink(
-            padding: const EdgeInsets.all(5),
+            padding: const EdgeInsets.all(3),
             decoration: BoxDecoration(
               color: color,
               border: Border.all(
@@ -106,7 +106,7 @@ class SubjectBuilder extends ConsumerWidget {
                   height: 5,
                 ),
                 if ((location != null))
-                  if (hideLocation == false)
+                  if (!hideLocation)
                     if (!hideTransparentSubjects)
                       Text(
                         location.toString(),

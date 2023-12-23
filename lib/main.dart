@@ -1,19 +1,13 @@
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:timetable/components/widgets/navigation_bar.dart';
 import 'package:timetable/constants/theme_options.dart';
-import 'package:timetable/models/settings.dart';
-import 'package:timetable/models/subjects.dart';
+import 'package:timetable/provider/settings.dart';
 import 'package:timetable/provider/themes.dart';
 
 void main() async {
-  await Hive.initFlutter();
-  Hive.registerAdapter(TimeOfDayAdapter());
-  Hive.registerAdapter(DaysAdapter());
-  Hive.registerAdapter(RotationWeeksAdapter());
-  Hive.registerAdapter(SubjectAdapter());
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(
     const ProviderScope(
       child: Timetable(),

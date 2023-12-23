@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:timetable/constants/custom_times.dart';
-import 'package:timetable/models/settings.dart';
+import 'package:timetable/provider/settings.dart';
 
 /// Time config part of the Subject creation screen.
 class TimeConfig extends ConsumerWidget {
@@ -115,12 +115,11 @@ class TimeConfig extends ConsumerWidget {
             ),
           ),
         ),
-        const SizedBox(
-          width: 10,
-        ),
-        const Icon(Icons.arrow_forward),
-        const SizedBox(
-          width: 10,
+        const Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: 10,
+          ),
+          child: Icon(Icons.arrow_forward),
         ),
         ActionChip(
           side: BorderSide.none,
@@ -153,15 +152,14 @@ class TimeConfig extends ConsumerWidget {
             ),
           ),
         ),
-        if (occupied == true)
-          const SizedBox(
-            width: 10,
+        if (occupied)
+          const Padding(
+            padding: EdgeInsets.only(left: 10),
+            child: Icon(
+              Icons.cancel,
+              color: Colors.redAccent,
+            ),
           ),
-        if (occupied == true)
-          const Icon(
-            Icons.cancel,
-            color: Colors.redAccent,
-          )
       ],
     );
   }

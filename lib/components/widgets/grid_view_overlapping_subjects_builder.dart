@@ -3,22 +3,22 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:non_uniform_border/non_uniform_border.dart';
 import 'package:timetable/constants/custom_times.dart';
 import 'package:timetable/constants/grid_properties.dart';
-import 'package:timetable/constants/rotation_weeks.dart';
-import 'package:timetable/models/settings.dart';
-import 'package:timetable/models/subjects.dart';
+import 'package:timetable/helpers/rotation_weeks.dart';
+import 'package:timetable/db/database.dart';
+import 'package:timetable/provider/settings.dart';
 import 'package:timetable/components/subject_management/subject_screen.dart';
 
 /// Overlapping Subjects Builder for the grid view.
 class OverlappingSubjBuilder extends ConsumerWidget {
-  final List<Subject> subjects;
+  final List<SubjectData> subjects;
   final int earlierStartTimeHour;
-  final int lateerEndTimeHour;
+  final int laterEndTimeHour;
 
   const OverlappingSubjBuilder({
     Key? key,
     required this.subjects,
     required this.earlierStartTimeHour,
-    required this.lateerEndTimeHour,
+    required this.laterEndTimeHour,
   }) : super(key: key);
 
   @override
@@ -50,9 +50,7 @@ class OverlappingSubjBuilder extends ConsumerWidget {
               ? 0
               : 1,
       bottomWidth:
-          lateerEndTimeHour == getCustomEndTime(customEndTime, ref).hour
-              ? 0
-              : 1,
+          laterEndTimeHour == getCustomEndTime(customEndTime, ref).hour ? 0 : 1,
       strokeAlign: BorderSide.strokeAlignCenter,
       color: Colors.grey,
     );
@@ -89,7 +87,12 @@ class OverlappingSubjBuilder extends ConsumerWidget {
                 height: (startTimeHour - earlierStartTimeHour) * (tileHeight),
               ),
               Padding(
-                padding: const EdgeInsets.all(outerPadding),
+                padding: const EdgeInsets.fromLTRB(
+                  outerPadding,
+                  outerPadding,
+                  outerPadding,
+                  outerPadding - 1,
+                ),
                 child: InkWell(
                   onTap: () {
                     Navigator.push(
@@ -118,7 +121,7 @@ class OverlappingSubjBuilder extends ConsumerWidget {
                         width: 0,
                       ),
                     ),
-                    width: ((tileWidth / 2) - .75) - (outerPadding * 2),
+                    width: ((tileWidth / 2) - .75) - (outerPadding * 2.25),
                     height:
                         (((endTimeHour - startTimeHour) * (tileHeight)) - 1) -
                             (outerPadding * 2),

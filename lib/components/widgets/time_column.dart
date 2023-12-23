@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:timetable/constants/grid_properties.dart';
 import 'package:timetable/constants/time.dart';
-import 'package:timetable/models/settings.dart';
+import 'package:timetable/provider/settings.dart';
 
 /// Widget that appears at the left side of the timetable grid view screen and shows the timetable time period.
 class TimeColumn extends ConsumerWidget {
@@ -17,30 +17,19 @@ class TimeColumn extends ConsumerWidget {
 
     return Column(children: [
       Column(
-        children: List.generate(
-          rows(ref),
-          (i) => SizedBox(
+        children: List.generate(rows(ref), (i) {
+          return SizedBox(
             height: compactMode ? 125 : 100,
-            width: timeColumnWidth,
             child: Text(
               is24HoursFormat
-                  ? times24h[i +
-                      (customStartTime.hour == 0
-                          ? 0
-                          : customTimePeriod
-                              ? customStartTime.hour
-                              : 8)]
-                  : timespmam[i +
-                      (customStartTime.hour == 0
-                          ? 0
-                          : customTimePeriod
-                              ? customStartTime.hour
-                              : 8)],
+                  ? times24h[i + (customTimePeriod ? customStartTime.hour : 8)]
+                  : timespmam[
+                      i + (customTimePeriod ? customStartTime.hour : 8)],
               style: const TextStyle(fontSize: 13),
               textAlign: TextAlign.center,
             ),
-          ),
-        ),
+          );
+        }),
       ),
     ]);
   }

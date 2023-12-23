@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:timetable/components/widgets/bottom_sheets/rotation_week_modal_bottom_sheet.dart';
 import 'package:timetable/constants/rotation_weeks.dart';
+import 'package:timetable/helpers/rotation_weeks.dart';
 
 /// Rotation Week config part of the Subject creation screen.
 class RotationWeekConfig extends StatelessWidget {
@@ -29,12 +30,9 @@ class RotationWeekConfig extends StatelessWidget {
               isDismissible: true,
               context: context,
               builder: (context) {
-                return SizedBox(
-                  height: 200,
-                  child: RotationWeekModalBottomSheet(
-                    rotationWeek: rotationWeek,
-                    rotationWeeks: rotationWeeks,
-                  ),
+                return RotationWeekModalBottomSheet(
+                  rotationWeek: rotationWeek,
+                  rotationWeeks: rotationWeeks,
                 );
               },
             );

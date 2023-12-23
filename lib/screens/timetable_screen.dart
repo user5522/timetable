@@ -3,99 +3,48 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:timetable/components/timetable_views/day_view.dart';
 import 'package:timetable/components/timetable_views/grid_view.dart';
+import 'package:timetable/components/widgets/grid_day_views_toggle.dart';
+import 'package:timetable/components/widgets/navigation_bar_toggle.dart';
+import 'package:timetable/components/widgets/rotation_week_toggle.dart';
 import 'package:timetable/constants/rotation_weeks.dart';
-import 'package:timetable/models/settings.dart';
+import 'package:timetable/provider/settings.dart';
+import 'package:timetable/provider/subjects.dart';
 
 /// The main screen, displays the default timetable view.
-/// groups [TimetableGridView] & [TimetableDayView].
+/// basically groups [TimetableGridView] & [TimetableDayView].
 class TimetableScreen extends HookConsumerWidget {
   const TimetableScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final rotationWeeks = ref.watch(settingsProvider).rotationWeeks;
-    final navbarToggle = ref.watch(settingsProvider).navbarVisible;
-    final settings = ref.read(settingsProvider.notifier);
-
     final isGridView = useState(true);
     final rotationWeek = useState(RotationWeeks.all);
 
-    List<RotationWeeks> labels = [
-      RotationWeeks.all,
-      RotationWeeks.a,
-      RotationWeeks.b,
-    ];
-
-    final clickCount = useState(0);
-
-    void changeLabel() {
-      clickCount.value++;
-      if (clickCount.value >= 3) {
-        clickCount.value = 0;
-      }
-    }
+    final subject = ref.watch(subjProvider);
 
     return Scaffold(
       appBar: AppBar(
-          title: Row(
-            children: [
-              IconButton(
-                onPressed: () {
-                  settings.updateNavbarVisible(!navbarToggle);
-                },
-                selectedIcon: const Icon(
-                  Icons.fullscreen,
-                  size: 25,
-                ),
-                icon: const Icon(
-                  Icons.close_fullscreen_outlined,
-                  size: 20,
-                ),
-                isSelected: navbarToggle,
-              ),
-              const SizedBox(
-                width: 5,
-              ),
-              const Text('Timetable'),
-            ],
+        leading: const NavbarToggle(),
+        title: const Text('Timetable'),
+        actions: [
+          if (rotationWeeks)
+            RotationWeekToggle(
+              rotationWeek: rotationWeek,
+            ),
+          GridDayViewsToggle(
+            isGridView: isGridView,
           ),
-          actions: [
-            if (rotationWeeks)
-              InkWell(
-                onTap: () {
-                  changeLabel();
-                  rotationWeek.value = labels[clickCount.value];
-                },
-                borderRadius: BorderRadius.circular(50),
-                child: Ink(
-                  width: 40,
-                  height: 40,
-                  child: Center(
-                    child: Text(
-                      getRotationWeekButtonLabel(labels[clickCount.value]),
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            IconButton(
-              onPressed: () {
-                isGridView.value = !isGridView.value;
-              },
-              selectedIcon: const Icon(Icons.view_agenda_outlined),
-              icon: const Icon(Icons.grid_view_outlined),
-              isSelected: isGridView.value,
-            )
-          ]),
+        ],
+      ),
       body: isGridView.value
           ? TimetableGridView(
               rotationWeek: rotationWeek,
+              subject: subject,
             )
           : TimetableDayView(
               rotationWeek: rotationWeek,
+              subject: subject,
             ),
     );
   }

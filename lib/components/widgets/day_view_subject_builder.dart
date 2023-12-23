@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:timetable/constants/rotation_weeks.dart';
-import 'package:timetable/models/settings.dart';
-import 'package:timetable/models/subjects.dart';
+import 'package:timetable/helpers/rotation_weeks.dart';
+import 'package:timetable/db/database.dart';
+import 'package:timetable/provider/settings.dart';
 import 'package:timetable/components/subject_management/subject_screen.dart';
 
 /// Subject builder for the day view.
 class DayViewSubjectBuilder extends ConsumerWidget {
-  final Subject subject;
+  final SubjectData subject;
 
   const DayViewSubjectBuilder({super.key, required this.subject});
 
@@ -76,6 +76,7 @@ class DayViewSubjectBuilder extends ConsumerWidget {
                           ),
                         ),
                       ),
+                      // SizedBox is for incase the label is too long
                       const SizedBox(
                         width: 20,
                       ),
@@ -123,9 +124,6 @@ class DayViewSubjectBuilder extends ConsumerWidget {
                           size: 19,
                           color: subLabelsColor,
                         ),
-                        const SizedBox(
-                          width: 10,
-                        ),
                         Expanded(
                           child: Text(
                             location.toString(),
@@ -143,13 +141,13 @@ class DayViewSubjectBuilder extends ConsumerWidget {
                   if (note != null && note.isNotEmpty)
                     Row(
                       children: [
-                        Icon(
-                          Icons.sticky_note_2_outlined,
-                          size: 19,
-                          color: subLabelsColor,
-                        ),
-                        const SizedBox(
-                          width: 10,
+                        Padding(
+                          padding: const EdgeInsets.only(right: 10),
+                          child: Icon(
+                            Icons.sticky_note_2_outlined,
+                            size: 19,
+                            color: subLabelsColor,
+                          ),
                         ),
                         Expanded(
                           child: Text(

@@ -6,7 +6,7 @@ import 'package:timetable/components/subject_management/subject_configs/time_con
 import 'package:timetable/components/widgets/list_tile_group.dart';
 import 'package:timetable/constants/days.dart';
 import 'package:timetable/constants/rotation_weeks.dart';
-import 'package:timetable/models/settings.dart';
+import 'package:timetable/provider/settings.dart';
 
 /// Day, Time & Rotation Week config part of the Subject creation screen.
 class TimeDayRotationWeekConfig extends ConsumerWidget {

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:timetable/constants/days.dart';
 import 'package:timetable/constants/grid_properties.dart';
-import 'package:timetable/models/settings.dart';
+import 'package:timetable/provider/settings.dart';
 
 /// Widget that appears at the top of the timetable grid view screen and shows the week's days.
 class DaysRow extends ConsumerWidget {
@@ -29,7 +29,6 @@ class DaysRow extends ConsumerWidget {
         hideSunday ? days.length - 1 : days.length,
         (i) => Container(
           alignment: Alignment.bottomCenter,
-          height: 20,
           width: tileWidth,
           child: Text(
             singleLetterDays

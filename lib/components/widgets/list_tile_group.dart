@@ -80,18 +80,18 @@ class ListItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        ListTile(
-          title: title,
-          subtitle: subtitle,
-          leading: leading,
-          onTap: () {
-            onTap;
-          },
-          shape: shape,
-          tileColor: Theme.of(context).colorScheme.surfaceVariant,
-        ),
-        const SizedBox(
-          height: 2,
+        Padding(
+          padding: const EdgeInsets.only(bottom: 2),
+          child: ListTile(
+            title: title,
+            subtitle: subtitle,
+            leading: leading,
+            onTap: () {
+              onTap;
+            },
+            shape: shape,
+            tileColor: Theme.of(context).colorScheme.surfaceVariant,
+          ),
         ),
       ],
     );
