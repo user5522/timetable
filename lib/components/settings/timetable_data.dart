@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:timetable/components/widgets/alert_dialog.dart';
-import 'package:timetable/models/subjects.dart';
+import 'package:timetable/db/models.dart';
 
 /// All the settings that allow for manipulating the timetable's data.
 class TimetableDataOptions extends ConsumerWidget {
@@ -9,7 +9,7 @@ class TimetableDataOptions extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final subjNotifier = ref.watch(subjectProvider.notifier);
+    final subjNotifier = ref.watch(subjProvider.notifier);
 
     return Column(
       children: [

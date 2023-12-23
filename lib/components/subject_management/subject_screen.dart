@@ -8,16 +8,17 @@ import 'package:timetable/components/widgets/list_tile_group.dart';
 import 'package:timetable/constants/basic_subject.dart';
 import 'package:timetable/constants/days.dart';
 import 'package:timetable/constants/rotation_weeks.dart';
+import 'package:timetable/db/database.dart';
+import 'package:timetable/db/models.dart';
 import 'package:timetable/models/overlapping_subjects.dart';
 import 'package:timetable/models/settings.dart';
-import 'package:timetable/models/subjects.dart';
 
 /// The Subject creation/modification screen.
 /// Uses [TimeDayRotationWeekConfig], [NotesTile] and [ColorsConfig]
 class SubjectScreen extends HookConsumerWidget {
   final int? rowIndex;
   final int? columnIndex;
-  final Subject? subject;
+  final SubjectData? subject;
 
   const SubjectScreen({
     super.key,
@@ -30,7 +31,13 @@ class SubjectScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final subjects = ref.watch(subjProvider);
+    final subjectNotifier = ref.watch(subjProvider.notifier);
+    final overlappingSubjects = ref.watch(overlappingSubjectsProvider);
+    final autoCompleteColor = ref.watch(settingsProvider).autoCompleteColor;
+
     final bool isSubjectNull = subject == null;
+    final int id = isSubjectNull ? subjects.length : subject!.id;
     final startTime = useState(
       TimeOfDay(
         hour: isSubjectNull ? (rowIndex! + 8) : subject!.startTime.hour,
@@ -43,31 +50,29 @@ class SubjectScreen extends HookConsumerWidget {
         minute: 0,
       ),
     );
-    final overlappingSubjects = ref.watch(overlappingSubjectsProvider);
-    final state = ref.read(subjectProvider.notifier);
-    final autoCompleteColor = ref.watch(settingsProvider).autoCompleteColor;
+
     final day = useState(
         Days.values[isSubjectNull ? columnIndex! : subject!.day.index]);
     final rotationWeek =
         useState(isSubjectNull ? RotationWeeks.none : subject!.rotationWeek);
-    final color = useState(isSubjectNull ? Colors.black : subject!.color);
+    final color =
+        useState(isSubjectNull ? Colors.black : Color(subject!.color));
 
     final label = useState(subject?.label ?? "");
     final location = useState(subject?.location ?? "");
     final note = useState(subject?.note ?? "");
 
-    final Subject newSubject = Subject(
+    final SubjectData newSubject = SubjectData(
+      id: id,
       label: label.value,
       location: location.value,
-      color: color.value,
+      color: color.value.value,
       startTime: startTime.value,
       endTime: endTime.value,
       day: day.value,
       rotationWeek: rotationWeek.value,
       note: note.value,
     );
-
-    final subjects = ref.watch(subjectProvider);
 
     final subjectsInSameDay = subjects
         .where(
@@ -116,7 +121,7 @@ class SubjectScreen extends HookConsumerWidget {
                 foregroundColor: Theme.of(context).colorScheme.errorContainer,
               ),
               onPressed: () {
-                state.removeSubject(subject!, overlappingSubjects);
+                subjectNotifier.deleteSubject(newSubject);
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
                     content: Text('Subject Deleted!'),
@@ -140,7 +145,7 @@ class SubjectScreen extends HookConsumerWidget {
                 if (formKey.currentState!.validate()) {
                   if (isSubjectNull) {
                     if (!isOccupied) {
-                      state.addSubject(newSubject);
+                      subjectNotifier.addSubject(newSubject.toCompanion(false));
                       Navigator.pop(context, label.value);
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
@@ -151,7 +156,7 @@ class SubjectScreen extends HookConsumerWidget {
                     }
                   } else {
                     if (!isOccupiedExceptSelf) {
-                      state.updateSubject(subject!, newSubject);
+                      subjectNotifier.updateSubject(newSubject);
                       Navigator.pop(context, label.value);
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
@@ -194,14 +199,14 @@ class SubjectScreen extends HookConsumerWidget {
                         onChanged: (value) {
                           label.value = value;
                           if (autoCompleteColor) {
-                            color.value = subjects
+                            color.value = Color(subjects
                                 .firstWhere(
                                   (subj) =>
                                       label.value.toLowerCase() ==
                                       subj.label.toLowerCase(),
                                   orElse: () => basicSubject,
                                 )
-                                .color;
+                                .color);
                           }
                         },
                       ),

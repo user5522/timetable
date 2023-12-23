@@ -7,8 +7,8 @@ import 'package:timetable/components/widgets/time_column.dart';
 import 'package:timetable/constants/custom_times.dart';
 import 'package:timetable/constants/grid_properties.dart';
 import 'package:timetable/constants/rotation_weeks.dart';
+import 'package:timetable/db/database.dart';
 import 'package:timetable/models/overlapping_subjects.dart';
-import 'package:timetable/models/subjects.dart';
 import 'package:timetable/components/widgets/grid_view_subject_builder.dart';
 import 'package:timetable/components/widgets/subject_container_builder.dart';
 import 'package:timetable/components/widgets/tile.dart';
@@ -17,15 +17,16 @@ import 'package:timetable/models/settings.dart';
 /// Timetable view that shows All the days' subjects in a grid form.
 class TimetableGridView extends HookConsumerWidget {
   final ValueNotifier<RotationWeeks> rotationWeek;
+  final List<SubjectData> subject;
 
   const TimetableGridView({
     super.key,
     required this.rotationWeek,
+    required this.subject,
   });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final subject = ref.watch(subjectProvider);
     final compactMode = ref.watch(settingsProvider).compactMode;
     final customStartTime = ref.watch(settingsProvider).customStartTime;
     final customEndTime = ref.watch(settingsProvider).customEndTime;
@@ -83,7 +84,7 @@ class TimetableGridView extends HookConsumerWidget {
   }
 
   List<List<Tile?>> generate(
-    List<Subject> subjects,
+    List<SubjectData> subjects,
     int totalDays,
     int totalHours,
     WidgetRef ref,
@@ -135,7 +136,7 @@ class TimetableGridView extends HookConsumerWidget {
             );
 
             for (final subjects in overlappingSubjects) {
-              Subject getSubjectWithEarlierStartTime() {
+              SubjectData getSubjectWithEarlierStartTime() {
                 if (subjects[0].startTime.hour < subjects[1].startTime.hour) {
                   return subjects[0];
                 } else {
@@ -143,7 +144,7 @@ class TimetableGridView extends HookConsumerWidget {
                 }
               }
 
-              Subject getSubjectWithLaterEndTime() {
+              SubjectData getSubjectWithLaterEndTime() {
                 if (subjects[0].endTime.hour > subjects[1].endTime.hour) {
                   return subjects[0];
                 } else {

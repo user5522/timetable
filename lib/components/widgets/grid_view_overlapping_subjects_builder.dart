@@ -4,13 +4,13 @@ import 'package:non_uniform_border/non_uniform_border.dart';
 import 'package:timetable/constants/custom_times.dart';
 import 'package:timetable/constants/grid_properties.dart';
 import 'package:timetable/constants/rotation_weeks.dart';
+import 'package:timetable/db/database.dart';
 import 'package:timetable/models/settings.dart';
-import 'package:timetable/models/subjects.dart';
 import 'package:timetable/components/subject_management/subject_screen.dart';
 
 /// Overlapping Subjects Builder for the grid view.
 class OverlappingSubjBuilder extends ConsumerWidget {
-  final List<Subject> subjects;
+  final List<SubjectData> subjects;
   final int earlierStartTimeHour;
   final int laterEndTimeHour;
 
@@ -63,18 +63,19 @@ class OverlappingSubjBuilder extends ConsumerWidget {
       ),
       child: Row(
         children: List.generate(subjects.length, (i) {
-          Color labelColor = subjects[i].color.computeLuminance() > .7
+          Color labelColor = Color(subjects[i].color).computeLuminance() > .7
               ? Colors.black
               : Colors.white;
-          Color subLabelsColor = subjects[i].color.computeLuminance() > .7
-              ? Colors.black.withOpacity(.6)
-              : Colors.white.withOpacity(.75);
+          Color subLabelsColor =
+              Color(subjects[i].color).computeLuminance() > .7
+                  ? Colors.black.withOpacity(.6)
+                  : Colors.white.withOpacity(.75);
 
           int endTimeHour = subjects[i].endTime.hour;
           int startTimeHour = subjects[i].startTime.hour;
           String label = subjects[i].label;
           String? location = subjects[i].location;
-          Color color = subjects[i].color;
+          Color color = Color(subjects[i].color);
 
           int subjHeight = endTimeHour - startTimeHour;
 
