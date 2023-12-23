@@ -6,13 +6,15 @@ import 'package:timetable/components/widgets/grid_view_overlapping_subjects_buil
 import 'package:timetable/components/widgets/time_column.dart';
 import 'package:timetable/constants/custom_times.dart';
 import 'package:timetable/constants/grid_properties.dart';
+import 'package:timetable/helpers/overlapping_subjects.dart';
 import 'package:timetable/constants/rotation_weeks.dart';
 import 'package:timetable/db/database.dart';
-import 'package:timetable/models/overlapping_subjects.dart';
+import 'package:timetable/provider/overlapping_subjects.dart';
 import 'package:timetable/components/widgets/grid_view_subject_builder.dart';
 import 'package:timetable/components/widgets/subject_container_builder.dart';
 import 'package:timetable/components/widgets/tile.dart';
-import 'package:timetable/models/settings.dart';
+import 'package:timetable/helpers/rotation_weeks.dart';
+import 'package:timetable/provider/settings.dart';
 
 /// Timetable view that shows All the days' subjects in a grid form.
 class TimetableGridView extends HookConsumerWidget {
@@ -92,6 +94,7 @@ class TimetableGridView extends HookConsumerWidget {
     final overlappingSubjects = ref.watch(overlappingSubjectsProvider);
     final customStartTime = ref.watch(settingsProvider).customStartTime;
 
+    // subjects' containers
     final List<List<Tile?>> grid = List.generate(
       totalDays,
       (columnIndex) => List.generate(
@@ -105,85 +108,63 @@ class TimetableGridView extends HookConsumerWidget {
       ),
     );
 
+    // overlapping subjects
     for (int j = 0; j < subjects.length; j++) {
       for (int i = 0; i < subjects.length; i++) {
         if (i != j) {
-          final bool sameDay = (subjects[i].day.index == subjects[j].day.index);
+          final bool subjectsInSameDay = (subjects[i].day == subjects[j].day);
           final bool subjectsOverlapInTime =
               ((subjects[i].startTime.hour <= subjects[j].startTime.hour &&
                       subjects[i].endTime.hour > subjects[j].startTime.hour) ||
                   (subjects[j].startTime.hour <= subjects[i].startTime.hour &&
                       subjects[j].endTime.hour > subjects[i].startTime.hour));
 
-          if (sameDay && subjectsOverlapInTime) {
+          if (subjectsInSameDay && subjectsOverlapInTime) {
             overlappingSubjects.add([subjects[i], subjects[j]]);
-          }
-
-          if (overlappingSubjects.isNotEmpty &&
-              overlappingSubjects.any((e) => e.length == 2)) {
-            overlappingSubjects.removeWhere(
-              (elem) => elem.any(
-                (e) {
-                  if (rotationWeek.value == RotationWeeks.a) {
-                    return e.rotationWeek == RotationWeeks.b;
-                  } else if (rotationWeek.value == RotationWeeks.b) {
-                    return e.rotationWeek == RotationWeeks.a;
-                  } else {
-                    return false;
-                  }
-                },
-              ),
-            );
-
-            for (final subjects in overlappingSubjects) {
-              SubjectData getSubjectWithEarlierStartTime() {
-                if (subjects[0].startTime.hour < subjects[1].startTime.hour) {
-                  return subjects[0];
-                } else {
-                  return subjects[1];
-                }
-              }
-
-              SubjectData getSubjectWithLaterEndTime() {
-                if (subjects[0].endTime.hour > subjects[1].endTime.hour) {
-                  return subjects[0];
-                } else {
-                  return subjects[1];
-                }
-              }
-
-              var day = subjects[0].day.index;
-              var earlierStartTimeHour =
-                  getSubjectWithEarlierStartTime().startTime.hour;
-              var laterEndTimeHour = getSubjectWithLaterEndTime().endTime.hour;
-              var start = getSubjectWithEarlierStartTime().startTime.hour -
-                  getCustomStartTime(customStartTime, ref).hour;
-              var end = getSubjectWithLaterEndTime().endTime.hour -
-                  getCustomStartTime(customStartTime, ref).hour;
-              var column = grid[day];
-
-              column.replaceRange(
-                start,
-                end,
-                List.generate(end - start, (_) => null),
-              );
-
-              column[start] = Tile(
-                height: end - start,
-                child: OverlappingSubjBuilder(
-                  subjects: subjects,
-                  earlierStartTimeHour: earlierStartTimeHour,
-                  laterEndTimeHour: laterEndTimeHour,
-                ),
-              );
-            }
           }
         }
       }
     }
 
-    for (final subject in subjects.where(
-      (e) => !overlappingSubjects.any((elem) => elem.contains(e)),
+    if (overlappingSubjects.isNotEmpty &&
+        overlappingSubjects.any((e) => e.length == 2)) {
+      getFilteredByRotationWeeksOverlappingSubjects(
+        overlappingSubjects,
+        rotationWeek,
+      );
+    }
+
+    for (final subjects in overlappingSubjects) {
+      var day = subjects[0].day.index;
+      var earlierStartTimeHour = getEarliestSubject(subjects).startTime.hour;
+      var laterEndTimeHour = getLatestSubject(subjects).endTime.hour;
+
+      var startTime = getEarliestSubject(subjects).startTime.hour -
+          getCustomStartTime(customStartTime, ref).hour;
+      var endTime = getLatestSubject(subjects).endTime.hour -
+          getCustomStartTime(customStartTime, ref).hour;
+      var column = grid[day];
+
+      column.replaceRange(
+        startTime,
+        endTime,
+        List.generate(endTime - startTime, (_) => null),
+      );
+
+      column[startTime] = Tile(
+        height: endTime - startTime,
+        child: OverlappingSubjBuilder(
+          subjects: subjects,
+          earlierStartTimeHour: earlierStartTimeHour,
+          laterEndTimeHour: laterEndTimeHour,
+        ),
+      );
+    }
+
+    // normal subjects
+    for (final subject in filterOverlappingSubjects(
+      subjects,
+      overlappingSubjects,
     )) {
       var day = subject.day.index;
       var start = subject.startTime.hour -

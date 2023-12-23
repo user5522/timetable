@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:timetable/components/widgets/navigation_bar.dart';
 import 'package:timetable/constants/theme_options.dart';
-import 'package:timetable/models/settings.dart';
+import 'package:timetable/provider/settings.dart';
 import 'package:timetable/provider/themes.dart';
 
 void main() async {

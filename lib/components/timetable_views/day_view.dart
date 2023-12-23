@@ -5,6 +5,7 @@ import 'package:timetable/components/widgets/day_view_subject_builder.dart';
 import 'package:timetable/constants/days.dart';
 import 'package:timetable/constants/grid_properties.dart';
 import 'package:timetable/constants/rotation_weeks.dart';
+import 'package:timetable/helpers/rotation_weeks.dart';
 import 'package:timetable/db/database.dart';
 
 /// Timetable view that shows each day's subjects in a single screen.

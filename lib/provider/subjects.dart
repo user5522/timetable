@@ -2,7 +2,7 @@ import 'package:drift/drift.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:timetable/db/database.dart';
-import 'package:timetable/models/overlapping_subjects.dart';
+import 'package:timetable/provider/overlapping_subjects.dart';
 
 class SubjNotifier extends StateNotifier<List<SubjectData>> {
   AppDatabase db;

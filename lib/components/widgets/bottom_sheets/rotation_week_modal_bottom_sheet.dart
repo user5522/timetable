@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:timetable/constants/rotation_weeks.dart';
+import 'package:timetable/helpers/rotation_weeks.dart';
 
 /// Bottom Sheet Modal Widget used to select a subject's rotation week.
 class RotationWeekModalBottomSheet extends StatelessWidget {

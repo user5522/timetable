@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:timetable/models/settings.dart';
+import 'package:timetable/provider/settings.dart';
 import 'package:timetable/components/settings/screens/timetable_period_screen.dart';
 
 /// All the settings for changing some timetable features.
@@ -27,7 +27,7 @@ class TimetableFeaturesOptions extends ConsumerWidget {
               ),
             );
           },
-          title: const Text("Time Period Config"),
+          title: const Text("Time Period Configuration"),
         ),
         SwitchListTile(
           title: const Text("Rotation Weeks"),

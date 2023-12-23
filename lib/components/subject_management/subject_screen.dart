@@ -9,8 +9,8 @@ import 'package:timetable/constants/basic_subject.dart';
 import 'package:timetable/constants/days.dart';
 import 'package:timetable/constants/rotation_weeks.dart';
 import 'package:timetable/db/database.dart';
-import 'package:timetable/models/overlapping_subjects.dart';
-import 'package:timetable/models/settings.dart';
+import 'package:timetable/provider/overlapping_subjects.dart';
+import 'package:timetable/provider/settings.dart';
 import 'package:timetable/provider/subjects.dart';
 
 /// The Subject creation/modification screen.

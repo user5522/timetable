@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:timetable/constants/rotation_weeks.dart';
+import 'package:timetable/helpers/rotation_weeks.dart';
 import 'package:timetable/db/database.dart';
-import 'package:timetable/models/settings.dart';
+import 'package:timetable/provider/settings.dart';
 import 'package:timetable/components/subject_management/subject_screen.dart';
 
 /// Subject builder for the day view.
