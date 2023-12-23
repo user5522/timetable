@@ -28,7 +28,7 @@ class SubjectBuilder extends ConsumerWidget {
 
     String label = subject.label;
     String? location = subject.location;
-    Color color = Color(subject.color);
+    Color color = subject.color;
 
     final hideTransparentSubjects =
         hideTransparentSubject && color.opacity == Colors.transparent.opacity;

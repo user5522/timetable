@@ -63,19 +63,18 @@ class OverlappingSubjBuilder extends ConsumerWidget {
       ),
       child: Row(
         children: List.generate(subjects.length, (i) {
-          Color labelColor = Color(subjects[i].color).computeLuminance() > .7
+          Color labelColor = subjects[i].color.computeLuminance() > .7
               ? Colors.black
               : Colors.white;
-          Color subLabelsColor =
-              Color(subjects[i].color).computeLuminance() > .7
-                  ? Colors.black.withOpacity(.6)
-                  : Colors.white.withOpacity(.75);
+          Color subLabelsColor = subjects[i].color.computeLuminance() > .7
+              ? Colors.black.withOpacity(.6)
+              : Colors.white.withOpacity(.75);
 
           int endTimeHour = subjects[i].endTime.hour;
           int startTimeHour = subjects[i].startTime.hour;
           String label = subjects[i].label;
           String? location = subjects[i].location;
-          Color color = Color(subjects[i].color);
+          Color color = subjects[i].color;
 
           int subjHeight = endTimeHour - startTimeHour;
 

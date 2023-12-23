@@ -35,9 +35,10 @@ class $SubjectTable extends Subject with TableInfo<$SubjectTable, SubjectData> {
       type: DriftSqlType.string, requiredDuringInsert: false);
   static const VerificationMeta _colorMeta = const VerificationMeta('color');
   @override
-  late final GeneratedColumn<int> color = GeneratedColumn<int>(
-      'color', aliasedName, false,
-      type: DriftSqlType.int, requiredDuringInsert: true);
+  late final GeneratedColumnWithTypeConverter<material.Color, int> color =
+      GeneratedColumn<int>('color', aliasedName, false,
+              type: DriftSqlType.int, requiredDuringInsert: true)
+          .withConverter<material.Color>($SubjectTable.$convertercolor);
   static const VerificationMeta _rotationWeekMeta =
       const VerificationMeta('rotationWeek');
   @override
@@ -95,12 +96,7 @@ class $SubjectTable extends Subject with TableInfo<$SubjectTable, SubjectData> {
       context.handle(
           _noteMeta, note.isAcceptableOrUnknown(data['note']!, _noteMeta));
     }
-    if (data.containsKey('color')) {
-      context.handle(
-          _colorMeta, color.isAcceptableOrUnknown(data['color']!, _colorMeta));
-    } else if (isInserting) {
-      context.missing(_colorMeta);
-    }
+    context.handle(_colorMeta, const VerificationResult.success());
     context.handle(_rotationWeekMeta, const VerificationResult.success());
     context.handle(_dayMeta, const VerificationResult.success());
     context.handle(_startTimeMeta, const VerificationResult.success());
@@ -122,8 +118,8 @@ class $SubjectTable extends Subject with TableInfo<$SubjectTable, SubjectData> {
           .read(DriftSqlType.string, data['${effectivePrefix}location']),
       note: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}note']),
-      color: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}color'])!,
+      color: $SubjectTable.$convertercolor.fromSql(attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}color'])!),
       rotationWeek: $SubjectTable.$converterrotationWeek.fromSql(
           attachedDatabase.typeMapping.read(
               DriftSqlType.int, data['${effectivePrefix}rotation_week'])!),
@@ -143,6 +139,8 @@ class $SubjectTable extends Subject with TableInfo<$SubjectTable, SubjectData> {
     return $SubjectTable(attachedDatabase, alias);
   }
 
+  static TypeConverter<material.Color, int> $convertercolor =
+      const ColorConverter();
   static JsonTypeConverter2<RotationWeeks, int, int> $converterrotationWeek =
       const EnumIndexConverter<RotationWeeks>(RotationWeeks.values);
   static JsonTypeConverter2<Days, int, int> $converterday =
@@ -158,7 +156,7 @@ class SubjectData extends DataClass implements Insertable<SubjectData> {
   final String label;
   final String? location;
   final String? note;
-  final int color;
+  final material.Color color;
   final RotationWeeks rotationWeek;
   final Days day;
   final material.TimeOfDay startTime;
@@ -184,7 +182,9 @@ class SubjectData extends DataClass implements Insertable<SubjectData> {
     if (!nullToAbsent || note != null) {
       map['note'] = Variable<String>(note);
     }
-    map['color'] = Variable<int>(color);
+    {
+      map['color'] = Variable<int>($SubjectTable.$convertercolor.toSql(color));
+    }
     {
       map['rotation_week'] = Variable<int>(
           $SubjectTable.$converterrotationWeek.toSql(rotationWeek));
@@ -227,7 +227,7 @@ class SubjectData extends DataClass implements Insertable<SubjectData> {
       label: serializer.fromJson<String>(json['label']),
       location: serializer.fromJson<String?>(json['location']),
       note: serializer.fromJson<String?>(json['note']),
-      color: serializer.fromJson<int>(json['color']),
+      color: serializer.fromJson<material.Color>(json['color']),
       rotationWeek: $SubjectTable.$converterrotationWeek
           .fromJson(serializer.fromJson<int>(json['rotationWeek'])),
       day: $SubjectTable.$converterday
@@ -244,7 +244,7 @@ class SubjectData extends DataClass implements Insertable<SubjectData> {
       'label': serializer.toJson<String>(label),
       'location': serializer.toJson<String?>(location),
       'note': serializer.toJson<String?>(note),
-      'color': serializer.toJson<int>(color),
+      'color': serializer.toJson<material.Color>(color),
       'rotationWeek': serializer.toJson<int>(
           $SubjectTable.$converterrotationWeek.toJson(rotationWeek)),
       'day': serializer.toJson<int>($SubjectTable.$converterday.toJson(day)),
@@ -258,7 +258,7 @@ class SubjectData extends DataClass implements Insertable<SubjectData> {
           String? label,
           Value<String?> location = const Value.absent(),
           Value<String?> note = const Value.absent(),
-          int? color,
+          material.Color? color,
           RotationWeeks? rotationWeek,
           Days? day,
           material.TimeOfDay? startTime,
@@ -313,7 +313,7 @@ class SubjectCompanion extends UpdateCompanion<SubjectData> {
   final Value<String> label;
   final Value<String?> location;
   final Value<String?> note;
-  final Value<int> color;
+  final Value<material.Color> color;
   final Value<RotationWeeks> rotationWeek;
   final Value<Days> day;
   final Value<material.TimeOfDay> startTime;
@@ -334,7 +334,7 @@ class SubjectCompanion extends UpdateCompanion<SubjectData> {
     required String label,
     this.location = const Value.absent(),
     this.note = const Value.absent(),
-    required int color,
+    required material.Color color,
     required RotationWeeks rotationWeek,
     required Days day,
     required material.TimeOfDay startTime,
@@ -374,7 +374,7 @@ class SubjectCompanion extends UpdateCompanion<SubjectData> {
       Value<String>? label,
       Value<String?>? location,
       Value<String?>? note,
-      Value<int>? color,
+      Value<material.Color>? color,
       Value<RotationWeeks>? rotationWeek,
       Value<Days>? day,
       Value<material.TimeOfDay>? startTime,
@@ -408,7 +408,8 @@ class SubjectCompanion extends UpdateCompanion<SubjectData> {
       map['note'] = Variable<String>(note.value);
     }
     if (color.present) {
-      map['color'] = Variable<int>(color.value);
+      map['color'] =
+          Variable<int>($SubjectTable.$convertercolor.toSql(color.value));
     }
     if (rotationWeek.present) {
       map['rotation_week'] = Variable<int>(

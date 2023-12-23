@@ -55,8 +55,7 @@ class SubjectScreen extends HookConsumerWidget {
         Days.values[isSubjectNull ? columnIndex! : subject!.day.index]);
     final rotationWeek =
         useState(isSubjectNull ? RotationWeeks.none : subject!.rotationWeek);
-    final color =
-        useState(isSubjectNull ? Colors.black : Color(subject!.color));
+    final color = useState(isSubjectNull ? Colors.black : subject!.color);
 
     final label = useState(subject?.label ?? "");
     final location = useState(subject?.location ?? "");
@@ -66,7 +65,7 @@ class SubjectScreen extends HookConsumerWidget {
       id: id,
       label: label.value,
       location: location.value,
-      color: color.value.value,
+      color: color.value,
       startTime: startTime.value,
       endTime: endTime.value,
       day: day.value,
@@ -199,14 +198,14 @@ class SubjectScreen extends HookConsumerWidget {
                         onChanged: (value) {
                           label.value = value;
                           if (autoCompleteColor) {
-                            color.value = Color(subjects
+                            color.value = subjects
                                 .firstWhere(
                                   (subj) =>
                                       label.value.toLowerCase().trim() ==
                                       subj.label.toLowerCase().trim(),
                                   orElse: () => basicSubject,
                                 )
-                                .color);
+                                .color;
                           }
                         },
                       ),

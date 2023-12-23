@@ -16,16 +16,15 @@ class DayViewSubjectBuilder extends ConsumerWidget {
     final rotationWeeks = ref.watch(settingsProvider).rotationWeeks;
     final hideTransparentSubject =
         ref.watch(settingsProvider).hideTransparentSubject;
-    Color labelColor = Color(subject.color).computeLuminance() > .7
-        ? Colors.black
-        : Colors.white;
-    Color subLabelsColor = Color(subject.color).computeLuminance() > .7
+    Color labelColor =
+        subject.color.computeLuminance() > .7 ? Colors.black : Colors.white;
+    Color subLabelsColor = subject.color.computeLuminance() > .7
         ? Colors.black.withOpacity(.6)
         : Colors.white.withOpacity(.75);
 
     String label = subject.label;
     String? location = subject.location;
-    Color color = Color(subject.color);
+    Color color = subject.color;
     String? note = subject.note;
 
     final hideTransparentSubjects =
