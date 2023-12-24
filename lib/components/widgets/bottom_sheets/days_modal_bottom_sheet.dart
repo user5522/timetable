@@ -6,8 +6,11 @@ class DaysModalBottomSheet extends StatelessWidget {
   final List<Days> days;
   final ValueNotifier<Days> day;
 
-  const DaysModalBottomSheet(
-      {super.key, required this.days, required this.day});
+  const DaysModalBottomSheet({
+    super.key,
+    required this.days,
+    required this.day,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -28,14 +31,28 @@ class DaysModalBottomSheet extends StatelessWidget {
           shrinkWrap: true,
           primary: false,
           children: days.map(
-            (e) {
+            (d) {
+              bool isSelected = (d == day.value);
+
               return ListTile(
-                title: Text(
-                  e.name[0].toUpperCase() + e.name.substring(1).toLowerCase(),
+                title: Row(
+                  children: [
+                    Text(
+                      d.name[0].toUpperCase() +
+                          d.name.substring(1).toLowerCase(),
+                    ),
+                    const Spacer(),
+                    Visibility(
+                      visible: isSelected,
+                      child: const Icon(
+                        Icons.check,
+                      ),
+                    ),
+                  ],
                 ),
                 visualDensity: VisualDensity.compact,
                 onTap: () {
-                  day.value = e;
+                  day.value = d;
                   Navigator.pop(context);
                 },
               );

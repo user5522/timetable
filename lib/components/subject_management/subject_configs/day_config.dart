@@ -29,9 +29,13 @@ class DayConfig extends StatelessWidget {
               isDismissible: true,
               context: context,
               builder: (context) {
-                return DaysModalBottomSheet(
-                  days: days,
-                  day: day,
+                return Wrap(
+                  children: [
+                    DaysModalBottomSheet(
+                      days: days,
+                      day: day,
+                    ),
+                  ],
                 );
               },
             );

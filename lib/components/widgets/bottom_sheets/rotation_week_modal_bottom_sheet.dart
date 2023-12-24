@@ -31,15 +31,28 @@ class RotationWeekModalBottomSheet extends StatelessWidget {
         ListView(
           shrinkWrap: true,
           primary: false,
-          children: rotationWeeks.where((e) => e != RotationWeeks.all).map(
-            (e) {
+          children: rotationWeeks.where((r) => r != RotationWeeks.all).map(
+            (r) {
+              bool isSelected = (r == rotationWeek.value);
+
               return ListTile(
-                title: Text(
-                  getRotationWeekLabel(e),
+                title: Row(
+                  children: [
+                    Text(
+                      getRotationWeekLabel(r),
+                    ),
+                    const Spacer(),
+                    Visibility(
+                      visible: isSelected,
+                      child: const Icon(
+                        Icons.check,
+                      ),
+                    ),
+                  ],
                 ),
                 visualDensity: VisualDensity.compact,
                 onTap: () {
-                  rotationWeek.value = e;
+                  rotationWeek.value = r;
                   Navigator.pop(context);
                 },
               );

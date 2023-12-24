@@ -31,19 +31,48 @@ class PresetColorsScreen extends HookWidget {
                   children: List.generate(
                     colorsPerRow,
                     (colIndex) {
-                      final index = rowIndex * colorsPerRow + colIndex;
-                      final isSelected = index == selectedColorIndex.value;
+                      final index = (rowIndex * colorsPerRow + colIndex);
+                      final isSelected = (index == selectedColorIndex.value);
+
+                      const topleft = BorderRadius.only(
+                        topLeft: Radius.circular(10),
+                      );
+                      const topRight = BorderRadius.only(
+                        topRight: Radius.circular(10),
+                      );
+                      const bottomRight = BorderRadius.only(
+                        bottomRight: Radius.circular(10),
+                      );
+                      const bottomLeft = BorderRadius.only(
+                        bottomLeft: Radius.circular(10),
+                      );
+
+                      final borderRadius = (index == 0)
+                          ? topleft
+                          : (index == (colorsPerRow - 1))
+                              ? topRight
+                              : (index == ((rowCount * colorsPerRow) - 1))
+                                  ? bottomRight
+                                  : (index ==
+                                          ((rowCount * colorsPerRow) -
+                                              (colorsPerRow)))
+                                      ? bottomLeft
+                                      : null;
 
                       return InkWell(
                         onTap: () {
                           selectedColorIndex.value = index;
                           color.value = colors[index].color;
                         },
+                        borderRadius: borderRadius,
                         child: Stack(
                           alignment: Alignment.center,
                           children: [
-                            Container(
-                              color: colors[index].color,
+                            Ink(
+                              decoration: BoxDecoration(
+                                borderRadius: borderRadius,
+                                color: colors[index].color,
+                              ),
                               height: 50,
                               width:
                                   (MediaQuery.of(context).size.width - 32.0) /

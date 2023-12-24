@@ -30,9 +30,13 @@ class RotationWeekConfig extends StatelessWidget {
               isDismissible: true,
               context: context,
               builder: (context) {
-                return RotationWeekModalBottomSheet(
-                  rotationWeek: rotationWeek,
-                  rotationWeeks: rotationWeeks,
+                return Wrap(
+                  children: [
+                    RotationWeekModalBottomSheet(
+                      rotationWeek: rotationWeek,
+                      rotationWeeks: rotationWeeks,
+                    ),
+                  ],
                 );
               },
             );
