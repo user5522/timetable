@@ -7,6 +7,7 @@ import 'package:timetable/constants/grid_properties.dart';
 import 'package:timetable/constants/rotation_weeks.dart';
 import 'package:timetable/helpers/rotation_weeks.dart';
 import 'package:timetable/db/database.dart';
+import 'package:timetable/helpers/sort_subjects.dart';
 
 /// Timetable view that shows each day's subjects in a single screen.
 class TimetableDayView extends HookConsumerWidget {
@@ -53,9 +54,11 @@ class TimetableDayView extends HookConsumerWidget {
                       ),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: getFilteredByRotationWeeksSubjects(
-                          rotationWeek,
-                          subject,
+                        children: sortSubjects(
+                          getFilteredByRotationWeeksSubjects(
+                            rotationWeek,
+                            subject,
+                          ),
                         )
                             .where((s) => s.day.index == index)
                             .map(
