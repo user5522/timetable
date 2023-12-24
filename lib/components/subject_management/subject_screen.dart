@@ -79,6 +79,18 @@ class SubjectScreen extends HookConsumerWidget {
         )
         .toList();
 
+    final multipleOccupied =
+        overlappingSubjects.any((e) => e.contains(newSubject))
+            ? false
+            : ((subjectsInSameDay
+                    .where(
+                      (e) =>
+                          e.startTime.hour >= startTime.value.hour &&
+                          e.endTime.hour <= endTime.value.hour,
+                    )
+                    .length) >
+                1);
+
     final isOccupied = subjectsInSameDay
         .where((e) => overlappingSubjects.any((elem) => elem.contains(e)))
         .any((e) {
@@ -143,7 +155,7 @@ class SubjectScreen extends HookConsumerWidget {
               onPressed: () {
                 if (formKey.currentState!.validate()) {
                   if (isSubjectNull) {
-                    if (!isOccupied) {
+                    if (!isOccupied && !multipleOccupied) {
                       subjectNotifier.addSubject(newSubject.toCompanion(false));
                       Navigator.pop(context, label.value);
                     } else {
@@ -154,7 +166,7 @@ class SubjectScreen extends HookConsumerWidget {
                       );
                     }
                   } else {
-                    if (!isOccupiedExceptSelf) {
+                    if (!isOccupiedExceptSelf && !multipleOccupied) {
                       subjectNotifier.updateSubject(newSubject);
                       Navigator.pop(context, label.value);
                     } else {
@@ -233,7 +245,9 @@ class SubjectScreen extends HookConsumerWidget {
                   rotationWeek: rotationWeek,
                   startTime: startTime,
                   endTime: endTime,
-                  occupied: isSubjectNull ? isOccupied : isOccupiedExceptSelf,
+                  occupied: isSubjectNull
+                      ? (isOccupied || multipleOccupied)
+                      : (isOccupiedExceptSelf || multipleOccupied),
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 10),
