@@ -16,9 +16,9 @@ List<SubjectData> filterOverlappingSubjects(
 
 /// Returns the subject with the earlier starting time.
 SubjectData getEarliestSubject(List<SubjectData> subjects) {
-  SubjectData earliestSubject = subjects.first;
+  SubjectData earliestSubject = subjects[0];
   for (final subject in subjects) {
-    if (subject.startTime.hour > earliestSubject.startTime.hour) {
+    if (subject.startTime.hour < earliestSubject.startTime.hour) {
       earliestSubject = subject;
     }
   }
