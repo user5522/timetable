@@ -6,11 +6,11 @@ import 'package:timetable/provider/overlapping_subjects.dart';
 
 class SubjNotifier extends StateNotifier<List<SubjectData>> {
   AppDatabase db;
-  List<List<SubjectData>> overlappingSubjects;
+  OverlappingSubjects overlappingSubjectsNotifier;
 
   SubjNotifier(
     this.db,
-    this.overlappingSubjects,
+    this.overlappingSubjectsNotifier,
   ) : super([]) {
     getSubjects();
   }
@@ -40,25 +40,31 @@ class SubjNotifier extends StateNotifier<List<SubjectData>> {
 
   Future updateSubject(SubjectData entry) async {
     db.subject.update().replace(entry);
-
     state = await getSubjects();
+
+    overlappingSubjectsNotifier.reset();
   }
 
   Future deleteSubject(SubjectData entry) async {
     db.subject.deleteWhere((t) => t.id.equals(entry.id));
-    overlappingSubjects.removeWhere((e) => e.contains(entry));
-
     state = await getSubjects();
+
+    overlappingSubjectsNotifier.reset();
   }
 
   void resetData() {
     db.subject.delete();
-
     state = [];
+
+    overlappingSubjectsNotifier.reset();
   }
 }
 
 final subjProvider = StateNotifierProvider<SubjNotifier, List<SubjectData>>(
-  (ref) => SubjNotifier(
-      ref.watch(AppDatabase.provider), ref.watch(overlappingSubjectsProvider)),
+  (ref) {
+    return SubjNotifier(
+      ref.watch(AppDatabase.provider),
+      ref.watch(overlappingSubjectsProvider.notifier),
+    );
+  },
 );

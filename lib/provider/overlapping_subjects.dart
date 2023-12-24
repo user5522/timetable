@@ -4,6 +4,10 @@ import 'package:timetable/db/database.dart';
 /// A [StateNotifier] that holds the list of overlapping subjects.
 class OverlappingSubjects extends StateNotifier<List<List<SubjectData>>> {
   OverlappingSubjects() : super([]);
+
+  void reset() {
+    state = [];
+  }
 }
 
 final overlappingSubjectsProvider =
