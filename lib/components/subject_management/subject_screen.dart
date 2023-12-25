@@ -88,6 +88,7 @@ class SubjectScreen extends HookConsumerWidget {
                           e.startTime.hour >= startTime.value.hour &&
                           e.endTime.hour <= endTime.value.hour,
                     )
+                    .where((e) => e != subject)
                     .length) >
                 1);
 
