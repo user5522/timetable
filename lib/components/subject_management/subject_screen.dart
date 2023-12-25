@@ -82,15 +82,22 @@ class SubjectScreen extends HookConsumerWidget {
     final multipleOccupied =
         overlappingSubjects.any((e) => e.contains(newSubject))
             ? false
-            : ((subjectsInSameDay
-                    .where(
-                      (e) =>
-                          e.startTime.hour >= startTime.value.hour &&
-                          e.endTime.hour <= endTime.value.hour,
-                    )
-                    .where((e) => e != subject)
-                    .length) >
-                1);
+            : subjectsInSameDay
+                    .where((s) {
+                      final sHours = List.generate(
+                        s.endTime.hour - s.startTime.hour,
+                        (index) => index + s.startTime.hour,
+                      );
+                      final inputHours = List.generate(
+                        endTime.value.hour - startTime.value.hour,
+                        (index) => index + startTime.value.hour,
+                      );
+
+                      return sHours.any((hour) => inputHours.contains(hour));
+                    })
+                    .where((s) => s != subject)
+                    .length >
+                1;
 
     final isOccupied = subjectsInSameDay
         .where((e) => overlappingSubjects.any((elem) => elem.contains(e)))
