@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:drift/drift.dart' as drift;
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:timetable/components/subject_management/subject_configs/colors_config.dart';
@@ -37,7 +38,6 @@ class SubjectScreen extends HookConsumerWidget {
     final autoCompleteColor = ref.watch(settingsProvider).autoCompleteColor;
 
     final bool isSubjectNull = subject == null;
-    final int id = isSubjectNull ? subjects.length : subject!.id;
     final startTime = useState(
       TimeOfDay(
         hour: isSubjectNull ? (rowIndex! + 8) : subject!.startTime.hour,
@@ -61,16 +61,15 @@ class SubjectScreen extends HookConsumerWidget {
     final location = useState(subject?.location ?? "");
     final note = useState(subject?.note ?? "");
 
-    final SubjectData newSubject = SubjectData(
-      id: id,
-      label: label.value,
-      location: location.value,
-      color: color.value,
-      startTime: startTime.value,
-      endTime: endTime.value,
-      day: day.value,
-      rotationWeek: rotationWeek.value,
-      note: note.value,
+    final SubjectCompanion newSubject = SubjectCompanion(
+      label: drift.Value(label.value),
+      location: drift.Value(location.value),
+      color: drift.Value(color.value),
+      startTime: drift.Value(startTime.value),
+      endTime: drift.Value(endTime.value),
+      day: drift.Value(day.value),
+      rotationWeek: drift.Value(rotationWeek.value),
+      note: drift.Value(note.value),
     );
 
     final subjectsInSameDay = subjects
@@ -79,25 +78,29 @@ class SubjectScreen extends HookConsumerWidget {
         )
         .toList();
 
-    final multipleOccupied =
-        overlappingSubjects.any((e) => e.contains(newSubject))
-            ? false
-            : subjectsInSameDay
-                    .where((s) {
-                      final sHours = List.generate(
-                        s.endTime.hour - s.startTime.hour,
-                        (index) => index + s.startTime.hour,
-                      );
-                      final inputHours = List.generate(
-                        endTime.value.hour - startTime.value.hour,
-                        (index) => index + startTime.value.hour,
-                      );
+    final multipleOccupied = overlappingSubjects.any((e) {
+      for (var subject in e) {
+        return newSubject == subject.toCompanion(false);
+      }
+      return false;
+    })
+        ? false
+        : subjectsInSameDay
+                .where((s) {
+                  final sHours = List.generate(
+                    s.endTime.hour - s.startTime.hour,
+                    (index) => index + s.startTime.hour,
+                  );
+                  final inputHours = List.generate(
+                    endTime.value.hour - startTime.value.hour,
+                    (index) => index + startTime.value.hour,
+                  );
 
-                      return sHours.any((hour) => inputHours.contains(hour));
-                    })
-                    .where((s) => s != subject)
-                    .length >
-                1;
+                  return sHours.any((hour) => inputHours.contains(hour));
+                })
+                .where((s) => s != subject)
+                .length >
+            1;
 
     final isOccupied = subjectsInSameDay
         .where((e) => overlappingSubjects.any((elem) => elem.contains(e)))
@@ -164,7 +167,7 @@ class SubjectScreen extends HookConsumerWidget {
                 if (formKey.currentState!.validate()) {
                   if (isSubjectNull) {
                     if (!isOccupied && !multipleOccupied) {
-                      subjectNotifier.addSubject(newSubject.toCompanion(false));
+                      subjectNotifier.addSubject(newSubject);
                       Navigator.pop(context, label.value);
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(

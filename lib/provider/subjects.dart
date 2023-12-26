@@ -38,15 +38,15 @@ class SubjNotifier extends StateNotifier<List<SubjectData>> {
     state = await getSubjects();
   }
 
-  Future updateSubject(SubjectData entry) async {
+  Future updateSubject(SubjectCompanion entry) async {
     db.subject.update().replace(entry);
     state = await getSubjects();
 
     overlappingSubjectsNotifier.reset();
   }
 
-  Future deleteSubject(SubjectData entry) async {
-    db.subject.deleteWhere((t) => t.id.equals(entry.id));
+  Future deleteSubject(SubjectCompanion entry) async {
+    db.subject.deleteWhere((t) => t.id.equals(entry.id.value));
     state = await getSubjects();
 
     overlappingSubjectsNotifier.reset();
