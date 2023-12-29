@@ -31,7 +31,7 @@ class Settings {
     this.monetTheming = false,
   });
 
-  Settings copy({
+  Settings copyWith({
     bool? customTimePeriod,
     bool? compactMode,
     bool? hideLocation,
@@ -60,4 +60,44 @@ class Settings {
         navbarVisible: navbarVisible ?? this.navbarVisible,
         monetTheming: monetTheming ?? this.monetTheming,
       );
+
+  Map<String, dynamic> toJson() => {
+        'customTimePeriod': customTimePeriod,
+        'compactMode': compactMode,
+        'hideLocation': hideLocation,
+        'singleLetterDays': singleLetterDays,
+        'rotationWeeks': rotationWeeks,
+        'customStartTimeHour': customStartTime.hour,
+        'customStartTimeMinute': customStartTime.minute,
+        'customEndTimeHour': customEndTime.hour,
+        'customEndTimeMinute': customEndTime.minute,
+        'hideSunday': hideSunday,
+        'autoCompleteColor': autoCompleteColor,
+        'hideTransparentSubject': hideTransparentSubject,
+        'navbarVisible': navbarVisible,
+        'monetTheming': monetTheming,
+      };
+
+  factory Settings.fromJson(Map<String, dynamic> json) {
+    return Settings(
+      customTimePeriod: json['customTimePeriod'] as bool,
+      compactMode: json['compactMode'] as bool,
+      hideLocation: json['hideLocation'] as bool,
+      singleLetterDays: json['singleLetterDays'] as bool,
+      rotationWeeks: json['rotationWeeks'] as bool,
+      customStartTime: TimeOfDay(
+        hour: json['customStartTimeHour'] as int,
+        minute: json['customStartTimeMinute'] as int,
+      ),
+      customEndTime: TimeOfDay(
+        hour: json['customEndTimeHour'] as int,
+        minute: json['customEndTimeMinute'] as int,
+      ),
+      hideSunday: json['hideSunday'] as bool,
+      autoCompleteColor: json['autoCompleteColor'] as bool,
+      hideTransparentSubject: json['hideTransparentSubject'] as bool,
+      navbarVisible: json['navbarVisible'] as bool,
+      monetTheming: json['monetTheming'] as bool,
+    );
+  }
 }
