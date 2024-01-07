@@ -41,9 +41,9 @@ class SubjectScreen extends HookConsumerWidget {
     final overlappingSubjects = ref.watch(overlappingSubjectsProvider);
     final autoCompleteColor = ref.watch(settingsProvider).autoCompleteColor;
     final timetables = ref.watch(timetableProvider);
-    // final multipleTimetables = ref.watch(settingsProvider).multipleTimetables;
     final customStartTimeHour =
         ref.watch(settingsProvider).customStartTime.hour;
+    final focus = FocusNode();
 
     final bool isSubjectNull = (subject == null);
     final int id = isSubjectNull ? subjects.length : subject!.id;
@@ -227,10 +227,15 @@ class SubjectScreen extends HookConsumerWidget {
                     ListItem(
                       title: TextFormField(
                         initialValue: label.value,
+                        autofocus: true,
+                        textInputAction: TextInputAction.next,
                         decoration: const InputDecoration(
                           hintText: "Subject",
                           border: InputBorder.none,
                         ),
+                        onFieldSubmitted: (v) {
+                          FocusScope.of(context).requestFocus(focus);
+                        },
                         validator: (value) {
                           if (value == null || value.trim().isEmpty) {
                             return 'Please enter a Subject.';
@@ -254,7 +259,9 @@ class SubjectScreen extends HookConsumerWidget {
                     ),
                     ListItem(
                       title: TextFormField(
+                        focusNode: focus,
                         initialValue: location.value,
+                        textInputAction: TextInputAction.done,
                         decoration: const InputDecoration(
                           hintText: "Location",
                           border: InputBorder.none,
