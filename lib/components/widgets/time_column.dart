@@ -13,24 +13,39 @@ class TimeColumn extends ConsumerWidget {
     final compactMode = ref.watch(settingsProvider).compactMode;
     final customTimePeriod = ref.watch(settingsProvider).customTimePeriod;
     final customStartTime = ref.watch(settingsProvider).customStartTime;
+    final twentyFourHours = ref.watch(settingsProvider).twentyFourHours;
     final is24HoursFormat = MediaQuery.of(context).alwaysUse24HourFormat;
 
-    return Column(children: [
-      Column(
-        children: List.generate(rows(ref), (i) {
-          return SizedBox(
-            height: compactMode ? 125 : 100,
-            child: Text(
-              is24HoursFormat
-                  ? times24h[i + (customTimePeriod ? customStartTime.hour : 8)]
-                  : timespmam[
-                      i + (customTimePeriod ? customStartTime.hour : 8)],
-              style: const TextStyle(fontSize: 13),
-              textAlign: TextAlign.center,
-            ),
-          );
-        }),
-      ),
-    ]);
+    return Column(
+      children: [
+        Column(
+          children: List.generate(
+            rows(ref),
+            (i) {
+              return SizedBox(
+                height: compactMode ? 125 : 100,
+                child: Text(
+                  is24HoursFormat
+                      ? times24h[i +
+                          (twentyFourHours
+                              ? 0
+                              : customTimePeriod
+                                  ? customStartTime.hour
+                                  : 8)]
+                      : timespmam[i +
+                          (twentyFourHours
+                              ? 0
+                              : customTimePeriod
+                                  ? customStartTime.hour
+                                  : 8)],
+                  style: const TextStyle(fontSize: 13),
+                  textAlign: TextAlign.center,
+                ),
+              );
+            },
+          ),
+        ),
+      ],
+    );
   }
 }

@@ -15,6 +15,7 @@ class Settings {
   final bool navbarVisible;
   final bool monetTheming;
   final bool multipleTimetables;
+  final bool twentyFourHours;
 
   // settings defaults
   Settings({
@@ -31,6 +32,7 @@ class Settings {
     this.navbarVisible = true,
     this.monetTheming = false,
     this.multipleTimetables = false,
+    this.twentyFourHours = false,
   });
 
   Settings copyWith({
@@ -47,6 +49,7 @@ class Settings {
     bool? navbarVisible,
     bool? monetTheming,
     bool? multipleTimetables,
+    bool? twentyFourHours,
   }) =>
       Settings(
         customTimePeriod: customTimePeriod ?? this.customTimePeriod,
@@ -63,6 +66,7 @@ class Settings {
         navbarVisible: navbarVisible ?? this.navbarVisible,
         monetTheming: monetTheming ?? this.monetTheming,
         multipleTimetables: multipleTimetables ?? this.multipleTimetables,
+        twentyFourHours: twentyFourHours ?? this.twentyFourHours,
       );
 
   Map<String, dynamic> toJson() => {
@@ -81,6 +85,7 @@ class Settings {
         'navbarVisible': navbarVisible,
         'monetTheming': monetTheming,
         'multipleTimetables': multipleTimetables,
+        'twentyFourHours': twentyFourHours,
       };
 
   factory Settings.fromJson(Map<String, dynamic> json) {
@@ -104,6 +109,7 @@ class Settings {
       navbarVisible: json['navbarVisible'] as bool,
       monetTheming: json['monetTheming'] as bool,
       multipleTimetables: json['multipleTimetables'] as bool,
+      twentyFourHours: json['twentyFourHours'] as bool,
     );
   }
 }

@@ -10,6 +10,14 @@ class SettingsNotifier extends StateNotifier<Settings> {
     loadSettings();
   }
 
+  void update24Hours(bool twentyFourHours) {
+    final newState = state.copyWith(
+      twentyFourHours: twentyFourHours,
+    );
+    state = newState;
+    saveSettings();
+  }
+
   void updateMultipleTimetables(bool multipleTimetables) {
     final newState = state.copyWith(
       multipleTimetables: multipleTimetables,

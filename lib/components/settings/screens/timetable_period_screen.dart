@@ -24,6 +24,7 @@ class TimetablePeriodScreen extends ConsumerWidget {
     final customTimePeriod = ref.watch(settingsProvider).customTimePeriod;
     final customStartTime = ref.watch(settingsProvider).customStartTime;
     final customEndTime = ref.watch(settingsProvider).customEndTime;
+    final twentyFourHours = ref.watch(settingsProvider).twentyFourHours;
     final settings = ref.read(settingsProvider.notifier);
 
     void showInvalidTimeDialog(bool isStartTime) {
@@ -56,6 +57,19 @@ class TimetablePeriodScreen extends ConsumerWidget {
               value: customTimePeriod,
               onChanged: (bool value) {
                 settings.updateCustomTimePeriod(value);
+                if (twentyFourHours) {
+                  settings.update24Hours(!value);
+                }
+              },
+            ),
+            SwitchListTile(
+              title: const Text("24 Hours Time Period"),
+              value: twentyFourHours,
+              onChanged: (bool value) {
+                settings.update24Hours(value);
+                if (customTimePeriod) {
+                  settings.updateCustomTimePeriod(false);
+                }
               },
             ),
             ListTile(

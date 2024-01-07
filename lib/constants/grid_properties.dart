@@ -22,13 +22,17 @@ int rows(WidgetRef ref) {
   final customTimePeriod = ref.watch(settingsProvider).customTimePeriod;
   final customStartTime = ref.watch(settingsProvider).customStartTime;
   final customEndTime = ref.watch(settingsProvider).customEndTime;
+  final twentyFourHours = ref.watch(settingsProvider).twentyFourHours;
 
-  if (customTimePeriod && (customEndTime.hour - customStartTime.hour != 0)) {
+  if (customTimePeriod && ((customEndTime.hour - customStartTime.hour) != 0)) {
     return (customEndTime.hour - customStartTime.hour).abs();
-  } else if (customTimePeriod &&
-      (customEndTime.hour - customStartTime.hour == 0)) {
-    return 24;
-  } else {
-    return 10;
   }
+  if (customTimePeriod &&
+      (customStartTime.hour == 0 &&
+          customStartTime.hour == customEndTime.hour)) {
+    return 24;
+  }
+  if (twentyFourHours) return 24;
+
+  return 10;
 }
