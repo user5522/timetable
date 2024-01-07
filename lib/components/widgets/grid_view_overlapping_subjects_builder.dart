@@ -15,11 +15,11 @@ class OverlappingSubjBuilder extends ConsumerWidget {
   final int laterEndTimeHour;
 
   const OverlappingSubjBuilder({
-    Key? key,
+    super.key,
     required this.subjects,
     required this.earlierStartTimeHour,
     required this.laterEndTimeHour,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

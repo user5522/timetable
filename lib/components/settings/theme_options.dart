@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:timetable/constants/theme_options.dart';
 import 'package:timetable/provider/themes.dart';
 
-/// application's theme mode options drop-down menu.
+/// app theme mode options drop-down menu.
 class ThemeOptions extends StatelessWidget {
+  final ThemeModeNotifier themeMode;
+
   const ThemeOptions({
     super.key,
     required this.themeMode,
   });
-
-  final ThemeModeNotifier themeMode;
 
   String getThemeModeLabel(ThemeModeOption themeMode) {
     switch (themeMode) {

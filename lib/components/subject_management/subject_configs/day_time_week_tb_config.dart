@@ -4,14 +4,16 @@ import 'package:timetable/components/subject_management/subject_configs/day_conf
 import 'package:timetable/components/subject_management/subject_configs/rotation_week_config.dart';
 import 'package:timetable/components/subject_management/subject_configs/time_config.dart';
 import 'package:timetable/components/subject_management/subject_configs/timetable_config.dart';
-import 'package:timetable/components/widgets/list_tile_group.dart';
+import 'package:timetable/components/widgets/list_item_group.dart';
 import 'package:timetable/constants/days.dart';
 import 'package:timetable/constants/rotation_weeks.dart';
 import 'package:timetable/db/database.dart';
 import 'package:timetable/provider/settings.dart';
 import 'package:timetable/provider/timetables.dart';
 
-/// Day, Time & Rotation Week config part of the Subject creation screen.
+/// Day, Time, Rotation Week & Timetable configuration part of the Subject creation screen.
+///
+/// basically groups [DayConfig], [RotationWeekConfig], [TimeConfig] and [TimetableConfig] in a [ListItemGroup].
 class TimeDayRotationWeekTimetableConfig extends ConsumerWidget {
   final ValueNotifier<TimeOfDay> startTime;
   final ValueNotifier<TimeOfDay> endTime;
@@ -36,7 +38,7 @@ class TimeDayRotationWeekTimetableConfig extends ConsumerWidget {
     final multipleTimetables = ref.watch(settingsProvider).multipleTimetables;
     final timetables = ref.watch(timetableProvider);
 
-    return ListTileGroup(
+    return ListItemGroup(
       children: [
         ListItem(
           title: DayConfig(

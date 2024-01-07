@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:timetable/components/widgets/list_tile_group.dart';
+import 'package:timetable/components/widgets/list_item_group.dart';
 
-/// Note config part of the Subject creation screen.
+/// Note configuration part of the Subject creation screen.
 class NotesTile extends ConsumerWidget {
   final ValueNotifier<String?> note;
 

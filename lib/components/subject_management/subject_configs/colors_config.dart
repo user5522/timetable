@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:timetable/components/subject_management/subject_configs/colors_config_screens/colors_screen.dart';
 
-/// Color config part of the Subject creation screen.
+/// Color configuration part of the Subject creation screen.
 class ColorsConfig extends StatelessWidget {
   final ValueNotifier<Color> color;
 

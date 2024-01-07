@@ -12,7 +12,7 @@ import 'package:timetable/db/database.dart';
 import 'package:timetable/helpers/timetables.dart';
 import 'package:timetable/provider/overlapping_subjects.dart';
 import 'package:timetable/components/widgets/grid_view_subject_builder.dart';
-import 'package:timetable/components/widgets/subject_container_builder.dart';
+import 'package:timetable/components/widgets/grid_view_subject_container_builder.dart';
 import 'package:timetable/components/widgets/tile.dart';
 import 'package:timetable/helpers/rotation_weeks.dart';
 import 'package:timetable/provider/settings.dart';

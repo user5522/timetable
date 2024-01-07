@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:drift/drift.dart' as drift;
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:timetable/components/widgets/alert_dialog.dart';
-import 'package:timetable/components/widgets/list_tile_group.dart';
+import 'package:timetable/components/widgets/list_item_group.dart';
 import 'package:timetable/db/database.dart';
 import 'package:timetable/provider/settings.dart';
 import 'package:timetable/provider/timetables.dart';
 
-/// Manage The number of Timetables in the app.
+/// Screen to manage the "multiple timetables" features.
 class TimetableManagementScreen extends ConsumerWidget {
   const TimetableManagementScreen({super.key});
 
@@ -61,7 +61,7 @@ class TimetableManagementScreen extends ConsumerWidget {
             ),
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 0, 16, 75),
-              child: ListTileGroup(
+              child: ListItemGroup(
                 children: List.generate(
                   timetables.length,
                   (i) => ListItem(

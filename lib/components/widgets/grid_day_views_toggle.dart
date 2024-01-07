@@ -5,9 +5,9 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 class GridDayViewsToggle extends HookWidget {
   final ValueNotifier<bool> isGridView;
   const GridDayViewsToggle({
-    Key? key,
+    super.key,
     required this.isGridView,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

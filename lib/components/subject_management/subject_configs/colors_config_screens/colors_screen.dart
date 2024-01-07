@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:timetable/components/subject_management/subject_configs/colors_config_screens/color_picker_screen.dart';
 import 'package:timetable/components/subject_management/subject_configs/colors_config_screens/preset_colors_scren.dart';
 
-/// Colors Configuration screen, groups [ColorPickerScreen] and [PresetColorsScreen].
+/// Colors configuration screen, basically groups [ColorPickerScreen] and [PresetColorsScreen].
 class ColorsScreen extends StatefulWidget {
   final ValueNotifier<Color> color;
 
   const ColorsScreen({
-    Key? key,
+    super.key,
     required this.color,
-  }) : super(key: key);
+  });
 
   @override
   State<ColorsScreen> createState() => _ColorsScreenState();

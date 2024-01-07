@@ -6,7 +6,7 @@ import 'package:timetable/provider/settings.dart';
 import 'package:timetable/screens/settings_screen.dart';
 import 'package:timetable/screens/timetable_screen.dart';
 
-/// The navigation bar.
+/// The app's bottom navigation bar.
 class Navigation extends HookConsumerWidget {
   const Navigation({
     super.key,

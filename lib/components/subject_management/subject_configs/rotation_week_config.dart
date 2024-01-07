@@ -3,7 +3,7 @@ import 'package:timetable/components/widgets/bottom_sheets/rotation_week_modal_b
 import 'package:timetable/constants/rotation_weeks.dart';
 import 'package:timetable/helpers/rotation_weeks.dart';
 
-/// Rotation Week config part of the Subject creation screen.
+/// Rotation Week configuration part of the Subject creation screen.
 class RotationWeekConfig extends StatelessWidget {
   final ValueNotifier<RotationWeeks> rotationWeek;
 

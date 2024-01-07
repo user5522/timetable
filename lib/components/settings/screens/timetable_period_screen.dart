@@ -4,6 +4,7 @@ import 'package:timetable/constants/custom_times.dart';
 import 'package:timetable/provider/settings.dart';
 
 /// Screen to manage the period of the timetable.
+///
 /// Changes the start time and end time of the timetable.
 class TimetablePeriodScreen extends ConsumerWidget {
   const TimetablePeriodScreen({super.key});

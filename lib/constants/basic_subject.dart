@@ -3,7 +3,7 @@ import 'package:timetable/constants/days.dart';
 import 'package:timetable/constants/rotation_weeks.dart';
 import 'package:timetable/db/database.dart';
 
-/// A basic subject with no additional information.
+/// A basic subject with no extra information.
 /// Used for the color autocomplete feature.
 const basicSubject = SubjectData(
   id: 0,

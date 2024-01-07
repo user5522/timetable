@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:timetable/constants/colors.dart';
 
-/// Preset colors screen for the color config screen.
+/// Preset colors screen for the color configuration screen.
 class PresetColorsScreen extends HookWidget {
   final ValueNotifier<Color> color;
 
   const PresetColorsScreen({
-    Key? key,
+    super.key,
     required this.color,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

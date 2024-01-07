@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:timetable/components/widgets/bottom_sheets/timetables_modal_bottom_sheet.dart';
 import 'package:timetable/db/database.dart';
 
-/// Timetable config part of the Subject creation screen.
+/// Timetable configuration part of the Subject creation screen.
 class TimetableConfig extends StatelessWidget {
   final ValueNotifier<TimetableData?> timetable;
 

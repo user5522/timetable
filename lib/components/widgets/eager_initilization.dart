@@ -5,8 +5,8 @@ import 'package:timetable/provider/subjects.dart';
 
 /// https://riverpod.dev/docs/essentials/eager_initialization
 ///
-/// All providers are initialized lazily by default.
-/// One solution is to forcibly read the providers you want to eagerly initialize.
+/// "All providers are initialized lazily by default.
+/// One solution is to forcibly read the providers you want to eagerly initialize."
 class EagerInitialization extends ConsumerWidget {
   final Widget child;
 
@@ -25,9 +25,6 @@ class EagerInitialization extends ConsumerWidget {
       future: timetablesNotifier.getTimetables(),
       builder: (context, snapshot) {
         if (snapshot.hasData) return child;
-        if (snapshot.hasError) {
-          return SingleChildScrollView(child: Text(snapshot.error.toString()));
-        }
         return const Center(child: CircularProgressIndicator());
       },
     );

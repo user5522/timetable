@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-// import 'package:drift/drift.dart' as drift;
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:timetable/components/subject_management/subject_configs/colors_config.dart';
 import 'package:timetable/components/subject_management/subject_configs/day_time_week_tb_config.dart';
 import 'package:timetable/components/subject_management/subject_configs/note_tile.dart';
-import 'package:timetable/components/widgets/list_tile_group.dart';
+import 'package:timetable/components/widgets/list_item_group.dart';
 import 'package:timetable/constants/basic_subject.dart';
 import 'package:timetable/constants/days.dart';
 import 'package:timetable/constants/rotation_weeks.dart';
@@ -16,8 +15,6 @@ import 'package:timetable/provider/subjects.dart';
 import 'package:timetable/provider/timetables.dart';
 
 /// The Subject creation/modification screen.
-///
-/// Uses [TimeDayRotationWeekTimetableConfig], [NotesTile] and [ColorsConfig]
 class SubjectScreen extends HookConsumerWidget {
   final int? rowIndex;
   final int? columnIndex;
@@ -222,7 +219,7 @@ class SubjectScreen extends HookConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                ListTileGroup(
+                ListItemGroup(
                   children: [
                     ListItem(
                       title: TextFormField(

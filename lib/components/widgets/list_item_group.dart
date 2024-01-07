@@ -1,10 +1,21 @@
 import 'package:flutter/material.dart';
 
 /// Custom Widget to handle the look of a List of ListTiles.
-class ListTileGroup extends StatelessWidget {
+///
+/// ```dart
+/// ListItemGroup(
+///   children: [
+///     // only accepts children of the type [ListItem]
+///     ListItem(
+///       title: "Title",
+///     ),
+///   ],
+/// );
+/// ```
+class ListItemGroup extends StatelessWidget {
   final List<ListItem> children;
 
-  const ListTileGroup({
+  const ListItemGroup({
     super.key,
     required this.children,
   });
@@ -14,28 +25,17 @@ class ListTileGroup extends StatelessWidget {
     return Column(
       children: children.asMap().entries.map((e) {
         final index = e.key;
-        if (index == 0 && children.length > 1) {
+        bool first = index == 0;
+        bool last = index == children.length - 1;
+        if (children.length > 1 && (first || last)) {
           return ListItem(
             title: e.value.title,
             subtitle: e.value.subtitle,
             leading: e.value.leading,
-            shape: const RoundedRectangleBorder(
+            shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.vertical(
-                top: Radius.circular(10),
-                bottom: Radius.circular(5),
-              ),
-            ),
-            onTap: () => e.value.onTap,
-          );
-        } else if (index == children.length - 1 && children.length > 1) {
-          return ListItem(
-            title: e.value.title,
-            subtitle: e.value.subtitle,
-            leading: e.value.leading,
-            shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.vertical(
-                top: Radius.circular(5),
-                bottom: Radius.circular(10),
+                top: Radius.circular(first ? 10 : 5),
+                bottom: Radius.circular(first ? 5 : 10),
               ),
             ),
             onTap: () => e.value.onTap,
@@ -58,6 +58,13 @@ class ListTileGroup extends StatelessWidget {
   }
 }
 
+/// Basically a worse version of ListTile that's needed for aesthetics.
+///
+/// ```dart
+/// ListItem(
+///   title: "Title",
+/// );
+/// ```
 class ListItem extends StatelessWidget {
   final Widget? title;
   final Widget? subtitle;
@@ -86,9 +93,7 @@ class ListItem extends StatelessWidget {
             title: title,
             subtitle: subtitle,
             leading: leading,
-            onTap: () {
-              onTap;
-            },
+            onTap: () => onTap,
             shape: shape,
             tileColor: Theme.of(context).colorScheme.surfaceVariant,
           ),
