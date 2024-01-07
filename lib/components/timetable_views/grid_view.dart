@@ -129,13 +129,17 @@ class TimetableGridView extends HookConsumerWidget {
       for (int i = 0; i < subjects.length; i++) {
         if (i != j) {
           final bool subjectsInSameDay = (subjects[i].day == subjects[j].day);
+          final bool subjectsInSameTimetable =
+              (subjects[i].timetable == subjects[j].timetable);
           final bool subjectsOverlapInTime =
               ((subjects[i].startTime.hour <= subjects[j].startTime.hour &&
                       subjects[i].endTime.hour > subjects[j].startTime.hour) ||
                   (subjects[j].startTime.hour <= subjects[i].startTime.hour &&
                       subjects[j].endTime.hour > subjects[i].startTime.hour));
 
-          if (subjectsInSameDay && subjectsOverlapInTime) {
+          if (subjectsInSameDay &&
+              subjectsOverlapInTime &&
+              subjectsInSameTimetable) {
             overlappingSubjects.add([subjects[i], subjects[j]]);
           }
         }

@@ -64,7 +64,7 @@ void filterOverlappingSubjectsByTimetable(
 ) {
   return overlappingSubjects.removeWhere(
     (elem) => elem.any(
-      (e) => e.timetable != timetables.indexOf(currentTimetable.value),
+      (e) => e.timetable != currentTimetable.value.name,
     ),
   );
 }
