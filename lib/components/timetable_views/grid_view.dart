@@ -9,22 +9,26 @@ import 'package:timetable/constants/grid_properties.dart';
 import 'package:timetable/helpers/overlapping_subjects.dart';
 import 'package:timetable/constants/rotation_weeks.dart';
 import 'package:timetable/db/database.dart';
+import 'package:timetable/helpers/timetables.dart';
 import 'package:timetable/provider/overlapping_subjects.dart';
 import 'package:timetable/components/widgets/grid_view_subject_builder.dart';
 import 'package:timetable/components/widgets/subject_container_builder.dart';
 import 'package:timetable/components/widgets/tile.dart';
 import 'package:timetable/helpers/rotation_weeks.dart';
 import 'package:timetable/provider/settings.dart';
+import 'package:timetable/provider/timetables.dart';
 
 /// Timetable view that shows All the days' subjects in a grid form.
 class TimetableGridView extends HookConsumerWidget {
   final ValueNotifier<RotationWeeks> rotationWeek;
   final List<SubjectData> subject;
+  final ValueNotifier<TimetableData> currentTimetable;
 
   const TimetableGridView({
     super.key,
     required this.rotationWeek,
     required this.subject,
+    required this.currentTimetable,
   });
 
   @override
@@ -32,13 +36,15 @@ class TimetableGridView extends HookConsumerWidget {
     final compactMode = ref.watch(settingsProvider).compactMode;
     final customStartTime = ref.watch(settingsProvider).customStartTime;
     final customEndTime = ref.watch(settingsProvider).customEndTime;
+    final timetables = ref.watch(timetableProvider);
+    final multipleTimetables = ref.watch(settingsProvider).multipleTimetables;
 
-    double screenWidth = MediaQuery.of(context).size.width;
-    bool isPortrait =
+    final double screenWidth = MediaQuery.of(context).size.width;
+    final bool isPortrait =
         MediaQuery.of(context).orientation == Orientation.portrait;
 
-    double tileHeight = compactMode ? 125 : 100;
-    double tileWidth = compactMode
+    final double tileHeight = compactMode ? 125 : 100;
+    final double tileWidth = compactMode
         ? (screenWidth / columns(ref) - ((timeColumnWidth + 10) / 10))
         : isPortrait
             ? 100
@@ -63,7 +69,15 @@ class TimetableGridView extends HookConsumerWidget {
                   rows: rows(ref),
                   columns: columns(ref),
                   grid: generate(
-                    getFilteredByRotationWeeksSubjects(rotationWeek, subject)
+                    getFilteredByTimetablesSubjects(
+                      currentTimetable,
+                      timetables,
+                      multipleTimetables,
+                      getFilteredByRotationWeeksSubjects(
+                        rotationWeek,
+                        subject,
+                      ),
+                    )
                         .where(
                           (e) =>
                               e.endTime.hour <=
@@ -92,6 +106,7 @@ class TimetableGridView extends HookConsumerWidget {
     WidgetRef ref,
   ) {
     final overlappingSubjects = ref.watch(overlappingSubjectsProvider);
+    final timetables = ref.watch(timetableProvider);
     final customStartTime = ref.watch(settingsProvider).customStartTime;
 
     // subjects' containers
@@ -103,6 +118,7 @@ class TimetableGridView extends HookConsumerWidget {
           child: SubjectContainerBuilder(
             rowIndex: rowIndex,
             columnIndex: columnIndex,
+            currentTimetable: currentTimetable,
           ),
         ),
       ),
@@ -128,9 +144,14 @@ class TimetableGridView extends HookConsumerWidget {
 
     if (overlappingSubjects.isNotEmpty &&
         overlappingSubjects.any((e) => e.length == 2)) {
-      getFilteredByRotationWeeksOverlappingSubjects(
+      filterOverlappingSubjectsByRotationWeeks(
         overlappingSubjects,
         rotationWeek,
+      );
+      filterOverlappingSubjectsByTimetable(
+        overlappingSubjects,
+        currentTimetable,
+        timetables,
       );
     }
 

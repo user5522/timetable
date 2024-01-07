@@ -9,7 +9,7 @@ class TimetableDataOptions extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final subjNotifier = ref.watch(subjProvider.notifier);
+    final subjNotifier = ref.watch(subjectProvider.notifier);
 
     return Column(
       children: [

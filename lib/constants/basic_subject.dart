@@ -15,4 +15,5 @@ const basicSubject = SubjectData(
   day: Days.monday,
   rotationWeek: RotationWeeks.all,
   note: "",
+  timetable: "1",
 );

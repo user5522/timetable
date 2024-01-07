@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:timetable/components/settings/screens/timetable_management_screen.dart';
 import 'package:timetable/provider/settings.dart';
 import 'package:timetable/components/settings/screens/timetable_period_screen.dart';
 
@@ -21,13 +22,27 @@ class TimetableFeaturesOptions extends ConsumerWidget {
               context,
               MaterialPageRoute(
                 settings: const RouteSettings(
-                  name: "CellScreen",
+                  name: "TimetablePeriodConfigScreen",
                 ),
                 builder: (context) => const TimetablePeriodScreen(),
               ),
             );
           },
           title: const Text("Time Period Configuration"),
+        ),
+        ListTile(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                settings: const RouteSettings(
+                  name: "TimetablesManagementScreen",
+                ),
+                builder: (context) => const TimetableManagementScreen(),
+              ),
+            );
+          },
+          title: const Text("Manage Timetables"),
         ),
         SwitchListTile(
           title: const Text("Rotation Weeks"),

@@ -3,16 +3,19 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:non_uniform_border/non_uniform_border.dart';
 import 'package:timetable/constants/grid_properties.dart';
 import 'package:timetable/components/subject_management/subject_screen.dart';
+import 'package:timetable/db/database.dart';
 
 /// Builds the tile that you click on to create a Subject in the grid view.
 class SubjectContainerBuilder extends ConsumerWidget {
   final int rowIndex;
   final int columnIndex;
+  final ValueNotifier<TimetableData> currentTimetable;
 
   const SubjectContainerBuilder({
     super.key,
     required this.rowIndex,
     required this.columnIndex,
+    required this.currentTimetable,
   });
 
   @override
@@ -37,6 +40,7 @@ class SubjectContainerBuilder extends ConsumerWidget {
             builder: (context) => SubjectScreen(
               rowIndex: rowIndex,
               columnIndex: columnIndex,
+              currentTimetable: currentTimetable,
             ),
           ),
         );

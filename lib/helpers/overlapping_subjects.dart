@@ -37,7 +37,7 @@ SubjectData getLatestSubject(List<SubjectData> subjects) {
 }
 
 /// filters overlapping subjects by the current rotation week.
-void getFilteredByRotationWeeksOverlappingSubjects(
+void filterOverlappingSubjectsByRotationWeeks(
   List<List<SubjectData>> overlappingSubjects,
   ValueNotifier<RotationWeeks> rotationWeek,
 ) {
@@ -52,6 +52,19 @@ void getFilteredByRotationWeeksOverlappingSubjects(
           return false;
         }
       },
+    ),
+  );
+}
+
+/// filters overlapping subjects by the current timetable.
+void filterOverlappingSubjectsByTimetable(
+  List<List<SubjectData>> overlappingSubjects,
+  ValueNotifier<TimetableData> currentTimetable,
+  List<TimetableData> timetables,
+) {
+  return overlappingSubjects.removeWhere(
+    (elem) => elem.any(
+      (e) => e.timetable != timetables.indexOf(currentTimetable.value),
     ),
   );
 }

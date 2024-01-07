@@ -1,6 +1,7 @@
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:timetable/components/widgets/eager_initilization.dart';
 import 'package:timetable/components/widgets/navigation_bar.dart';
 import 'package:timetable/constants/theme_options.dart';
 import 'package:timetable/provider/settings.dart';
@@ -10,14 +11,14 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(
     const ProviderScope(
-      child: Timetable(),
+      child: TimetableApp(),
     ),
   );
 }
 
 /// The main class of the application.
-class Timetable extends ConsumerWidget {
-  const Timetable({super.key});
+class TimetableApp extends ConsumerWidget {
+  const TimetableApp({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -53,7 +54,9 @@ class Timetable extends ConsumerWidget {
                   ),
             useMaterial3: true,
           ),
-          home: const Navigation(),
+          home: const EagerInitialization(
+            child: Navigation(),
+          ),
         );
       },
     );

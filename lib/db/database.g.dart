@@ -3,6 +3,178 @@
 part of 'database.dart';
 
 // ignore_for_file: type=lint
+class $TimetableTable extends Timetable
+    with TableInfo<$TimetableTable, TimetableData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $TimetableTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+      'id', aliasedName, false,
+      hasAutoIncrement: true,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+      'name', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  @override
+  List<GeneratedColumn> get $columns => [id, name];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'timetable';
+  @override
+  VerificationContext validateIntegrity(Insertable<TimetableData> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+          _nameMeta, name.isAcceptableOrUnknown(data['name']!, _nameMeta));
+    } else if (isInserting) {
+      context.missing(_nameMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  TimetableData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return TimetableData(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
+      name: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}name'])!,
+    );
+  }
+
+  @override
+  $TimetableTable createAlias(String alias) {
+    return $TimetableTable(attachedDatabase, alias);
+  }
+}
+
+class TimetableData extends DataClass implements Insertable<TimetableData> {
+  final int id;
+  final String name;
+  const TimetableData({required this.id, required this.name});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['name'] = Variable<String>(name);
+    return map;
+  }
+
+  TimetableCompanion toCompanion(bool nullToAbsent) {
+    return TimetableCompanion(
+      id: Value(id),
+      name: Value(name),
+    );
+  }
+
+  factory TimetableData.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return TimetableData(
+      id: serializer.fromJson<int>(json['id']),
+      name: serializer.fromJson<String>(json['name']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'name': serializer.toJson<String>(name),
+    };
+  }
+
+  TimetableData copyWith({int? id, String? name}) => TimetableData(
+        id: id ?? this.id,
+        name: name ?? this.name,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('TimetableData(')
+          ..write('id: $id, ')
+          ..write('name: $name')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, name);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is TimetableData &&
+          other.id == this.id &&
+          other.name == this.name);
+}
+
+class TimetableCompanion extends UpdateCompanion<TimetableData> {
+  final Value<int> id;
+  final Value<String> name;
+  const TimetableCompanion({
+    this.id = const Value.absent(),
+    this.name = const Value.absent(),
+  });
+  TimetableCompanion.insert({
+    this.id = const Value.absent(),
+    required String name,
+  }) : name = Value(name);
+  static Insertable<TimetableData> custom({
+    Expression<int>? id,
+    Expression<String>? name,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (name != null) 'name': name,
+    });
+  }
+
+  TimetableCompanion copyWith({Value<int>? id, Value<String>? name}) {
+    return TimetableCompanion(
+      id: id ?? this.id,
+      name: name ?? this.name,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('TimetableCompanion(')
+          ..write('id: $id, ')
+          ..write('name: $name')
+          ..write(')'))
+        .toString();
+  }
+}
+
 class $SubjectTable extends Subject with TableInfo<$SubjectTable, SubjectData> {
   @override
   final GeneratedDatabase attachedDatabase;
@@ -66,9 +238,25 @@ class $SubjectTable extends Subject with TableInfo<$SubjectTable, SubjectData> {
       endTime = GeneratedColumn<String>('end_time', aliasedName, false,
               type: DriftSqlType.string, requiredDuringInsert: true)
           .withConverter<material.TimeOfDay>($SubjectTable.$converterendTime);
+  static const VerificationMeta _timetableMeta =
+      const VerificationMeta('timetable');
   @override
-  List<GeneratedColumn> get $columns =>
-      [id, label, location, note, color, rotationWeek, day, startTime, endTime];
+  late final GeneratedColumn<String> timetable = GeneratedColumn<String>(
+      'timetable', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  @override
+  List<GeneratedColumn> get $columns => [
+        id,
+        label,
+        location,
+        note,
+        color,
+        rotationWeek,
+        day,
+        startTime,
+        endTime,
+        timetable
+      ];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -101,6 +289,12 @@ class $SubjectTable extends Subject with TableInfo<$SubjectTable, SubjectData> {
     context.handle(_dayMeta, const VerificationResult.success());
     context.handle(_startTimeMeta, const VerificationResult.success());
     context.handle(_endTimeMeta, const VerificationResult.success());
+    if (data.containsKey('timetable')) {
+      context.handle(_timetableMeta,
+          timetable.isAcceptableOrUnknown(data['timetable']!, _timetableMeta));
+    } else if (isInserting) {
+      context.missing(_timetableMeta);
+    }
     return context;
   }
 
@@ -131,6 +325,8 @@ class $SubjectTable extends Subject with TableInfo<$SubjectTable, SubjectData> {
       endTime: $SubjectTable.$converterendTime.fromSql(attachedDatabase
           .typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}end_time'])!),
+      timetable: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}timetable'])!,
     );
   }
 
@@ -161,6 +357,7 @@ class SubjectData extends DataClass implements Insertable<SubjectData> {
   final Days day;
   final material.TimeOfDay startTime;
   final material.TimeOfDay endTime;
+  final String timetable;
   const SubjectData(
       {required this.id,
       required this.label,
@@ -170,7 +367,8 @@ class SubjectData extends DataClass implements Insertable<SubjectData> {
       required this.rotationWeek,
       required this.day,
       required this.startTime,
-      required this.endTime});
+      required this.endTime,
+      required this.timetable});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -200,6 +398,7 @@ class SubjectData extends DataClass implements Insertable<SubjectData> {
       map['end_time'] =
           Variable<String>($SubjectTable.$converterendTime.toSql(endTime));
     }
+    map['timetable'] = Variable<String>(timetable);
     return map;
   }
 
@@ -216,6 +415,7 @@ class SubjectData extends DataClass implements Insertable<SubjectData> {
       day: Value(day),
       startTime: Value(startTime),
       endTime: Value(endTime),
+      timetable: Value(timetable),
     );
   }
 
@@ -234,6 +434,7 @@ class SubjectData extends DataClass implements Insertable<SubjectData> {
           .fromJson(serializer.fromJson<int>(json['day'])),
       startTime: serializer.fromJson<material.TimeOfDay>(json['startTime']),
       endTime: serializer.fromJson<material.TimeOfDay>(json['endTime']),
+      timetable: serializer.fromJson<String>(json['timetable']),
     );
   }
   @override
@@ -250,6 +451,7 @@ class SubjectData extends DataClass implements Insertable<SubjectData> {
       'day': serializer.toJson<int>($SubjectTable.$converterday.toJson(day)),
       'startTime': serializer.toJson<material.TimeOfDay>(startTime),
       'endTime': serializer.toJson<material.TimeOfDay>(endTime),
+      'timetable': serializer.toJson<String>(timetable),
     };
   }
 
@@ -262,7 +464,8 @@ class SubjectData extends DataClass implements Insertable<SubjectData> {
           RotationWeeks? rotationWeek,
           Days? day,
           material.TimeOfDay? startTime,
-          material.TimeOfDay? endTime}) =>
+          material.TimeOfDay? endTime,
+          String? timetable}) =>
       SubjectData(
         id: id ?? this.id,
         label: label ?? this.label,
@@ -273,6 +476,7 @@ class SubjectData extends DataClass implements Insertable<SubjectData> {
         day: day ?? this.day,
         startTime: startTime ?? this.startTime,
         endTime: endTime ?? this.endTime,
+        timetable: timetable ?? this.timetable,
       );
   @override
   String toString() {
@@ -285,14 +489,15 @@ class SubjectData extends DataClass implements Insertable<SubjectData> {
           ..write('rotationWeek: $rotationWeek, ')
           ..write('day: $day, ')
           ..write('startTime: $startTime, ')
-          ..write('endTime: $endTime')
+          ..write('endTime: $endTime, ')
+          ..write('timetable: $timetable')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(
-      id, label, location, note, color, rotationWeek, day, startTime, endTime);
+  int get hashCode => Object.hash(id, label, location, note, color,
+      rotationWeek, day, startTime, endTime, timetable);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -305,7 +510,8 @@ class SubjectData extends DataClass implements Insertable<SubjectData> {
           other.rotationWeek == this.rotationWeek &&
           other.day == this.day &&
           other.startTime == this.startTime &&
-          other.endTime == this.endTime);
+          other.endTime == this.endTime &&
+          other.timetable == this.timetable);
 }
 
 class SubjectCompanion extends UpdateCompanion<SubjectData> {
@@ -318,6 +524,7 @@ class SubjectCompanion extends UpdateCompanion<SubjectData> {
   final Value<Days> day;
   final Value<material.TimeOfDay> startTime;
   final Value<material.TimeOfDay> endTime;
+  final Value<String> timetable;
   const SubjectCompanion({
     this.id = const Value.absent(),
     this.label = const Value.absent(),
@@ -328,6 +535,7 @@ class SubjectCompanion extends UpdateCompanion<SubjectData> {
     this.day = const Value.absent(),
     this.startTime = const Value.absent(),
     this.endTime = const Value.absent(),
+    this.timetable = const Value.absent(),
   });
   SubjectCompanion.insert({
     this.id = const Value.absent(),
@@ -339,12 +547,14 @@ class SubjectCompanion extends UpdateCompanion<SubjectData> {
     required Days day,
     required material.TimeOfDay startTime,
     required material.TimeOfDay endTime,
+    required String timetable,
   })  : label = Value(label),
         color = Value(color),
         rotationWeek = Value(rotationWeek),
         day = Value(day),
         startTime = Value(startTime),
-        endTime = Value(endTime);
+        endTime = Value(endTime),
+        timetable = Value(timetable);
   static Insertable<SubjectData> custom({
     Expression<int>? id,
     Expression<String>? label,
@@ -355,6 +565,7 @@ class SubjectCompanion extends UpdateCompanion<SubjectData> {
     Expression<int>? day,
     Expression<String>? startTime,
     Expression<String>? endTime,
+    Expression<String>? timetable,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -366,6 +577,7 @@ class SubjectCompanion extends UpdateCompanion<SubjectData> {
       if (day != null) 'day': day,
       if (startTime != null) 'start_time': startTime,
       if (endTime != null) 'end_time': endTime,
+      if (timetable != null) 'timetable': timetable,
     });
   }
 
@@ -378,7 +590,8 @@ class SubjectCompanion extends UpdateCompanion<SubjectData> {
       Value<RotationWeeks>? rotationWeek,
       Value<Days>? day,
       Value<material.TimeOfDay>? startTime,
-      Value<material.TimeOfDay>? endTime}) {
+      Value<material.TimeOfDay>? endTime,
+      Value<String>? timetable}) {
     return SubjectCompanion(
       id: id ?? this.id,
       label: label ?? this.label,
@@ -389,6 +602,7 @@ class SubjectCompanion extends UpdateCompanion<SubjectData> {
       day: day ?? this.day,
       startTime: startTime ?? this.startTime,
       endTime: endTime ?? this.endTime,
+      timetable: timetable ?? this.timetable,
     );
   }
 
@@ -426,6 +640,9 @@ class SubjectCompanion extends UpdateCompanion<SubjectData> {
       map['end_time'] = Variable<String>(
           $SubjectTable.$converterendTime.toSql(endTime.value));
     }
+    if (timetable.present) {
+      map['timetable'] = Variable<String>(timetable.value);
+    }
     return map;
   }
 
@@ -440,7 +657,8 @@ class SubjectCompanion extends UpdateCompanion<SubjectData> {
           ..write('rotationWeek: $rotationWeek, ')
           ..write('day: $day, ')
           ..write('startTime: $startTime, ')
-          ..write('endTime: $endTime')
+          ..write('endTime: $endTime, ')
+          ..write('timetable: $timetable')
           ..write(')'))
         .toString();
   }
@@ -448,10 +666,11 @@ class SubjectCompanion extends UpdateCompanion<SubjectData> {
 
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
+  late final $TimetableTable timetable = $TimetableTable(this);
   late final $SubjectTable subject = $SubjectTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
-  List<DatabaseSchemaEntity> get allSchemaEntities => [subject];
+  List<DatabaseSchemaEntity> get allSchemaEntities => [timetable, subject];
 }

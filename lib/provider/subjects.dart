@@ -1,14 +1,13 @@
 import 'package:drift/drift.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-
 import 'package:timetable/db/database.dart';
 import 'package:timetable/provider/overlapping_subjects.dart';
 
-class SubjNotifier extends StateNotifier<List<SubjectData>> {
+class SubjectNotifier extends StateNotifier<List<SubjectData>> {
   AppDatabase db;
   OverlappingSubjects overlappingSubjectsNotifier;
 
-  SubjNotifier(
+  SubjectNotifier(
     this.db,
     this.overlappingSubjectsNotifier,
   ) : super([]) {
@@ -32,24 +31,42 @@ class SubjNotifier extends StateNotifier<List<SubjectData>> {
         day: entry.day.value,
         startTime: entry.startTime.value,
         endTime: entry.endTime.value,
+        timetable: entry.timetable.value,
       ),
     );
 
     state = await getSubjects();
   }
 
-  Future updateSubject(SubjectCompanion entry) async {
+  Future updateSubject(SubjectData entry) async {
     db.subject.update().replace(entry);
     state = await getSubjects();
 
     overlappingSubjectsNotifier.reset();
   }
 
-  Future deleteSubject(SubjectCompanion entry) async {
-    db.subject.deleteWhere((t) => t.id.equals(entry.id.value));
+  Future deleteSubject(SubjectData entry) async {
+    db.subject.deleteWhere((t) => t.id.equals(entry.id));
     state = await getSubjects();
 
     overlappingSubjectsNotifier.reset();
+  }
+
+  Future deleteTimetableSubjects(
+    List<TimetableData> timetables,
+    TimetableData timetable,
+  ) async {
+    var subjects = await db.subject.select().get();
+
+    for (var subject in subjects.where(
+      (e) => e.timetable == timetable.name,
+    )) {
+      db.subject.deleteWhere(
+        (t) => t.id.equals(subject.id),
+      );
+    }
+
+    state = await getSubjects();
   }
 
   void resetData() {
@@ -60,11 +77,10 @@ class SubjNotifier extends StateNotifier<List<SubjectData>> {
   }
 }
 
-final subjProvider = StateNotifierProvider<SubjNotifier, List<SubjectData>>(
-  (ref) {
-    return SubjNotifier(
-      ref.watch(AppDatabase.provider),
-      ref.watch(overlappingSubjectsProvider.notifier),
-    );
-  },
+final subjectProvider =
+    StateNotifierProvider<SubjectNotifier, List<SubjectData>>(
+  (ref) => SubjectNotifier(
+    ref.watch(AppDatabase.provider),
+    ref.watch(overlappingSubjectsProvider.notifier),
+  ),
 );

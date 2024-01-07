@@ -10,6 +10,14 @@ class SettingsNotifier extends StateNotifier<Settings> {
     loadSettings();
   }
 
+  void updateMultipleTimetables(bool multipleTimetables) {
+    final newState = state.copyWith(
+      multipleTimetables: multipleTimetables,
+    );
+    state = newState;
+    saveSettings();
+  }
+
   void updateMonetThemeing(bool monetTheming) {
     final newState = state.copyWith(
       monetTheming: monetTheming,

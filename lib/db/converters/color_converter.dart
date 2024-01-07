@@ -6,7 +6,7 @@ class ColorConverter extends TypeConverter<Color, int> {
 
   @override
   Color fromSql(int fromDb) {
-    // Parse TimeOfDay from String
+    // Parse Color from int
     return Color(fromDb);
   }
 

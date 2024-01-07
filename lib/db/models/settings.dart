@@ -14,6 +14,7 @@ class Settings {
   final bool hideTransparentSubject;
   final bool navbarVisible;
   final bool monetTheming;
+  final bool multipleTimetables;
 
   // settings defaults
   Settings({
@@ -29,6 +30,7 @@ class Settings {
     this.hideTransparentSubject = true,
     this.navbarVisible = true,
     this.monetTheming = false,
+    this.multipleTimetables = false,
   });
 
   Settings copyWith({
@@ -44,6 +46,7 @@ class Settings {
     bool? hideTransparentSubject,
     bool? navbarVisible,
     bool? monetTheming,
+    bool? multipleTimetables,
   }) =>
       Settings(
         customTimePeriod: customTimePeriod ?? this.customTimePeriod,
@@ -59,6 +62,7 @@ class Settings {
             hideTransparentSubject ?? this.hideTransparentSubject,
         navbarVisible: navbarVisible ?? this.navbarVisible,
         monetTheming: monetTheming ?? this.monetTheming,
+        multipleTimetables: multipleTimetables ?? this.multipleTimetables,
       );
 
   Map<String, dynamic> toJson() => {
@@ -76,6 +80,7 @@ class Settings {
         'hideTransparentSubject': hideTransparentSubject,
         'navbarVisible': navbarVisible,
         'monetTheming': monetTheming,
+        'multipleTimetables': multipleTimetables,
       };
 
   factory Settings.fromJson(Map<String, dynamic> json) {
@@ -98,6 +103,7 @@ class Settings {
       hideTransparentSubject: json['hideTransparentSubject'] as bool,
       navbarVisible: json['navbarVisible'] as bool,
       monetTheming: json['monetTheming'] as bool,
+      multipleTimetables: json['multipleTimetables'] as bool,
     );
   }
 }
