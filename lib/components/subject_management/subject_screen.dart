@@ -43,10 +43,11 @@ class SubjectScreen extends HookConsumerWidget {
     final focus = FocusNode();
 
     final bool isSubjectNull = (subject == null);
+    final bool isCTimetableNull = (currentTimetable == null);
     final int id = isSubjectNull ? subjects.length : subject!.id;
 
     final timetable = useState(
-      isSubjectNull
+      isSubjectNull || isCTimetableNull
           ? currentTimetable!.value
           : timetables.where((t) => t.name == subject!.timetable).firstOrNull,
     );
