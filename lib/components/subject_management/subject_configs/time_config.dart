@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:timetable/components/widgets/act_chip.dart';
+import 'package:timetable/helpers/time_management.dart';
 import 'package:timetable/constants/custom_times.dart';
 import 'package:timetable/provider/settings.dart';
 
@@ -15,16 +17,6 @@ class TimeConfig extends ConsumerWidget {
     required this.startTime,
     required this.endTime,
   });
-
-  bool _isBefore(TimeOfDay time1, TimeOfDay time2) {
-    return (time1.hour < time2.hour) ||
-        (time1.hour == time2.hour && time1.minute < time2.minute);
-  }
-
-  bool _isAfter(TimeOfDay time1, TimeOfDay time2) {
-    return (time1.hour > time2.hour) ||
-        (time1.hour == time2.hour && time1.minute > time2.minute);
-  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -84,9 +76,7 @@ class TimeConfig extends ConsumerWidget {
       children: [
         const Text("Time"),
         const Spacer(),
-        ActionChip(
-          side: BorderSide.none,
-          backgroundColor: const Color(0xffbabcbe),
+        ActChip(
           onPressed: () async {
             final TimeOfDay? selectedTime = await showTimePicker(
               context: context,
@@ -101,19 +91,14 @@ class TimeConfig extends ConsumerWidget {
                     getCustomStartTime(customStartTime, ref).hour)) {
               showInvalidTimePeriodDialog();
             } else if (selectedTime != null) {
-              if (_isBefore(selectedTime, endTime.value)) {
+              if (isBefore(selectedTime, endTime.value)) {
                 startTime.value = selectedTime;
               } else {
                 showInvalidTimeDialog(true);
               }
             }
           },
-          label: Text(
-            "${startTime.value.hour}:00",
-            style: const TextStyle(
-              color: Colors.black,
-            ),
-          ),
+          label: Text("${startTime.value.hour}:00"),
         ),
         const Padding(
           padding: EdgeInsets.symmetric(
@@ -121,9 +106,7 @@ class TimeConfig extends ConsumerWidget {
           ),
           child: Icon(Icons.arrow_forward),
         ),
-        ActionChip(
-          side: BorderSide.none,
-          backgroundColor: const Color(0xffbabcbe),
+        ActChip(
           onPressed: () async {
             final TimeOfDay? selectedTime = await showTimePicker(
               context: context,
@@ -138,19 +121,14 @@ class TimeConfig extends ConsumerWidget {
                     getCustomEndTime(customEndTime, ref).hour)) {
               showInvalidTimePeriodDialog();
             } else if (selectedTime != null) {
-              if (_isAfter(selectedTime, startTime.value)) {
+              if (isAfter(selectedTime, startTime.value)) {
                 endTime.value = selectedTime;
               } else {
                 showInvalidTimeDialog(false);
               }
             }
           },
-          label: Text(
-            "${endTime.value.hour}:00",
-            style: const TextStyle(
-              color: Colors.black,
-            ),
-          ),
+          label: Text("${endTime.value.hour}:00"),
         ),
         if (occupied)
           const Padding(

@@ -27,30 +27,46 @@ class ListItemGroup extends StatelessWidget {
         final index = e.key;
         bool first = index == 0;
         bool last = index == children.length - 1;
+        if (children.length == 1) {
+          return ListItem(
+            title: e.value.title,
+            subtitle: e.value.subtitle,
+            leading: e.value.leading,
+            trailing: e.value.trailing,
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(
+                Radius.circular(10),
+              ),
+            ),
+            onTap: e.value.onTap,
+          );
+        }
         if (children.length > 1 && (first || last)) {
           return ListItem(
             title: e.value.title,
             subtitle: e.value.subtitle,
             leading: e.value.leading,
+            trailing: e.value.trailing,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.vertical(
                 top: Radius.circular(first ? 10 : 5),
                 bottom: Radius.circular(first ? 5 : 10),
               ),
             ),
-            onTap: () => e.value.onTap,
+            onTap: e.value.onTap,
           );
         } else {
           return ListItem(
             title: e.value.title,
             subtitle: e.value.subtitle,
             leading: e.value.leading,
+            trailing: e.value.trailing,
             shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.all(
                 Radius.circular(5),
               ),
             ),
-            onTap: () => e.value.onTap,
+            onTap: e.value.onTap,
           );
         }
       }).toList(),
@@ -69,7 +85,8 @@ class ListItem extends StatelessWidget {
   final Widget? title;
   final Widget? subtitle;
   final Widget? leading;
-  final GestureTapCallback? onTap;
+  final Widget? trailing;
+  final VoidCallback? onTap;
   final ShapeBorder? shape;
   final String? hintText;
 
@@ -78,6 +95,7 @@ class ListItem extends StatelessWidget {
     this.title,
     this.subtitle,
     this.leading,
+    this.trailing,
     this.onTap,
     this.shape,
     this.hintText,
@@ -93,9 +111,10 @@ class ListItem extends StatelessWidget {
             title: title,
             subtitle: subtitle,
             leading: leading,
-            onTap: () => onTap,
+            onTap: onTap,
             shape: shape,
-            tileColor: Theme.of(context).colorScheme.surfaceVariant,
+            trailing: trailing,
+            tileColor: Theme.of(context).colorScheme.onInverseSurface,
           ),
         ),
       ],

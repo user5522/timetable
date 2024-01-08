@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:timetable/components/widgets/act_chip.dart';
 import 'package:timetable/components/widgets/bottom_sheets/timetables_modal_bottom_sheet.dart';
 import 'package:timetable/db/database.dart';
 
@@ -17,9 +18,7 @@ class TimetableConfig extends StatelessWidget {
       children: [
         const Text("Timetable"),
         const Spacer(),
-        ActionChip(
-          side: BorderSide.none,
-          backgroundColor: const Color(0xffbabcbe),
+        ActChip(
           onPressed: () {
             showModalBottomSheet(
               showDragHandle: true,
@@ -37,12 +36,7 @@ class TimetableConfig extends StatelessWidget {
               },
             );
           },
-          label: Text(
-            timetable.value!.name,
-            style: const TextStyle(
-              color: Colors.black,
-            ),
-          ),
+          label: Text(timetable.value!.name),
         ),
       ],
     );

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:timetable/components/widgets/act_chip.dart';
 import 'package:timetable/components/widgets/bottom_sheets/rotation_week_modal_bottom_sheet.dart';
 import 'package:timetable/constants/rotation_weeks.dart';
 import 'package:timetable/helpers/rotation_weeks.dart';
@@ -20,9 +21,7 @@ class RotationWeekConfig extends StatelessWidget {
       children: [
         const Text("Rotation Week"),
         const Spacer(),
-        ActionChip(
-          side: BorderSide.none,
-          backgroundColor: const Color(0xffbabcbe),
+        ActChip(
           onPressed: () {
             showModalBottomSheet(
               showDragHandle: true,
@@ -41,12 +40,7 @@ class RotationWeekConfig extends StatelessWidget {
               },
             );
           },
-          label: Text(
-            getRotationWeekLabel(rotationWeek.value),
-            style: const TextStyle(
-              color: Colors.black,
-            ),
-          ),
+          label: Text(getRotationWeekLabel(rotationWeek.value)),
         ),
       ],
     );
