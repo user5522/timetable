@@ -47,8 +47,12 @@ class SubjectScreen extends HookConsumerWidget {
     final int id = isSubjectNull ? subjects.length : subject!.id;
 
     final timetable = useState(
-      isSubjectNull || isCTimetableNull
-          ? currentTimetable!.value
+      isSubjectNull
+          ? isCTimetableNull
+              ? timetables
+                  .where((t) => t.name == subject!.timetable)
+                  .firstOrNull
+              : currentTimetable!.value
           : timetables.where((t) => t.name == subject!.timetable).firstOrNull,
     );
     final startTime = useState(
