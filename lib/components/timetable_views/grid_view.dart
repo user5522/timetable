@@ -38,6 +38,29 @@ class TimetableGridView extends HookConsumerWidget {
     final customEndTime = ref.watch(settingsProvider).customEndTime;
     final timetables = ref.watch(timetableProvider);
     final multipleTimetables = ref.watch(settingsProvider).multipleTimetables;
+    final overlappingSubjectsNotifier =
+        ref.watch(overlappingSubjectsProvider.notifier);
+    final subjects = getFilteredByTimetablesSubjects(
+      currentTimetable,
+      timetables,
+      multipleTimetables,
+      getFilteredByRotationWeeksSubjects(
+        rotationWeek,
+        subject,
+      ),
+    )
+        .where(
+          (e) =>
+              e.endTime.hour <= getCustomEndTime(customEndTime, ref).hour &&
+              e.startTime.hour >= getCustomStartTime(customStartTime, ref).hour,
+        )
+        .toList();
+
+    Future addOverlappingSubjects() async {
+      overlappingSubjectsNotifier.addInBulk(findOverlappingSubjects(subjects));
+    }
+
+    addOverlappingSubjects();
 
     final double screenWidth = MediaQuery.of(context).size.width;
     final bool isPortrait =
@@ -69,23 +92,7 @@ class TimetableGridView extends HookConsumerWidget {
                   rows: rows(ref),
                   columns: columns(ref),
                   grid: generate(
-                    getFilteredByTimetablesSubjects(
-                      currentTimetable,
-                      timetables,
-                      multipleTimetables,
-                      getFilteredByRotationWeeksSubjects(
-                        rotationWeek,
-                        subject,
-                      ),
-                    )
-                        .where(
-                          (e) =>
-                              e.endTime.hour <=
-                                  getCustomEndTime(customEndTime, ref).hour &&
-                              e.startTime.hour >=
-                                  getCustomStartTime(customStartTime, ref).hour,
-                        )
-                        .toList(),
+                    subjects,
                     columns(ref),
                     rows(ref),
                     ref,
@@ -125,27 +132,6 @@ class TimetableGridView extends HookConsumerWidget {
     );
 
     // overlapping subjects
-    for (int j = 0; j < subjects.length; j++) {
-      for (int i = 0; i < subjects.length; i++) {
-        if (i != j) {
-          final bool subjectsInSameDay = (subjects[i].day == subjects[j].day);
-          final bool subjectsInSameTimetable =
-              (subjects[i].timetable == subjects[j].timetable);
-          final bool subjectsOverlapInTime =
-              ((subjects[i].startTime.hour <= subjects[j].startTime.hour &&
-                      subjects[i].endTime.hour > subjects[j].startTime.hour) ||
-                  (subjects[j].startTime.hour <= subjects[i].startTime.hour &&
-                      subjects[j].endTime.hour > subjects[i].startTime.hour));
-
-          if (subjectsInSameDay &&
-              subjectsOverlapInTime &&
-              subjectsInSameTimetable) {
-            overlappingSubjects.add([subjects[i], subjects[j]]);
-          }
-        }
-      }
-    }
-
     if (overlappingSubjects.isNotEmpty &&
         overlappingSubjects.any((e) => e.length == 2)) {
       filterOverlappingSubjectsByRotationWeeks(

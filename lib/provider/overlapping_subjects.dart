@@ -5,6 +5,10 @@ import 'package:timetable/db/database.dart';
 class OverlappingSubjects extends StateNotifier<List<List<SubjectData>>> {
   OverlappingSubjects() : super([]);
 
+  void addInBulk(List<List<SubjectData>> value) {
+    state = value;
+  }
+
   void reset() {
     state = [];
   }

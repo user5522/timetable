@@ -68,3 +68,73 @@ void filterOverlappingSubjectsByTimetable(
     ),
   );
 }
+
+/// geete if 2 subjects overlap in time.
+bool doSubjectsOverlap(SubjectData a, SubjectData b, List<SubjectData> group) {
+  return a.day == b.day &&
+      (a.startTime.hour < b.endTime.hour ||
+          (a.startTime.hour == b.endTime.hour &&
+              a.startTime.minute < b.endTime.minute)) &&
+      (a.endTime.hour > b.startTime.hour ||
+          (a.endTime.hour == b.startTime.hour &&
+              a.endTime.minute > b.startTime.minute)) &&
+      (!group.contains(a) || !group.contains(b));
+}
+
+void findOverlappingSubjectsWithinGroup(
+  List<SubjectData> subjects,
+  List<SubjectData> group,
+  int startIndex,
+) {
+  for (int i = startIndex; i < subjects.length; i++) {
+    if (!group.contains(subjects[i]) &&
+        group.any(
+          (subject) => doSubjectsOverlap(
+            subject,
+            subjects[i],
+            group,
+          ),
+        )) {
+      group.add(subjects[i]);
+      findOverlappingSubjectsWithinGroup(
+        subjects,
+        group,
+        i + 1,
+      );
+    }
+  }
+}
+
+List<List<SubjectData>> findOverlappingSubjects(List<SubjectData> subjects) {
+  final overlappingSubjects = <List<SubjectData>>[];
+
+  for (int i = 0; i < subjects.length; i++) {
+    if (overlappingSubjects.any(
+      (group) => group.contains(subjects[i]),
+    )) {
+      continue;
+    }
+
+    final overlappingGroup = <SubjectData>[subjects[i]];
+
+    for (int j = i + 1; j < subjects.length; j++) {
+      if (doSubjectsOverlap(
+        subjects[i],
+        subjects[j],
+        overlappingGroup,
+      )) {
+        overlappingGroup.add(subjects[j]);
+
+        findOverlappingSubjectsWithinGroup(
+          subjects,
+          overlappingGroup,
+          j + 1,
+        );
+      }
+    }
+
+    overlappingSubjects.add(overlappingGroup);
+  }
+
+  return overlappingSubjects.where((e) => e.length > 1).toList();
+}

@@ -121,7 +121,8 @@ class OverlappingSubjBuilder extends ConsumerWidget {
                         width: 0,
                       ),
                     ),
-                    width: ((tileWidth / 2) - .75) - (outerPadding * 2.25),
+                    width: ((tileWidth / subjects.length) - .75) -
+                        (outerPadding * 2.25),
                     height:
                         (((endTimeHour - startTimeHour) * (tileHeight)) - 1) -
                             (outerPadding * 2),
