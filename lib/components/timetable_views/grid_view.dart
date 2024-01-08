@@ -38,8 +38,6 @@ class TimetableGridView extends HookConsumerWidget {
     final customEndTime = ref.watch(settingsProvider).customEndTime;
     final timetables = ref.watch(timetableProvider);
     final multipleTimetables = ref.watch(settingsProvider).multipleTimetables;
-    final overlappingSubjectsNotifier =
-        ref.watch(overlappingSubjectsProvider.notifier);
     final subjects = getFilteredByTimetablesSubjects(
       currentTimetable,
       timetables,
@@ -56,11 +54,16 @@ class TimetableGridView extends HookConsumerWidget {
         )
         .toList();
 
-    Future addOverlappingSubjects() async {
-      overlappingSubjectsNotifier.addInBulk(findOverlappingSubjects(subjects));
-    }
+    Future.delayed(
+      Duration.zero,
+      () async {
+        final overlappingSubjectsNotifier =
+            ref.read(overlappingSubjectsProvider.notifier);
 
-    addOverlappingSubjects();
+        overlappingSubjectsNotifier
+            .addInBulk(findOverlappingSubjects(subjects));
+      },
+    );
 
     final double screenWidth = MediaQuery.of(context).size.width;
     final bool isPortrait =
