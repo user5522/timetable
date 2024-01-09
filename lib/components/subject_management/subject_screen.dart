@@ -4,6 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:timetable/components/subject_management/subject_configs/colors_config.dart';
 import 'package:timetable/components/subject_management/subject_configs/day_time_week_tb_config.dart';
 import 'package:timetable/components/subject_management/subject_configs/note_tile.dart';
+import 'package:timetable/components/subject_management/subjects_list.dart';
 import 'package:timetable/components/widgets/list_item_group.dart';
 import 'package:timetable/constants/basic_subject.dart';
 import 'package:timetable/constants/days.dart';
@@ -228,6 +229,7 @@ class SubjectScreen extends HookConsumerWidget {
                   children: [
                     ListItem(
                       title: TextFormField(
+                        key: Key(label.value),
                         initialValue: label.value,
                         autofocus: true,
                         textInputAction: TextInputAction.next,
@@ -258,6 +260,25 @@ class SubjectScreen extends HookConsumerWidget {
                           }
                         },
                       ),
+                      trailing: subjects.isNotEmpty
+                          ? IconButton(
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    settings: const RouteSettings(
+                                      name: "SubjectsList",
+                                    ),
+                                    builder: (context) => SubjectsList(
+                                      subjects: subjects,
+                                      value: label,
+                                    ),
+                                  ),
+                                );
+                              },
+                              icon: const Icon(Icons.more_horiz),
+                            )
+                          : null,
                     ),
                     ListItem(
                       title: TextFormField(
