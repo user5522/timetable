@@ -14,13 +14,26 @@ class SubjectsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Set<String> uniqueSubjects = {};
+
+    // remove duplicate subjects by label
+    List<SubjectData> filteredSubjects = [];
+    for (SubjectData subject in subjects) {
+      final label = subject.label;
+
+      if (!uniqueSubjects.contains(label)) {
+        uniqueSubjects.add(label);
+        filteredSubjects.add(subject);
+      }
+    }
+
     return Scaffold(
       appBar: AppBar(title: const Text('Choose a Subject')),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: ListItemGroup(
-            children: subjects
+            children: filteredSubjects
                 .map(
                   (e) => ListItem(
                     leading: Container(
