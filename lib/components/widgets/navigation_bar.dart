@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:timetable/provider/settings.dart';
+import 'package:timetable/provider/subjects.dart';
 import 'package:timetable/screens/settings_screen.dart';
 import 'package:timetable/screens/timetable_screen.dart';
 
@@ -15,6 +16,7 @@ class Navigation extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final navbarToggle = ref.watch(settingsProvider).navbarVisible;
+    final subject = ref.watch(subjectProvider.notifier);
     final currentPageIndex = useState(0);
 
     void onTabTapped(int index) {
@@ -52,19 +54,23 @@ class Navigation extends HookConsumerWidget {
               transitionType: SharedAxisTransitionType.horizontal,
               child: child);
         },
-        child: _buildPage(currentPageIndex.value),
+        child: _buildPage(currentPageIndex.value, subject),
       ),
     );
   }
 
-  Widget _buildPage(int pageIndex) {
+  Widget _buildPage(int pageIndex, SubjectNotifier subject) {
     switch (pageIndex) {
       case 0:
-        return const TimetableScreen();
+        return TimetableScreen(
+          key: Key(subject.getSubjects().toString()),
+        );
       case 1:
         return const SettingsScreen();
       default:
-        return const TimetableScreen();
+        return TimetableScreen(
+          key: Key(subject.getSubjects().toString()),
+        );
     }
   }
 }

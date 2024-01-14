@@ -80,7 +80,7 @@ class SubjectNotifier extends StateNotifier<List<SubjectData>> {
 final subjectProvider =
     StateNotifierProvider<SubjectNotifier, List<SubjectData>>(
   (ref) => SubjectNotifier(
-    ref.watch(AppDatabase.provider),
+    ref.watch(AppDatabase.databaseProvider),
     ref.watch(overlappingSubjectsProvider.notifier),
   ),
 );

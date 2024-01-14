@@ -64,7 +64,7 @@ class TimetableNotifier extends StateNotifier<List<TimetableData>> {
 final timetableProvider =
     StateNotifierProvider<TimetableNotifier, List<TimetableData>>(
   (ref) => TimetableNotifier(
-    ref.watch(AppDatabase.provider),
+    ref.watch(AppDatabase.databaseProvider),
     ref.watch(subjectProvider.notifier),
   ),
 );
