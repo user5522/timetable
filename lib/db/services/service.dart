@@ -24,8 +24,8 @@ void exportData(
 
     a;
     snackBar;
-  } catch (error) {
-    print('Error exporting data: $error');
+  } catch (_) {
+    // print('Error exporting data: $error');
   }
 }
 
@@ -79,7 +79,7 @@ Future<void> restoreData(
     }
 
     snackBar;
-  } catch (error) {
-    print('Error restoring data: $error');
+  } catch (_) {
+    // print('Error restoring data: $error');
   }
 }
