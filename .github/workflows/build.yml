@@ -38,6 +38,8 @@ jobs:
           keyStorePassword: ${{ secrets.SIGNING_KEYSTORE_PASSWORD }}
           alias: ${{ secrets.SIGNING_KEY_ALIAS }}
           keyPassword: ${{ secrets.SIGNING_KEY_PASSWORD }}
+        env:
+          BUILD_TOOLS_VERSION: "34.0.0"
       - name: Archive arm64-v8a
         uses: actions/upload-artifact@v2
         with:
