@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:timetable/components/widgets/act_chip.dart';
+import 'package:timetable/components/widgets/time_picker.dart';
 import 'package:timetable/helpers/time_management.dart';
 import 'package:timetable/constants/custom_times.dart';
 import 'package:timetable/provider/settings.dart';
@@ -78,9 +79,9 @@ class TimeConfig extends ConsumerWidget {
         const Spacer(),
         ActChip(
           onPressed: () async {
-            final TimeOfDay? selectedTime = await showTimePicker(
-              context: context,
-              initialTime: TimeOfDay(
+            final TimeOfDay? selectedTime = await timePicker(
+              context,
+              TimeOfDay(
                 hour: startTime.value.hour,
                 minute: 0,
               ),
@@ -108,9 +109,9 @@ class TimeConfig extends ConsumerWidget {
         ),
         ActChip(
           onPressed: () async {
-            final TimeOfDay? selectedTime = await showTimePicker(
-              context: context,
-              initialTime: TimeOfDay(
+            final TimeOfDay? selectedTime = await timePicker(
+              context,
+              TimeOfDay(
                 hour: endTime.value.hour,
                 minute: 0,
               ),

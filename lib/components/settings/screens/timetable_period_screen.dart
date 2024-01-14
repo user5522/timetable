@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:timetable/components/widgets/time_picker.dart';
 import 'package:timetable/constants/custom_times.dart';
 import 'package:timetable/provider/settings.dart';
 
@@ -85,12 +86,9 @@ class TimetablePeriodScreen extends ConsumerWidget {
                 "${getCustomTimeHour(customStartTime)}:${getCustomTimeMinute(customStartTime)}",
               ),
               onTap: () async {
-                final TimeOfDay? selectedTime = await showTimePicker(
-                  context: context,
-                  initialTime: TimeOfDay(
-                    hour: customStartTime.hour,
-                    minute: customStartTime.minute,
-                  ),
+                final TimeOfDay? selectedTime = await timePicker(
+                  context,
+                  customStartTime,
                 );
                 if (selectedTime != null) {
                   if (_isBefore(selectedTime, customEndTime)) {
@@ -108,12 +106,9 @@ class TimetablePeriodScreen extends ConsumerWidget {
                 "${getCustomTimeHour(customEndTime)}:${getCustomTimeMinute(customEndTime)}",
               ),
               onTap: () async {
-                final TimeOfDay? selectedTime = await showTimePicker(
-                  context: context,
-                  initialTime: TimeOfDay(
-                    hour: customEndTime.hour,
-                    minute: customEndTime.minute,
-                  ),
+                final TimeOfDay? selectedTime = await timePicker(
+                  context,
+                  customEndTime,
                 );
                 if (selectedTime != null) {
                   if (_isAfter(selectedTime, customStartTime)) {
