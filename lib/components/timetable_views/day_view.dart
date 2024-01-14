@@ -8,7 +8,7 @@ import 'package:timetable/constants/grid_properties.dart';
 import 'package:timetable/constants/rotation_weeks.dart';
 import 'package:timetable/helpers/rotation_weeks.dart';
 import 'package:timetable/db/database.dart';
-import 'package:timetable/helpers/sort_subjects.dart';
+import 'package:timetable/helpers/subjects.dart';
 import 'package:timetable/helpers/timetables.dart';
 import 'package:timetable/provider/settings.dart';
 import 'package:timetable/provider/timetables.dart';
