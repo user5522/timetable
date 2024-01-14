@@ -50,6 +50,7 @@ Future<void> restoreData(
           subjectsTable.insertOne(
             SubjectCompanion.insert(
               label: element["label"],
+              location: element["location"],
               color: Color(element["color"]),
               rotationWeek: RotationWeeks.values[element["rotationWeek"]],
               day: Days.values[element["day"]],
