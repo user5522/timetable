@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:drift/drift.dart';
+import 'package:drift/drift.dart' as drift;
 import 'package:flutter/material.dart';
 import 'package:timetable/constants/days.dart';
 import 'package:timetable/constants/rotation_weeks.dart';
@@ -50,8 +50,8 @@ Future<void> restoreData(
           subjectsTable.insertOne(
             SubjectCompanion.insert(
               label: element["label"],
-              location: element["location"]? ?? "",
-              note: element["note"]? ?? "",
+              location: drift.Value(element["location"]),
+              note: drift.Value(element["note"]),
               color: Color(element["color"]),
               rotationWeek: RotationWeeks.values[element["rotationWeek"]],
               day: Days.values[element["day"]],
@@ -67,6 +67,7 @@ Future<void> restoreData(
           );
         }
       }
+
       if (table == 'timetable') {
         timetablesTable.deleteAll();
 
