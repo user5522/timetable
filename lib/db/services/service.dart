@@ -2,10 +2,16 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:drift/drift.dart' as drift;
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:timetable/constants/days.dart';
 import 'package:timetable/constants/rotation_weeks.dart';
 import 'package:timetable/db/database.dart';
+
+final DateTime now = DateTime.now();
+final String date =
+    '${now.year}-${now.month}-${now.day}_${now.hour}-${now.minute}';
+final String fileName = 'timetable_backup $date.json';
 
 void exportData(
   AppDatabase db,
@@ -19,24 +25,31 @@ void exportData(
 
     final jsonData = jsonEncode(allData);
 
-    final a = await File('storage/emulated/0/Documents/database_export.json')
+    final a = await File('storage/emulated/0/Documents/$fileName')
         .writeAsString(jsonData);
 
     a;
     snackBar;
-  } catch (_) {
-    // print('Error exporting data: $error');
+  } catch (error) {
+    print('Error exporting data: $error');
   }
 }
 
 Future<void> restoreData(
   AppDatabase db,
-  ScaffoldFeatureController<SnackBar, SnackBarClosedReason> snackBar,
+  ValueNotifier<String> snackBarMessage,
 ) async {
   try {
-    final jsonData =
-        await File('storage/emulated/0/Documents/database_export.json')
-            .readAsString();
+    FilePickerResult? result = await FilePicker.platform.pickFiles();
+    File file;
+
+    if (result != null) {
+      file = File(result.files.single.path!);
+    } else {
+      return;
+    }
+
+    final jsonData = await file.readAsString();
     final decodedData = jsonDecode(jsonData) as Map<String, dynamic>;
 
     for (final table in decodedData.keys) {
@@ -80,8 +93,6 @@ Future<void> restoreData(
         }
       }
     }
-
-    snackBar;
   } catch (_) {
     // print('Error restoring data: $error');
   }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:timetable/components/widgets/alert_dialog.dart';
 import 'package:timetable/db/database.dart';
@@ -6,13 +7,19 @@ import 'package:timetable/db/services/service.dart';
 import 'package:timetable/provider/subjects.dart';
 
 /// All the settings that allow for manipulating the timetable's data.
-class TimetableDataOptions extends ConsumerWidget {
+class TimetableDataOptions extends HookConsumerWidget {
   const TimetableDataOptions({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final subjNotifier = ref.watch(subjectProvider.notifier);
     final db = ref.watch(AppDatabase.databaseProvider);
+
+    final snackBarMessage = useState("");
+
+    void pop() {
+      return Navigator.of(context).pop();
+    }
 
     return Column(
       children: [
@@ -39,17 +46,10 @@ class TimetableDataOptions extends ConsumerWidget {
                     "This will replace all current data. \n Are you sure?",
                   ),
                   approveButtonText: "Proceed",
-                  onApprove: () {
-                    final ScaffoldFeatureController<SnackBar,
-                            SnackBarClosedReason> snackBar =
-                        ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text("Data restored successfully!"),
-                      ),
-                    );
-                    restoreData(db, snackBar);
-
-                    Navigator.of(context).pop();
+                  onApprove: () async {
+                    await restoreData(db, snackBarMessage);
+                    pop();
+                    snackBarMessage.value = "";
                   },
                 );
               },
