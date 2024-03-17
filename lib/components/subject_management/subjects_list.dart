@@ -33,23 +33,25 @@ class SubjectsList extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: ListItemGroup(
-            children: filteredSubjects
-                .map(
-                  (e) => ListItem(
-                    leading: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(50),
-                        color: e.color,
-                      ),
-                      width: 15,
-                      height: 15,
-                    ),
-                    title: Text(e.label),
-                    subtitle: (e.location != null && e.location!.isNotEmpty) ||
-                            (e.note != null && e.note!.isNotEmpty)
+            children: List.generate(filteredSubjects.length, (i) {
+              final subj = filteredSubjects[i];
+              return ListItem(
+                leading: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(50),
+                    color: subj.color,
+                  ),
+                  width: 15,
+                  height: 15,
+                ),
+                title: Text(subj.label),
+                subtitle:
+                    (subj.location != null && subj.location!.isNotEmpty) ||
+                            (subj.note != null && subj.note!.isNotEmpty)
                         ? Column(
                             children: [
-                              if (e.location != null && e.location!.isNotEmpty)
+                              if (subj.location != null &&
+                                  subj.location!.isNotEmpty)
                                 Row(
                                   children: [
                                     const Icon(
@@ -59,7 +61,7 @@ class SubjectsList extends StatelessWidget {
                                     const SizedBox(width: 2.5),
                                     Expanded(
                                       child: Text(
-                                        e.location.toString(),
+                                        subj.location.toString(),
                                         maxLines: 2,
                                         overflow: TextOverflow.ellipsis,
                                         style: const TextStyle(
@@ -69,7 +71,7 @@ class SubjectsList extends StatelessWidget {
                                     ),
                                   ],
                                 ),
-                              if (e.note != null && e.note!.isNotEmpty)
+                              if (subj.note != null && subj.note!.isNotEmpty)
                                 Row(
                                   children: [
                                     const Icon(
@@ -79,7 +81,7 @@ class SubjectsList extends StatelessWidget {
                                     const SizedBox(width: 2.5),
                                     Expanded(
                                       child: Text(
-                                        e.note.toString(),
+                                        subj.note.toString(),
                                         maxLines: 4,
                                         overflow: TextOverflow.ellipsis,
                                         style: const TextStyle(
@@ -92,13 +94,12 @@ class SubjectsList extends StatelessWidget {
                             ],
                           )
                         : null,
-                    onTap: () {
-                      value.value = e.label;
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                )
-                .toList(),
+                onTap: () {
+                  value.value = subj.label;
+                  Navigator.of(context).pop();
+                },
+              );
+            }),
           ),
         ),
       ),
