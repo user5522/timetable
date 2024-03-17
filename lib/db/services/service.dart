@@ -31,7 +31,7 @@ void exportData(
     a;
     snackBar;
   } catch (error) {
-    print('Error exporting data: $error');
+    // print('Error exporting data: $error');
   }
 }
 
