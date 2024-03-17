@@ -41,7 +41,6 @@ class SubjectScreen extends HookConsumerWidget {
     final timetables = ref.watch(timetableProvider);
     final customStartTimeHour =
         ref.watch(settingsProvider).customStartTime.hour;
-    final focus = useState(FocusNode());
 
     final bool isSubjectNull = (subject == null);
     final bool isCTimetableNull = (currentTimetable == null);
@@ -229,17 +228,11 @@ class SubjectScreen extends HookConsumerWidget {
                   children: [
                     ListItem(
                       title: TextFormField(
-                        key: Key(label.value),
                         initialValue: label.value,
-                        autofocus: true,
-                        textInputAction: TextInputAction.next,
                         decoration: const InputDecoration(
                           hintText: "Subject",
                           border: InputBorder.none,
                         ),
-                        onFieldSubmitted: (v) {
-                          FocusScope.of(context).requestFocus(focus.value);
-                        },
                         validator: (value) {
                           if (value == null || value.trim().isEmpty) {
                             return 'Please enter a Subject.';
@@ -282,7 +275,6 @@ class SubjectScreen extends HookConsumerWidget {
                     ),
                     ListItem(
                       title: TextFormField(
-                        focusNode: focus.value,
                         initialValue: location.value,
                         textInputAction: TextInputAction.done,
                         decoration: const InputDecoration(
