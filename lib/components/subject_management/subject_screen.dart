@@ -228,6 +228,7 @@ class SubjectScreen extends HookConsumerWidget {
                   children: [
                     ListItem(
                       title: TextFormField(
+                        key: Key(label.value),
                         initialValue: label.value,
                         decoration: const InputDecoration(
                           hintText: "Subject",
