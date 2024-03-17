@@ -229,6 +229,7 @@ class SubjectScreen extends HookConsumerWidget {
                     ListItem(
                       title: TextFormField(
                         key: Key(label.value),
+                        autofocus: true,
                         initialValue: label.value,
                         decoration: const InputDecoration(
                           hintText: "Subject",
