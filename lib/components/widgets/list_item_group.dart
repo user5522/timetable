@@ -25,50 +25,44 @@ class ListItemGroup extends StatelessWidget {
     return Column(
       children: children.asMap().entries.map((e) {
         final index = e.key;
-        bool first = index == 0;
-        bool last = index == children.length - 1;
-        if (children.length == 1) {
-          return ListItem(
-            title: e.value.title,
-            subtitle: e.value.subtitle,
-            leading: e.value.leading,
-            trailing: e.value.trailing,
-            shape: const RoundedRectangleBorder(
+
+        ShapeBorder getShape(
+          int index,
+          int length,
+        ) {
+          bool isFirst = index == 0;
+          bool isLast = index == length - 1;
+
+          if (length == 1) {
+            return const RoundedRectangleBorder(
               borderRadius: BorderRadius.all(
                 Radius.circular(10),
               ),
-            ),
-            onTap: e.value.onTap,
-          );
-        }
-        if (children.length > 1 && (first || last)) {
-          return ListItem(
-            title: e.value.title,
-            subtitle: e.value.subtitle,
-            leading: e.value.leading,
-            trailing: e.value.trailing,
-            shape: RoundedRectangleBorder(
+            );
+          } else if (isFirst || isLast) {
+            return RoundedRectangleBorder(
               borderRadius: BorderRadius.vertical(
-                top: Radius.circular(first ? 10 : 5),
-                bottom: Radius.circular(first ? 5 : 10),
+                top: Radius.circular(isFirst ? 10 : 5),
+                bottom: Radius.circular(isFirst ? 5 : 10),
               ),
-            ),
-            onTap: e.value.onTap,
-          );
-        } else {
-          return ListItem(
-            title: e.value.title,
-            subtitle: e.value.subtitle,
-            leading: e.value.leading,
-            trailing: e.value.trailing,
-            shape: const RoundedRectangleBorder(
+            );
+          } else {
+            return const RoundedRectangleBorder(
               borderRadius: BorderRadius.all(
                 Radius.circular(5),
               ),
-            ),
-            onTap: e.value.onTap,
-          );
+            );
+          }
         }
+
+        return ListItem(
+          title: e.value.title,
+          subtitle: e.value.subtitle,
+          leading: e.value.leading,
+          trailing: e.value.trailing,
+          shape: getShape(index, children.length),
+          onTap: e.value.onTap,
+        );
       }).toList(),
     );
   }
@@ -88,7 +82,6 @@ class ListItem extends StatelessWidget {
   final Widget? trailing;
   final VoidCallback? onTap;
   final ShapeBorder? shape;
-  final String? hintText;
 
   const ListItem({
     super.key,
@@ -98,15 +91,17 @@ class ListItem extends StatelessWidget {
     this.trailing,
     this.onTap,
     this.shape,
-    this.hintText,
   });
 
   @override
   Widget build(BuildContext context) {
+    final customTileColor = Theme.of(context).colorScheme.onInverseSurface;
+    const customPadding = EdgeInsets.only(bottom: 2);
+
     return Column(
       children: [
         Padding(
-          padding: const EdgeInsets.only(bottom: 2),
+          padding: customPadding,
           child: ListTile(
             title: title,
             subtitle: subtitle,
@@ -114,7 +109,7 @@ class ListItem extends StatelessWidget {
             onTap: onTap,
             shape: shape,
             trailing: trailing,
-            tileColor: Theme.of(context).colorScheme.onInverseSurface,
+            tileColor: customTileColor,
           ),
         ),
       ],
