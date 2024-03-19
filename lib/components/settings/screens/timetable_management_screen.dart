@@ -41,7 +41,7 @@ class TimetableManagementScreen extends ConsumerWidget {
                   builder: (BuildContext context) {
                     return ShowAlertDialog(
                       content: const Text(
-                        "Reseting will delete all subjects other than the default one's.",
+                        "Reseting will delete all subjects except the default timetable's ones.",
                       ),
                       approveButtonText: "Reset",
                       onApprove: () {
@@ -65,35 +65,44 @@ class TimetableManagementScreen extends ConsumerWidget {
                 children: List.generate(
                   timetables.length,
                   (i) => ListItem(
-                    title: Row(
-                      children: [
-                        Text("Timetable ${timetables[i].name}"),
-                        const Spacer(),
-                        if (timetables[i] != timetables[0] &&
-                            multipleTimetables)
-                          IconButton(
-                            onPressed: () {
-                              showDialog<void>(
-                                context: context,
-                                barrierDismissible: true,
-                                builder: (BuildContext context) {
-                                  return ShowAlertDialog(
-                                    content: const Text(
-                                      "Deleting a timetable will delete it's corresponding subjects.",
-                                    ),
-                                    approveButtonText: "Delete",
-                                    onApprove: () {
-                                      timetable.deleteTimetable(timetables[i]);
-                                      Navigator.of(context).pop();
-                                    },
-                                  );
-                                },
-                              );
-                            },
-                            icon: const Icon(Icons.delete_outline),
-                          ),
-                      ],
+                    title: Opacity(
+                      opacity: timetables[i] != timetables[0]
+                          ? multipleTimetables
+                              ? 1
+                              : .5
+                          : 1,
+                      child: Row(
+                        children: [
+                          Text("Timetable ${timetables[i].name}"),
+                          const Spacer(),
+                          if (timetables[i] != timetables[0] &&
+                              multipleTimetables)
+                            IconButton(
+                              onPressed: () {
+                                showDialog<void>(
+                                  context: context,
+                                  barrierDismissible: true,
+                                  builder: (BuildContext context) {
+                                    return ShowAlertDialog(
+                                      content: const Text(
+                                        "Deleting a timetable will delete it's corresponding subjects.",
+                                      ),
+                                      approveButtonText: "Delete",
+                                      onApprove: () {
+                                        timetable
+                                            .deleteTimetable(timetables[i]);
+                                        Navigator.of(context).pop();
+                                      },
+                                    );
+                                  },
+                                );
+                              },
+                              icon: const Icon(Icons.delete_outline),
+                            ),
+                        ],
+                      ),
                     ),
+                    onTap: () {},
                   ),
                 ),
               ),
@@ -101,22 +110,23 @@ class TimetableManagementScreen extends ConsumerWidget {
           ],
         ),
       ),
-      floatingActionButton: multipleTimetables
-          ? FloatingActionButton(
-              onPressed: () {
-                if (timetables.length < 5 && multipleTimetables) {
-                  timetable.addTimetable(
-                    TimetableCompanion(
-                      name: drift.Value(
-                        (int.parse(timetables.last.name) + 1).toString(),
-                      ),
-                    ),
-                  );
-                }
-              },
-              child: const Icon(Icons.add),
-            )
-          : Container(),
+      floatingActionButton: Visibility(
+        visible: timetables.length < 5 && multipleTimetables,
+        child: FloatingActionButton(
+          onPressed: () {
+            if (timetables.length < 5 && multipleTimetables) {
+              timetable.addTimetable(
+                TimetableCompanion(
+                  name: drift.Value(
+                    (int.parse(timetables.last.name) + 1).toString(),
+                  ),
+                ),
+              );
+            }
+          },
+          child: const Icon(Icons.add),
+        ),
+      ),
     );
   }
 }
