@@ -3,10 +3,8 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:timetable/components/subject_management/subject_configs/colors_config.dart';
 import 'package:timetable/components/subject_management/subject_configs/day_time_week_tb_config.dart';
+import 'package:timetable/components/subject_management/subject_configs/label_location_config.dart';
 import 'package:timetable/components/subject_management/subject_configs/note_tile.dart';
-import 'package:timetable/components/subject_management/subjects_list.dart';
-import 'package:timetable/components/widgets/list_item_group.dart';
-import 'package:timetable/constants/basic_subject.dart';
 import 'package:timetable/constants/days.dart';
 import 'package:timetable/constants/rotation_weeks.dart';
 import 'package:timetable/db/database.dart';
@@ -224,71 +222,12 @@ class SubjectScreen extends HookConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                ListItemGroup(
-                  children: [
-                    ListItem(
-                      title: TextFormField(
-                        key: Key(label.value),
-                        autofocus: true,
-                        initialValue: label.value,
-                        decoration: const InputDecoration(
-                          hintText: "Subject",
-                          border: InputBorder.none,
-                        ),
-                        validator: (value) {
-                          if (value == null || value.trim().isEmpty) {
-                            return 'Please enter a Subject.';
-                          }
-                          return null;
-                        },
-                        onChanged: (value) {
-                          label.value = value;
-                          if (autoCompleteColor) {
-                            color.value = subjects
-                                .firstWhere(
-                                  (subj) =>
-                                      label.value.toLowerCase().trim() ==
-                                      subj.label.toLowerCase().trim(),
-                                  orElse: () => basicSubject,
-                                )
-                                .color;
-                          }
-                        },
-                      ),
-                      trailing: subjects.isNotEmpty
-                          ? IconButton(
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    settings: const RouteSettings(
-                                      name: "SubjectsList",
-                                    ),
-                                    builder: (context) => SubjectsList(
-                                      subjects: subjects,
-                                      value: label,
-                                    ),
-                                  ),
-                                );
-                              },
-                              icon: const Icon(Icons.more_horiz),
-                            )
-                          : null,
-                    ),
-                    ListItem(
-                      title: TextFormField(
-                        initialValue: location.value,
-                        textInputAction: TextInputAction.done,
-                        decoration: const InputDecoration(
-                          hintText: "Location",
-                          border: InputBorder.none,
-                        ),
-                        onChanged: (value) {
-                          location.value = value;
-                        },
-                      ),
-                    ),
-                  ],
+                LabelLocationConfig(
+                  subjects: subjects,
+                  label: label,
+                  location: location,
+                  color: color,
+                  autoCompleteColor: autoCompleteColor,
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 10),
