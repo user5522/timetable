@@ -7,10 +7,7 @@ List<SubjectData> getFilteredByTimetablesSubjects(
   bool multipleTimetables,
   List<SubjectData> allSubjects,
 ) {
-  if (multipleTimetables && timetables.length != 1) {
-    return allSubjects
-        .where((s) => s.timetable == currentTimetable.value.name)
-        .toList();
-  }
-  return allSubjects.where((e) => e.timetable == "1").toList();
+  return allSubjects
+      .where((s) => s.timetable == currentTimetable.value.name)
+      .toList();
 }
