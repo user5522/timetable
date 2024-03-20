@@ -1,19 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:timetable/components/widgets/act_chip.dart';
 import 'package:timetable/components/widgets/list_item_group.dart';
 import 'package:timetable/db/database.dart';
 
-class SubjectsList extends StatelessWidget {
+class SubjectsList extends HookWidget {
   final List<SubjectData> subjects;
   final ValueNotifier<String> value;
+  final ValueNotifier<String> label;
+  final ValueNotifier<String?> location;
+  final ValueNotifier<Color> color;
 
   const SubjectsList({
     super.key,
     required this.subjects,
     required this.value,
+    required this.label,
+    required this.location,
+    required this.color,
   });
 
   @override
   Widget build(BuildContext context) {
+    final ValueNotifier<bool> labelFilterEnabled = useState(false);
+    final ValueNotifier<bool> locationFilterEnabled = useState(false);
+    final ValueNotifier<bool> colorFilterEnabled = useState(false);
     Set<String> uniqueSubjects = {};
 
     // remove duplicate subjects by label
@@ -27,8 +38,59 @@ class SubjectsList extends StatelessWidget {
       }
     }
 
+    filteredSubjects = filteredSubjects.where((subject) {
+      bool passesLabelFilter = !labelFilterEnabled.value ||
+          subject.label.trim() == label.value.trim();
+      bool passesLocationFilter = !locationFilterEnabled.value ||
+          subject.location?.trim() == location.value?.trim();
+      bool passesColorFilter =
+          !colorFilterEnabled.value || subject.color == color.value;
+
+      return passesLabelFilter && passesLocationFilter && passesColorFilter;
+    }).toList();
+
     return Scaffold(
-      appBar: AppBar(title: const Text('Choose a Subject')),
+      appBar: AppBar(
+        title: const Text('Choose a Subject'),
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(48.0),
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: Wrap(
+              spacing: 4,
+              crossAxisAlignment: WrapCrossAlignment.center,
+              children: [
+                const Padding(padding: EdgeInsets.only(left: 16.0)),
+                const Text("Filter by:", style: TextStyle(fontSize: 17)),
+                if (location.value != null && location.value!.trim().isNotEmpty)
+                  ActChip(
+                    label: const Text('Location'),
+                    enabled: locationFilterEnabled.value,
+                    onPressed: () {
+                      locationFilterEnabled.value =
+                          !locationFilterEnabled.value;
+                    },
+                  ),
+                if (label.value.trim().isNotEmpty)
+                  ActChip(
+                    label: const Text('Label'),
+                    onPressed: () {
+                      labelFilterEnabled.value = !labelFilterEnabled.value;
+                    },
+                    enabled: labelFilterEnabled.value,
+                  ),
+                ActChip(
+                  label: const Text('Color'),
+                  enabled: colorFilterEnabled.value,
+                  onPressed: () {
+                    colorFilterEnabled.value = !colorFilterEnabled.value;
+                  },
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16),

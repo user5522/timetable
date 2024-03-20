@@ -88,6 +88,9 @@ class _LabelLocationConfigState extends State<LabelLocationConfig> {
                         builder: (context) => SubjectsList(
                           subjects: widget.subjects,
                           value: widget.label,
+                          label: widget.label,
+                          location: widget.location,
+                          color: widget.color,
                         ),
                       ),
                     );
