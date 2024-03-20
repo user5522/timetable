@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:timetable/components/widgets/act_chip.dart';
 import 'package:timetable/components/widgets/bottom_sheets/days_modal_bottom_sheet.dart';
@@ -12,13 +13,13 @@ class DayConfig extends StatelessWidget {
     required this.day,
   });
 
-  static const List<Days> days = Days.values;
+  static const List<Days> daysList = Days.values;
 
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
-        const Text("Day"),
+        const Text("day").plural(1),
         const Spacer(),
         ActChip(
           onPressed: () {
@@ -31,7 +32,7 @@ class DayConfig extends StatelessWidget {
                 return Wrap(
                   children: [
                     DaysModalBottomSheet(
-                      days: days,
+                      daysList: daysList,
                       day: day,
                     ),
                   ],
@@ -40,8 +41,7 @@ class DayConfig extends StatelessWidget {
             );
           },
           label: Text(
-            day.value.name[0].toUpperCase() +
-                day.value.name.substring(1).toLowerCase(),
+            days[day.value.index],
           ),
         ),
       ],

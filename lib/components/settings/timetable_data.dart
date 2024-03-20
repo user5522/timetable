@@ -1,5 +1,5 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:timetable/components/widgets/alert_dialog.dart';
 import 'package:timetable/db/database.dart';
@@ -7,15 +7,13 @@ import 'package:timetable/db/services/service.dart';
 import 'package:timetable/provider/subjects.dart';
 
 /// All the settings that allow for manipulating the timetable's data.
-class TimetableDataOptions extends HookConsumerWidget {
+class TimetableDataOptions extends ConsumerWidget {
   const TimetableDataOptions({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final subjNotifier = ref.watch(subjectProvider.notifier);
     final db = ref.watch(AppDatabase.databaseProvider);
-
-    final snackBarMessage = useState("");
 
     void pop() {
       return Navigator.of(context).pop();
@@ -27,13 +25,13 @@ class TimetableDataOptions extends HookConsumerWidget {
           onTap: () {
             final ScaffoldFeatureController<SnackBar, SnackBarClosedReason>
                 snackBar = ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text("Data exported successfully!"),
+              SnackBar(
+                content: const Text("create_backup_snackbar").tr(),
               ),
             );
             exportData(db, snackBar);
           },
-          title: const Text("Create a Backup"),
+          title: const Text("create_backup").tr(),
         ),
         ListTile(
           onTap: () async {
@@ -42,20 +40,28 @@ class TimetableDataOptions extends HookConsumerWidget {
               barrierDismissible: true,
               builder: (BuildContext context) {
                 return ShowAlertDialog(
-                  content: const Text(
-                    "This will replace all current data. \n Are you sure?",
+                  content: FittedBox(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // I know using the gender feature to group dialogs together is stupid but whatever
+                        const Text("restore_backup_dialog")
+                            .tr(gender: "dialog_1"),
+                        const Text("restore_backup_dialog")
+                            .tr(gender: "dialog_2"),
+                      ],
+                    ),
                   ),
-                  approveButtonText: "Proceed",
+                  approveButtonText: "proceed".tr(),
                   onApprove: () async {
-                    await restoreData(db, snackBarMessage);
+                    await restoreData(db);
                     pop();
-                    snackBarMessage.value = "";
                   },
                 );
               },
             );
           },
-          title: const Text("Restore Data"),
+          title: const Text("restore_backup").tr(),
         ),
         ListTile(
           onTap: () {
@@ -64,8 +70,8 @@ class TimetableDataOptions extends HookConsumerWidget {
               barrierDismissible: true,
               builder: (BuildContext context) {
                 return ShowAlertDialog(
-                  content: const Text("Delete all Subjects?"),
-                  approveButtonText: "Delete",
+                  content: const Text("remove_all_subjects_dialog").tr(),
+                  approveButtonText: "delete".tr(),
                   onApprove: () {
                     subjNotifier.resetData();
                     Navigator.of(context).pop();
@@ -74,7 +80,7 @@ class TimetableDataOptions extends HookConsumerWidget {
               },
             );
           },
-          title: const Text("Remove All Subjects"),
+          title: const Text("remove_all_subjects").tr(),
         ),
       ],
     );

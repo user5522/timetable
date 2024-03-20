@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:timetable/components/widgets/subject_data_bottom_sheet.dart';
 import 'package:timetable/constants/rotation_weeks.dart';
@@ -17,7 +18,7 @@ class RotationWeekModalBottomSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SubjectDataBottomSheet(
-      title: "Rotation weeks",
+      title: "rotation_week".plural(2),
       children: rotationWeeks.where((r) => r != RotationWeeks.all).map(
         (r) {
           bool isSelected = (r == rotationWeek.value);

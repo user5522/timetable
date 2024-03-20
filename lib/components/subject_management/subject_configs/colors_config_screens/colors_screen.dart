@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:timetable/components/subject_management/subject_configs/colors_config_screens/color_picker_screen.dart';
 import 'package:timetable/components/subject_management/subject_configs/colors_config_screens/preset_colors_scren.dart';
@@ -35,17 +36,17 @@ class _ColorsScreenState extends State<ColorsScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Choose a color'),
+        title: const Text('choose_color').tr(),
         bottom: TabBar(
           controller: _tabController,
-          tabs: const <Widget>[
+          tabs: <Widget>[
             Tab(
-              icon: Icon(Icons.color_lens_outlined),
-              text: "Presets",
+              icon: const Icon(Icons.color_lens_outlined),
+              text: "presets".tr(),
             ),
             Tab(
-              icon: Icon(Icons.colorize),
-              text: "Custom",
+              icon: const Icon(Icons.colorize),
+              text: "custom".tr(),
             ),
           ],
         ),

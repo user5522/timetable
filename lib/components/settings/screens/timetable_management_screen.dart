@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:drift/drift.dart' as drift;
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -20,30 +21,28 @@ class TimetableManagementScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Timetable Management"),
+        title: const Text("manage_timetables").tr(),
       ),
       body: SingleChildScrollView(
         child: Column(
           children: [
             SwitchListTile(
-              title: const Text("Multiple Timetables"),
+              title: const Text("multiple_timetables").tr(),
               value: multipleTimetables,
               onChanged: (bool value) {
                 settings.updateMultipleTimetables(value);
               },
             ),
             ListTile(
-              title: const Text("Reset"),
+              title: const Text("reset").tr(),
               onTap: () {
                 showDialog<void>(
                   context: context,
                   barrierDismissible: true,
                   builder: (BuildContext context) {
                     return ShowAlertDialog(
-                      content: const Text(
-                        "Reseting will delete all subjects except the default timetable's ones.",
-                      ),
-                      approveButtonText: "Reset",
+                      content: const Text("reset_timetables_dialog").tr(),
+                      approveButtonText: "reset".tr(),
                       onApprove: () {
                         timetable.resetData();
                         Navigator.of(context).pop();
@@ -55,7 +54,7 @@ class TimetableManagementScreen extends ConsumerWidget {
             ),
             ListTile(
               dense: true,
-              title: const Text("Manage"),
+              title: const Text("manage").tr(),
               enabled: multipleTimetables ? true : false,
               textColor: Theme.of(context).colorScheme.primary,
             ),
@@ -73,7 +72,9 @@ class TimetableManagementScreen extends ConsumerWidget {
                           : 1,
                       child: Row(
                         children: [
-                          Text("Timetable ${timetables[i].name}"),
+                          Text(
+                            "${"timetable".plural(1)} ${timetables[i].name}",
+                          ),
                           const Spacer(),
                           if (timetables[i] != timetables[0] &&
                               multipleTimetables)
@@ -84,10 +85,10 @@ class TimetableManagementScreen extends ConsumerWidget {
                                   barrierDismissible: true,
                                   builder: (BuildContext context) {
                                     return ShowAlertDialog(
-                                      content: const Text(
-                                        "Deleting a timetable will delete it's corresponding subjects.",
-                                      ),
-                                      approveButtonText: "Delete",
+                                      content:
+                                          const Text("delete_timetable_dialog")
+                                              .tr(),
+                                      approveButtonText: "delete".tr(),
                                       onApprove: () {
                                         timetable
                                             .deleteTimetable(timetables[i]);
@@ -98,6 +99,7 @@ class TimetableManagementScreen extends ConsumerWidget {
                                 );
                               },
                               icon: const Icon(Icons.delete_outline),
+                              tooltip: "delete".tr(),
                             ),
                         ],
                       ),
@@ -124,6 +126,7 @@ class TimetableManagementScreen extends ConsumerWidget {
               );
             }
           },
+          tooltip: "create".tr(),
           child: const Icon(Icons.add),
         ),
       ),

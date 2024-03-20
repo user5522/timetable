@@ -37,7 +37,6 @@ void exportData(
 
 Future<void> restoreData(
   AppDatabase db,
-  ValueNotifier<String> snackBarMessage,
 ) async {
   try {
     FilePickerResult? result = await FilePicker.platform.pickFiles();

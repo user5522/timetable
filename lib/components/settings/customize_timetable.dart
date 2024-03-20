@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:timetable/provider/settings.dart';
@@ -19,35 +20,35 @@ class CustomizeTimetableOptions extends ConsumerWidget {
     return Column(
       children: [
         SwitchListTile(
-          title: const Text("Compact Mode"),
+          title: const Text("compact_mode").tr(),
           value: compactMode,
           onChanged: (bool value) {
             settings.updateCompactMode(value);
           },
         ),
         SwitchListTile(
-          title: const Text("Hide Locations"),
+          title: const Text("hide_locations").tr(),
           value: hideLocation,
           onChanged: (bool value) {
             settings.updateHideLocation(value);
           },
         ),
         SwitchListTile(
-          title: const Text("Single Letter Days"),
+          title: const Text("single_letter_days").tr(),
           value: singleLetterDays,
           onChanged: (bool value) {
             settings.updateSingleLetterDays(value);
           },
         ),
         SwitchListTile(
-          title: const Text("Hide Sunday"),
+          title: const Text("hide_sunday").tr(),
           value: hideSunday,
           onChanged: (bool value) {
             settings.updateHideSunday(value);
           },
         ),
         SwitchListTile(
-          title: const Text("Hide Transparent Subjects"),
+          title: const Text("hide_transparent_subjects").tr(),
           value: hideTransparentSubject,
           onChanged: (bool value) {
             settings.updateHideTransparentSubject(value);

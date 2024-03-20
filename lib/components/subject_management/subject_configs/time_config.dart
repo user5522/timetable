@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:timetable/components/widgets/act_chip.dart';
@@ -41,14 +42,13 @@ class TimeConfig extends ConsumerWidget {
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          title: const Text('Invalid Time'),
-          content: Text(
-            'Time period must be between $startTime and $endTime.',
-          ),
+          title: const Text('invalid_time').tr(),
+          content:
+              const Text('invalid_time_config').tr(args: [startTime, endTime]),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('OK'),
+              child: const Text('ok').tr(),
             ),
           ],
         ),
@@ -59,14 +59,17 @@ class TimeConfig extends ConsumerWidget {
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          title: const Text('Invalid Time'),
+          title: const Text('invalid_time').tr(),
           content: Text(
-            'The ${isStartTime ? "start" : "end"} time must be ${isStartTime ? "before" : "after"} the ${isStartTime ? "end" : "start"} time.',
+            // I know using the gender feature to group dialogs together is stupid but whatever
+            isStartTime
+                ? "invalid_time_error".tr(gender: "start_time")
+                : "invalid_time_error".tr(gender: "end_time"),
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('OK'),
+              child: const Text('ok').tr(),
             ),
           ],
         ),
@@ -75,7 +78,7 @@ class TimeConfig extends ConsumerWidget {
 
     return Row(
       children: [
-        const Text("Time"),
+        const Text("time").tr(),
         const Spacer(),
         ActChip(
           onPressed: () async {

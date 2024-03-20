@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -163,13 +164,13 @@ class SubjectScreen extends HookConsumerWidget {
               onPressed: () {
                 subjectNotifier.deleteSubject(newSubject);
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Subject Deleted!'),
+                  SnackBar(
+                    content: const Text('subject_deleted_snackbar').tr(),
                   ),
                 );
                 Navigator.pop(context);
               },
-              child: const Text("Delete"),
+              child: const Text("delete").tr(),
             ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -189,8 +190,9 @@ class SubjectScreen extends HookConsumerWidget {
                       Navigator.pop(context, label.value);
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Time slots are already occupied!'),
+                        SnackBar(
+                          // I don't know how to say the error in french so I translated it :P
+                          content: const Text('time_slots_occupied_error').tr(),
                         ),
                       );
                     }
@@ -201,15 +203,15 @@ class SubjectScreen extends HookConsumerWidget {
                       Navigator.pop(context, label.value);
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Time slots are already occupied!'),
+                        SnackBar(
+                          content: const Text('time_slots_occupied_error').tr(),
                         ),
                       );
                     }
                   }
                 }
               },
-              child: Text(isSubjectNull ? "Create" : "Save"),
+              child: Text(isSubjectNull ? "create".tr() : "save".tr()),
             ),
           ),
         ],

@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:timetable/constants/rotation_weeks.dart';
 import 'package:timetable/db/database.dart';
@@ -6,13 +7,13 @@ import 'package:timetable/db/database.dart';
 String getRotationWeekLabel(RotationWeeks rotationWeek) {
   switch (rotationWeek) {
     case RotationWeeks.none:
-      return "All Weeks";
+      return "all_weeks".tr();
     case RotationWeeks.a:
-      return "Week A";
+      return "${"week".tr()} A";
     case RotationWeeks.b:
-      return "Week B";
+      return "${"week".tr()} B";
     default:
-      return "All Weeks";
+      return "all_weeks".tr();
   }
 }
 
@@ -20,13 +21,13 @@ String getRotationWeekLabel(RotationWeeks rotationWeek) {
 String getRotationWeekButtonLabel(RotationWeeks rotationWeek) {
   switch (rotationWeek) {
     case RotationWeeks.none:
-      return "All";
+      return "all".tr();
     case RotationWeeks.a:
       return "A";
     case RotationWeeks.b:
       return "B";
     default:
-      return "All";
+      return "all".tr();
   }
 }
 

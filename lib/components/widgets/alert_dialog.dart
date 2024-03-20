@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 /// Alert dialog widget to use instead of rewriting the same code every time.
@@ -24,7 +25,7 @@ class ShowAlertDialog extends StatelessWidget {
           onPressed: () {
             Navigator.pop(context);
           },
-          child: const Text("Cancel"),
+          child: const Text("cancel").tr(),
         ),
         TextButton(
           onPressed: onApprove,

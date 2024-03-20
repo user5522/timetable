@@ -1,4 +1,5 @@
 import 'package:animations/animations.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -26,21 +27,27 @@ class Navigation extends HookConsumerWidget {
     }
 
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          context.setLocale(const Locale('fr', 'FR'));
+        },
+        child: const Icon(Icons.language),
+      ),
       bottomNavigationBar: Visibility(
         visible: navbarToggle,
         child: NavigationBar(
           onDestinationSelected: onTabTapped,
           selectedIndex: currentPageIndex.value,
-          destinations: const <Widget>[
+          destinations: <Widget>[
             NavigationDestination(
-              selectedIcon: Icon(Icons.table_chart),
-              icon: Icon(Icons.table_chart_outlined),
-              label: 'Timetable',
+              selectedIcon: const Icon(Icons.table_chart),
+              icon: const Icon(Icons.table_chart_outlined),
+              label: "timetable".plural(1),
             ),
             NavigationDestination(
-              selectedIcon: Icon(Icons.settings),
-              icon: Icon(Icons.settings_outlined),
-              label: 'Settings',
+              selectedIcon: const Icon(Icons.settings),
+              icon: const Icon(Icons.settings_outlined),
+              label: 'settings'.plural(1),
             ),
           ],
         ),

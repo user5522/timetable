@@ -5,19 +5,19 @@ import 'package:timetable/constants/theme_options.dart';
 /// Themes' [StateNotifier].
 class ThemeModeNotifier extends StateNotifier<ThemeModeOption> {
   ThemeModeNotifier() : super(ThemeModeOption.auto) {
-    _loadThemeFromSharedPreferences();
+    loadTheme();
   }
 
   void changeTheme(ThemeModeOption newThemeMode) {
     state = newThemeMode;
-    _saveThemePreference(newThemeMode);
+    saveTheme(newThemeMode);
   }
 
   ThemeModeOption getTheme() {
     return state;
   }
 
-  Future<void> _loadThemeFromSharedPreferences() async {
+  Future<void> loadTheme() async {
     final prefs = await SharedPreferences.getInstance();
     final savedTheme = prefs.getString('themeMode');
     if (savedTheme != null) {
@@ -27,7 +27,7 @@ class ThemeModeNotifier extends StateNotifier<ThemeModeOption> {
     }
   }
 
-  Future<void> _saveThemePreference(ThemeModeOption themeMode) async {
+  Future<void> saveTheme(ThemeModeOption themeMode) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(
       'themeMode',

@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:timetable/provider/settings.dart';
@@ -17,6 +18,7 @@ class NavbarToggle extends HookConsumerWidget {
       onPressed: () {
         settings.updateNavbarVisible(!navbarToggle);
       },
+      tooltip: "fullscreen_tooltip".tr(),
       selectedIcon: const Icon(
         Icons.fullscreen,
         size: 25,

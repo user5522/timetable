@@ -3,15 +3,25 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:timetable/components/widgets/eager_initilization.dart';
 import 'package:timetable/components/widgets/navigation_bar.dart';
+import 'package:timetable/constants/languages.dart';
 import 'package:timetable/constants/theme_options.dart';
 import 'package:timetable/provider/settings.dart';
 import 'package:timetable/provider/themes.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await EasyLocalization.ensureInitialized();
+  EasyLocalization.logger.enableLevels = [];
+
   runApp(
-    const ProviderScope(
-      child: TimetableApp(),
+    ProviderScope(
+      child: EasyLocalization(
+        supportedLocales: languages,
+        path: 'assets/translations',
+        fallbackLocale: languages[0],
+        child: const TimetableApp(),
+      ),
     ),
   );
 }
@@ -33,6 +43,9 @@ class TimetableApp extends ConsumerWidget {
         ColorScheme? darkDynamic,
       ) {
         return MaterialApp(
+          localizationsDelegates: context.localizationDelegates,
+          supportedLocales: context.supportedLocales,
+          locale: context.locale,
           title: 'Timetable',
           color: Colors.white,
           theme: ThemeData(

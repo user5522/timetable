@@ -44,12 +44,14 @@ class TimeDayRotationWeekTimetableConfig extends ConsumerWidget {
           title: DayConfig(
             day: day,
           ),
+          onTap: () {},
         ),
         if (rotationWeeks)
           ListItem(
             title: RotationWeekConfig(
               rotationWeek: rotationWeek,
             ),
+            onTap: () {},
           ),
         ListItem(
           title: TimeConfig(
@@ -57,12 +59,14 @@ class TimeDayRotationWeekTimetableConfig extends ConsumerWidget {
             startTime: startTime,
             endTime: endTime,
           ),
+          onTap: () {},
         ),
         if (multipleTimetables && timetables.length > 1)
           ListItem(
             title: TimetableConfig(
               timetable: timetable,
             ),
+            onTap: () {},
           ),
       ],
     );

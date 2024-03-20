@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:timetable/components/widgets/act_chip.dart';
@@ -51,7 +52,7 @@ class SubjectsList extends HookWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Choose a Subject'),
+        title: const Text('choose_subject').tr(),
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(48.0),
           child: Align(
@@ -61,10 +62,11 @@ class SubjectsList extends HookWidget {
               crossAxisAlignment: WrapCrossAlignment.center,
               children: [
                 const Padding(padding: EdgeInsets.only(left: 16.0)),
-                const Text("Filter by:", style: TextStyle(fontSize: 17)),
+                Text("${"filter_by".tr()}:",
+                    style: const TextStyle(fontSize: 17)),
                 if (location.value != null && location.value!.trim().isNotEmpty)
                   ActChip(
-                    label: const Text('Location'),
+                    label: const Text('location').tr(),
                     enabled: locationFilterEnabled.value,
                     onPressed: () {
                       locationFilterEnabled.value =
@@ -73,14 +75,14 @@ class SubjectsList extends HookWidget {
                   ),
                 if (label.value.trim().isNotEmpty)
                   ActChip(
-                    label: const Text('Label'),
+                    label: const Text('label').tr(),
                     onPressed: () {
                       labelFilterEnabled.value = !labelFilterEnabled.value;
                     },
                     enabled: labelFilterEnabled.value,
                   ),
                 ActChip(
-                  label: const Text('Color'),
+                  label: const Text('color').tr(),
                   enabled: colorFilterEnabled.value,
                   onPressed: () {
                     colorFilterEnabled.value = !colorFilterEnabled.value;

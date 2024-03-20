@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -31,7 +32,7 @@ class TimetableScreen extends HookConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         leading: const NavbarToggle(),
-        title: const Text('Timetable'),
+        title: const Text('timetable').plural(1),
         actions: [
           if (multipleTimetables && (timetables.length > 1))
             TimetableToggle(

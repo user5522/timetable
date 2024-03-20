@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:timetable/components/subject_management/subjects_list.dart';
 import 'package:timetable/components/widgets/list_item_group.dart';
@@ -51,13 +52,13 @@ class _LabelLocationConfigState extends State<LabelLocationConfig> {
             initialValue: widget.label.value,
             autofocus: true,
             textInputAction: TextInputAction.next,
-            decoration: const InputDecoration(
-              hintText: "Subject",
+            decoration: InputDecoration(
+              hintText: "subject".tr(),
               border: InputBorder.none,
             ),
             validator: (value) {
               if (value == null || value.trim().isEmpty) {
-                return 'Please enter a Subject.';
+                return 'subject_input_error'.tr();
               }
               return null;
             },
@@ -104,8 +105,8 @@ class _LabelLocationConfigState extends State<LabelLocationConfig> {
             focusNode: locationFieldFocusNode,
             initialValue: widget.location.value,
             textInputAction: TextInputAction.done,
-            decoration: const InputDecoration(
-              hintText: "Location",
+            decoration: InputDecoration(
+              hintText: "location".tr(),
               border: InputBorder.none,
             ),
             onChanged: (value) {

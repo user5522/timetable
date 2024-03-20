@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:timetable/components/widgets/list_item_group.dart';
@@ -16,8 +17,8 @@ class NotesTile extends ConsumerWidget {
     return ListItem(
       title: TextFormField(
         initialValue: note.value,
-        decoration: const InputDecoration(
-          hintText: "Notes",
+        decoration: InputDecoration(
+          hintText: "notes".tr(),
           border: InputBorder.none,
         ),
         maxLines: 3,

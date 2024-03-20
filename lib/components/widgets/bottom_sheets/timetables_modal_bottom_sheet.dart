@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:timetable/components/widgets/subject_data_bottom_sheet.dart';
@@ -19,11 +20,11 @@ class TimetablesModalBottomSheet extends ConsumerWidget {
 
     return SingleChildScrollView(
       child: SubjectDataBottomSheet(
-        title: "Timetables",
+        title: "timetable".plural(2),
         children: timetables.map(
           (t) {
             return ListTile(
-              title: Text("Timetable ${t.name}"),
+              title: Text("${"timetable".plural(1)} ${t.name}"),
               visualDensity: VisualDensity.compact,
               onTap: () {
                 timetable.value = t;

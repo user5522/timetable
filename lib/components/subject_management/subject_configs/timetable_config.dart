@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:timetable/components/widgets/act_chip.dart';
 import 'package:timetable/components/widgets/bottom_sheets/timetables_modal_bottom_sheet.dart';
@@ -16,7 +17,7 @@ class TimetableConfig extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        const Text("Timetable"),
+        const Text("timetable").plural(1),
         const Spacer(),
         ActChip(
           onPressed: () {

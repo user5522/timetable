@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:timetable/components/settings/screens/timetable_management_screen.dart';
@@ -28,7 +29,7 @@ class TimetableFeaturesOptions extends ConsumerWidget {
               ),
             );
           },
-          title: const Text("Time Period Configuration"),
+          title: const Text("timetable_period_config").tr(),
         ),
         ListTile(
           onTap: () {
@@ -42,20 +43,18 @@ class TimetableFeaturesOptions extends ConsumerWidget {
               ),
             );
           },
-          title: const Text("Manage Timetables"),
+          title: const Text("manage_timetables").tr(),
         ),
         SwitchListTile(
-          title: const Text("Rotation Weeks"),
+          title: const Text("rotation_week").plural(2),
           value: rotationWeeks,
           onChanged: (bool value) {
             settings.updateRotationWeeks(value);
           },
         ),
         SwitchListTile(
-          title: const Text("Auto Complete Colors"),
-          subtitle: const Text(
-            "auto assigns colors from previously made subjects that have matching names",
-          ),
+          title: const Text("auto_complete_colors").tr(),
+          subtitle: const Text("auto_complete_colors_description").tr(),
           value: autoCompleteColor,
           onChanged: (bool value) {
             settings.updateAutoCompleteColor(value);

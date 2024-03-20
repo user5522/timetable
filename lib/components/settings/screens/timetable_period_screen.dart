@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:timetable/components/widgets/time_picker.dart';
@@ -32,14 +33,17 @@ class TimetablePeriodScreen extends ConsumerWidget {
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          title: const Text('Invalid Time'),
+          title: const Text('invalid_time').tr(),
           content: Text(
-            'The ${isStartTime ? "start" : "end"} time must be ${isStartTime ? "before" : "after"} the ${isStartTime ? "end" : "start"} time.',
+            // I know using the gender feature to group dialogs together is stupid but whatever
+            isStartTime
+                ? "invalid_time_error".tr(gender: "start_time")
+                : "invalid_time_error".tr(gender: "end_time"),
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('OK'),
+              child: const Text('ok').tr(),
             ),
           ],
         ),
@@ -48,13 +52,13 @@ class TimetablePeriodScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Period Preferences"),
+        title: const Text("period_preferences").tr(),
       ),
       body: SingleChildScrollView(
         child: Column(
           children: [
             SwitchListTile(
-              title: const Text("Custom Time Period"),
+              title: const Text("custom_time_period").tr(),
               value: customTimePeriod,
               onChanged: (bool value) {
                 settings.updateCustomTimePeriod(value);
@@ -64,7 +68,7 @@ class TimetablePeriodScreen extends ConsumerWidget {
               },
             ),
             SwitchListTile(
-              title: const Text("24 Hours Time Period"),
+              title: const Text("24_hour_period").tr(),
               value: twentyFourHours,
               onChanged: (bool value) {
                 settings.update24Hours(value);
@@ -75,12 +79,12 @@ class TimetablePeriodScreen extends ConsumerWidget {
             ),
             ListTile(
               dense: true,
-              title: const Text("Configuration"),
+              title: const Text("configuration").tr(),
               enabled: customTimePeriod ? true : false,
               textColor: Theme.of(context).colorScheme.primary,
             ),
             ListTile(
-              title: const Text("Timetable Start Time"),
+              title: const Text("start_time").tr(),
               enabled: customTimePeriod ? true : false,
               subtitle: Text(
                 "${getCustomTimeHour(customStartTime)}:${getCustomTimeMinute(customStartTime)}",
@@ -100,7 +104,7 @@ class TimetablePeriodScreen extends ConsumerWidget {
               },
             ),
             ListTile(
-              title: const Text("Timetable End Time"),
+              title: const Text("end_time").tr(),
               enabled: customTimePeriod ? true : false,
               subtitle: Text(
                 "${getCustomTimeHour(customEndTime)}:${getCustomTimeMinute(customEndTime)}",

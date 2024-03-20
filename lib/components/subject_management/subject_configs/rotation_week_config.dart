@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:timetable/components/widgets/act_chip.dart';
 import 'package:timetable/components/widgets/bottom_sheets/rotation_week_modal_bottom_sheet.dart';
@@ -19,7 +20,7 @@ class RotationWeekConfig extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        const Text("Rotation Week"),
+        const Text("rotation_week").plural(1),
         const Spacer(),
         ActChip(
           onPressed: () {

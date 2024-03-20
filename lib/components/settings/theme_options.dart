@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:timetable/constants/theme_options.dart';
 import 'package:timetable/provider/themes.dart';
@@ -14,11 +15,11 @@ class ThemeOptions extends StatelessWidget {
   String getThemeModeLabel(ThemeModeOption themeMode) {
     switch (themeMode) {
       case ThemeModeOption.dark:
-        return 'Dark';
+        return 'dark'.tr();
       case ThemeModeOption.auto:
-        return 'System';
+        return 'system'.tr();
       case ThemeModeOption.light:
-        return 'Light';
+        return 'light'.tr();
     }
   }
 
@@ -40,12 +41,12 @@ class ThemeOptions extends StatelessWidget {
 
     return Row(
       children: [
-        const Text('Theme Mode'),
+        const Text('theme_mode').tr(),
         const Spacer(),
         DropdownMenu<ThemeModeOption>(
-          width: 120,
+          width: 130,
           dropdownMenuEntries: themeEntries(),
-          label: const Text("Theme"),
+          label: const Text("theme").tr(),
           initialSelection: themeMode.getTheme(),
           onSelected: (value) {
             themeMode.changeTheme(value!);
