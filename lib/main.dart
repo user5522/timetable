@@ -32,7 +32,7 @@ class TimetableApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final themeMode = ref.watch(themeModeProvider);
+    final theme = ref.watch(themeProvider);
     final monetTheming = ref.watch(settingsProvider).monetTheming;
     final Brightness systemBrightness =
         MediaQuery.of(context).platformBrightness;
@@ -50,18 +50,18 @@ class TimetableApp extends ConsumerWidget {
           color: Colors.white,
           theme: ThemeData(
             colorScheme: monetTheming
-                ? themeMode == ThemeModeOption.auto
+                ? theme == ThemeOption.auto
                     ? systemBrightness == Brightness.light
                         ? lightDynamic
                         : darkDynamic
-                    : themeMode == ThemeModeOption.light
+                    : theme == ThemeOption.light
                         ? lightDynamic
                         : darkDynamic
                 : ColorScheme.fromSeed(
                     seedColor: Colors.deepPurple,
-                    brightness: themeMode == ThemeModeOption.auto
+                    brightness: theme == ThemeOption.auto
                         ? systemBrightness
-                        : themeMode == ThemeModeOption.dark
+                        : theme == ThemeOption.dark
                             ? Brightness.dark
                             : Brightness.light,
                   ),

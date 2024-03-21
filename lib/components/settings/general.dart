@@ -13,7 +13,7 @@ class GeneralOptions extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final themeMode = ref.read(themeModeProvider.notifier);
+    final theme = ref.read(themeProvider.notifier);
     final language = ref.read(languageProvider.notifier);
     final monetTheming = ref.watch(settingsProvider).monetTheming;
     final settings = ref.read(settingsProvider.notifier);
@@ -28,7 +28,7 @@ class GeneralOptions extends ConsumerWidget {
         ),
         ListTile(
           title: ThemeOptions(
-            themeMode: themeMode,
+            theme: theme,
           ),
           onTap: () {},
         ),

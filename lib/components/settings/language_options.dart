@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:timetable/constants/languages.dart';
 import 'package:timetable/provider/language.dart';
 
-/// app theme mode options drop-down menu.
+/// app theme options drop-down menu.
 class LanguageOptions extends StatelessWidget {
   final LanguageNotifier language;
 

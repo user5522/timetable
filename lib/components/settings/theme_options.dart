@@ -3,36 +3,36 @@ import 'package:flutter/material.dart';
 import 'package:timetable/constants/theme_options.dart';
 import 'package:timetable/provider/themes.dart';
 
-/// app theme mode options drop-down menu.
+/// app theme me options dropdown menu.
 class ThemeOptions extends StatelessWidget {
-  final ThemeModeNotifier themeMode;
+  final ThemeNotifier theme;
 
   const ThemeOptions({
     super.key,
-    required this.themeMode,
+    required this.theme,
   });
 
-  String getThemeModeLabel(ThemeModeOption themeMode) {
-    switch (themeMode) {
-      case ThemeModeOption.dark:
+  String getThemeLabel(ThemeOption theme) {
+    switch (theme) {
+      case ThemeOption.dark:
         return 'dark'.tr();
-      case ThemeModeOption.auto:
+      case ThemeOption.auto:
         return 'system'.tr();
-      case ThemeModeOption.light:
+      case ThemeOption.light:
         return 'light'.tr();
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    List<DropdownMenuEntry<ThemeModeOption>> themeEntries() {
-      final themeEntries = <DropdownMenuEntry<ThemeModeOption>>[];
+    List<DropdownMenuEntry<ThemeOption>> themeEntries() {
+      final themeEntries = <DropdownMenuEntry<ThemeOption>>[];
 
-      for (final ThemeModeOption option in ThemeModeOption.values) {
+      for (final ThemeOption option in ThemeOption.values) {
         themeEntries.add(
-          DropdownMenuEntry<ThemeModeOption>(
+          DropdownMenuEntry<ThemeOption>(
             value: option,
-            label: getThemeModeLabel(option),
+            label: getThemeLabel(option),
           ),
         );
       }
@@ -43,13 +43,13 @@ class ThemeOptions extends StatelessWidget {
       children: [
         const Text('theme_mode').tr(),
         const Spacer(),
-        DropdownMenu<ThemeModeOption>(
+        DropdownMenu<ThemeOption>(
           width: 130,
           dropdownMenuEntries: themeEntries(),
           label: const Text("theme").tr(),
-          initialSelection: themeMode.getTheme(),
+          initialSelection: theme.getTheme(),
           onSelected: (value) {
-            themeMode.changeTheme(value!);
+            theme.changeTheme(value!);
           },
         ),
       ],

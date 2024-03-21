@@ -1,5 +1,5 @@
-/// Theme mode options.
-enum ThemeModeOption {
+/// Theme options.
+enum ThemeOption {
   dark,
   light,
   auto,
