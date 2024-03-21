@@ -37,7 +37,7 @@
   "auto_complete_colors_description": "attribue automatiquement les couleurs des sujets créés précédemment qui portent des noms correspondants",
 
   "delete_timetable_dialog": "La suppression d'un tableau supprimera ses sujets correspondants.",
-  "reset_timetables_dialog": "La réinitialisation supprimera toutes les matières à l'exception de celles du tableau par défaut.",
+  "reset_timetables_dialog": "La réinitialisation des emplois de temps supprimera toutes les matières aussi.",
   "create_backup": "Créer une Sauvegarde",
   "restore_backup": "Restaurer une Sauvegarde",
   "restore_backup_dialog": {

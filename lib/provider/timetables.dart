@@ -51,15 +51,12 @@ class TimetableNotifier extends StateNotifier<List<TimetableData>> {
   }
 
   Future resetData() async {
-    final timetables = await db.timetable.select().get();
-
     db.timetable.deleteAll();
-    for (var timetable in state.where((e) => e.name != timetables.first.name)) {
+    for (var timetable in state) {
       subjectsNotifier.deleteTimetableSubjects(state, timetable);
     }
 
-    db.timetable
-        .insertOne(TimetableCompanion.insert(name: timetables.first.name));
+    db.timetable.insertOne(TimetableCompanion.insert(name: "1"));
     state = await getTimetables();
   }
 }
