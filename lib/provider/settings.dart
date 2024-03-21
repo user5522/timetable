@@ -127,12 +127,12 @@ class SettingsNotifier extends StateNotifier<Settings> {
 
     final settingsJson = prefs.getString('settings');
 
-    if (settingsJson != null) {
-      final settingsMap = jsonDecode(settingsJson);
+    if (settingsJson == null) return;
 
-      final loadedSettings = Settings.fromJson(settingsMap);
-      state = loadedSettings;
-    }
+    final settingsMap = jsonDecode(settingsJson);
+
+    final loadedSettings = Settings.fromJson(settingsMap);
+    state = loadedSettings;
   }
 
   Future<void> saveSettings() async {

@@ -89,27 +89,35 @@ class Settings {
       };
 
   factory Settings.fromJson(Map<String, dynamic> json) {
-    return Settings(
-      customTimePeriod: json['customTimePeriod'] as bool,
-      compactMode: json['compactMode'] as bool,
-      hideLocation: json['hideLocation'] as bool,
-      singleLetterDays: json['singleLetterDays'] as bool,
-      rotationWeeks: json['rotationWeeks'] as bool,
-      customStartTime: TimeOfDay(
-        hour: json['customStartTimeHour'] as int,
-        minute: json['customStartTimeMinute'] as int,
-      ),
-      customEndTime: TimeOfDay(
-        hour: json['customEndTimeHour'] as int,
-        minute: json['customEndTimeMinute'] as int,
-      ),
-      hideSunday: json['hideSunday'] as bool,
-      autoCompleteColor: json['autoCompleteColor'] as bool,
-      hideTransparentSubject: json['hideTransparentSubject'] as bool,
-      navbarVisible: json['navbarVisible'] as bool,
-      monetTheming: json['monetTheming'] as bool,
-      multipleTimetables: json['multipleTimetables'] as bool,
-      twentyFourHours: json['twentyFourHours'] as bool,
+    final settings = Settings();
+
+    return settings.copyWith(
+      customTimePeriod: json['customTimePeriod'] as bool?,
+      compactMode: json['compactMode'] as bool?,
+      hideLocation: json['hideLocation'] as bool?,
+      singleLetterDays: json['singleLetterDays'] as bool?,
+      rotationWeeks: json['rotationWeeks'] as bool?,
+      customStartTime: json['customStartTimeHour'] != null &&
+              json['customStartTimeMinute'] != null
+          ? TimeOfDay(
+              hour: json['customStartTimeHour'] as int,
+              minute: json['customStartTimeMinute'] as int,
+            )
+          : null,
+      customEndTime: json['customEndTimeHour'] != null &&
+              json['customEndTimeMinute'] != null
+          ? TimeOfDay(
+              hour: json['customEndTimeHour'] as int,
+              minute: json['customEndTimeMinute'] as int,
+            )
+          : null,
+      hideSunday: json['hideSunday'] as bool?,
+      autoCompleteColor: json['autoCompleteColor'] as bool?,
+      hideTransparentSubject: json['hideTransparentSubject'] as bool?,
+      navbarVisible: json['navbarVisible'] as bool?,
+      monetTheming: json['monetTheming'] as bool?,
+      multipleTimetables: json['multipleTimetables'] as bool?,
+      twentyFourHours: json['twentyFourHours'] as bool?,
     );
   }
 }
