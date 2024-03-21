@@ -32,7 +32,7 @@ class PresetColorsScreen extends HookWidget {
                     colorsPerRow,
                     (colIndex) {
                       final index = (rowIndex * colorsPerRow + colIndex);
-                      final isSelected = (index == selectedColorIndex.value);
+                      final isCurrentColor = colors[index].color == color.value;
 
                       const topleft = BorderRadius.only(
                         topLeft: Radius.circular(10),
@@ -79,7 +79,7 @@ class PresetColorsScreen extends HookWidget {
                                       3.0,
                             ),
                             Visibility(
-                              visible: isSelected,
+                              visible: isCurrentColor,
                               child: Icon(
                                 Icons.check,
                                 color:
