@@ -23,8 +23,21 @@ class TimetablesModalBottomSheet extends ConsumerWidget {
         title: "timetable".plural(2),
         children: timetables.map(
           (t) {
+            bool isSelected = (t == timetable.value);
+
             return ListTile(
-              title: Text("${"timetable".plural(1)} ${t.name}"),
+              title: Row(
+                children: [
+                  Text("${"timetable".plural(1)} ${t.name}"),
+                  const Spacer(),
+                  Visibility(
+                    visible: isSelected,
+                    child: const Icon(
+                      Icons.check,
+                    ),
+                  ),
+                ],
+              ),
               visualDensity: VisualDensity.compact,
               onTap: () {
                 timetable.value = t;
