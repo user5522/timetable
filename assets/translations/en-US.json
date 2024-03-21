@@ -94,7 +94,8 @@
 
   "day_view": "Day View",
   "grid_view": "Grid View",
-  "fullscreen_tooltip": "Hide navigation bar",
+  "fullscreen_tooltip_hide": "Hide navigation bar",
+  "fullscreen_tooltip_show": "Show navigation bar",
 
   "ok": "OK",
   "create": "Create",

@@ -27,7 +27,7 @@ class DaysModalBottomSheet extends StatelessWidget {
               children: [
                 Text(
                   days[d.index],
-                ),
+                ).tr(),
                 const Spacer(),
                 Visibility(
                   visible: isSelected,

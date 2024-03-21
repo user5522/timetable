@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:timetable/constants/days.dart';
@@ -49,8 +50,8 @@ class DayViewNavigationBar extends ConsumerWidget {
                     ),
                     child: Text(
                       singleLetterDays
-                          ? days[index][0]
-                          : days[index].substring(0, 3),
+                          ? days[index].tr()[0]
+                          : days[index].tr().substring(0, 3),
                     ),
                   ),
                 );

@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:timetable/components/subject_management/subject_screen.dart';
@@ -52,6 +53,7 @@ class TimetableDayView extends HookConsumerWidget {
             ),
           );
         },
+        tooltip: "create".tr(),
         child: const Icon(Icons.add),
       ),
       body: Column(
@@ -80,7 +82,7 @@ class TimetableDayView extends HookConsumerWidget {
                             fontWeight: FontWeight.w400,
                             fontSize: 20,
                           ),
-                        ),
+                        ).tr(),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: sortSubjects(

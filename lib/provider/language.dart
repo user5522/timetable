@@ -20,10 +20,10 @@ class LanguageNotifier extends StateNotifier<Locale> {
 
   Future<void> loadLanguage() async {
     final prefs = await SharedPreferences.getInstance();
-    final savedLanguage = prefs.getInt('language');
-    if (savedLanguage == null) return;
+    final savedLanguageIndex = prefs.getInt('language');
+    if (savedLanguageIndex == null) return;
 
-    state = languages[savedLanguage];
+    state = languages[savedLanguageIndex];
   }
 
   Future<void> saveLanguage(Locale language) async {

@@ -94,7 +94,8 @@
 
   "grid_view": "Vue en Grille",
   "day_view": "Vue du Jour",
-  "fullscreen_tooltip": "Cacher la barre de navigation",
+  "fullscreen_tooltip_hide": "Cacher la barre de navigation",
+  "fullscreen_tooltip_show": "Afficher la barre de navigation",
 
   "ok": "OK",
   "create": "Créer",

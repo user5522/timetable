@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
@@ -12,6 +13,7 @@ class GridDayViewsToggle extends HookWidget {
   @override
   Widget build(BuildContext context) {
     return IconButton(
+      tooltip: isGridView.value ? 'day_view'.tr() : 'grid_view'.tr(),
       onPressed: () {
         isGridView.value = !isGridView.value;
       },

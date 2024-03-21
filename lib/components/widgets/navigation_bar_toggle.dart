@@ -18,7 +18,9 @@ class NavbarToggle extends HookConsumerWidget {
       onPressed: () {
         settings.updateNavbarVisible(!navbarToggle);
       },
-      tooltip: "fullscreen_tooltip".tr(),
+      tooltip: navbarToggle
+          ? "fullscreen_tooltip_hide".tr()
+          : "fullscreen_tooltip_show".tr(),
       selectedIcon: const Icon(
         Icons.fullscreen,
         size: 25,

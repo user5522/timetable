@@ -42,7 +42,7 @@ class DayConfig extends StatelessWidget {
           },
           label: Text(
             days[day.value.index],
-          ),
+          ).tr(),
         ),
       ],
     );

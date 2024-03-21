@@ -12,22 +12,22 @@ class LanguageOptions extends StatelessWidget {
     required this.language,
   });
 
-  String getLanguageLabel(Locale language) {
-    const en = Locale('en', 'US');
-    const fr = Locale('fr', 'FR');
-
-    switch (language) {
-      case en:
-        return 'English';
-      case fr:
-        return 'Français';
-      default:
-        return 'English';
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
+    String getLanguageLabel(Locale language) {
+      const en = Locale('en', 'US');
+      const fr = Locale('fr', 'FR');
+
+      switch (language) {
+        case en:
+          return 'English';
+        case fr:
+          return 'Français';
+        default:
+          return 'English';
+      }
+    }
+
     List<DropdownMenuEntry<Locale>> themeEntries() {
       final themeEntries = <DropdownMenuEntry<Locale>>[];
 

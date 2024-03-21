@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:timetable/constants/days.dart';
@@ -32,10 +33,10 @@ class DaysRow extends ConsumerWidget {
           width: tileWidth,
           child: Text(
             singleLetterDays
-                ? days[i][0]
+                ? days[i].tr()[0]
                 : isPortrait && compactMode
-                    ? days[i].substring(0, 3)
-                    : days[i],
+                    ? days[i].tr().substring(0, 3)
+                    : days[i].tr(),
           ),
         ),
       ),
