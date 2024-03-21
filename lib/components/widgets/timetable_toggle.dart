@@ -8,9 +8,9 @@ import 'package:timetable/provider/timetables.dart';
 class TimetableToggle extends HookConsumerWidget {
   final ValueNotifier<TimetableData> timetable;
   const TimetableToggle({
-    Key? key,
+    super.key,
     required this.timetable,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

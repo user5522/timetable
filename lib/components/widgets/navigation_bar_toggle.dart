@@ -6,8 +6,8 @@ import 'package:timetable/provider/settings.dart';
 /// Toggles the navbar on and off.
 class NavbarToggle extends HookConsumerWidget {
   const NavbarToggle({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

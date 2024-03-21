@@ -7,9 +7,9 @@ import 'package:timetable/helpers/rotation_weeks.dart';
 class RotationWeekToggle extends HookWidget {
   final ValueNotifier<RotationWeeks> rotationWeek;
   const RotationWeekToggle({
-    Key? key,
+    super.key,
     required this.rotationWeek,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
