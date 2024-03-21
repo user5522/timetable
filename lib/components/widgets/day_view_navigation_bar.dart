@@ -50,9 +50,7 @@ class DayViewNavigationBar extends ConsumerWidget {
                     child: Text(
                       singleLetterDays
                           ? days[index][0]
-                          : hideSunday
-                              ? days[index].substring(0, 3)
-                              : days[index].substring(0, 2),
+                          : days[index].substring(0, 3),
                     ),
                   ),
                 );

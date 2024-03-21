@@ -21,9 +21,10 @@ class Navigation extends HookConsumerWidget {
     final currentPageIndex = useState(0);
 
     void onTabTapped(int index) {
-      if (currentPageIndex.value != index) {
-        currentPageIndex.value = index;
-      }
+      if (currentPageIndex.value == index) return;
+
+      currentPageIndex.value = index;
+      return;
     }
 
     return Scaffold(

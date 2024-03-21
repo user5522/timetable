@@ -149,41 +149,39 @@ class OverlappingSubjBuilder extends ConsumerWidget {
                         SizedBox(
                           height: compactMode ? 8 : 5,
                         ),
-                        if ((location != null))
-                          if (!hideLocation)
-                            if (!hideTransparentSubjects)
-                              RotatedBox(
-                                quarterTurns: compactMode ? 1 : 0,
-                                child: Text(
-                                  compactMode
-                                      ? location.length > (subjHeight * 5)
-                                          ? '${location.substring(0, (subjHeight * 5))}..'
-                                          : location
-                                      : location,
-                                  maxLines: compactMode ? 1 : subjHeight,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                    color: subLabelsColor,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
+                        if (location != null &&
+                            (!hideLocation || !hideTransparentSubjects))
+                          RotatedBox(
+                            quarterTurns: compactMode ? 1 : 0,
+                            child: Text(
+                              compactMode
+                                  ? location.length > (subjHeight * 5)
+                                      ? '${location.substring(0, (subjHeight * 5))}..'
+                                      : location
+                                  : location,
+                              maxLines: compactMode ? 1 : subjHeight,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                color: subLabelsColor,
+                                fontWeight: FontWeight.bold,
                               ),
+                            ),
+                          ),
                         if (rotationWeeks) const Spacer(),
-                        if (rotationWeeks)
-                          if (!hideTransparentSubjects)
-                            Align(
-                              alignment: Alignment.bottomRight,
-                              child: RotatedBox(
-                                quarterTurns: compactMode ? 1 : 0,
-                                child: Text(
-                                  getSubjectRotationWeekLabel(subjects[i]),
-                                  style: TextStyle(
-                                    color: subLabelsColor,
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                        if (rotationWeeks || !hideTransparentSubjects)
+                          Align(
+                            alignment: Alignment.bottomRight,
+                            child: RotatedBox(
+                              quarterTurns: compactMode ? 1 : 0,
+                              child: Text(
+                                getSubjectRotationWeekLabel(subjects[i]),
+                                style: TextStyle(
+                                  color: subLabelsColor,
+                                  fontWeight: FontWeight.bold,
                                 ),
                               ),
                             ),
+                          ),
                       ],
                     ),
                   ),

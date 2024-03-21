@@ -39,20 +39,20 @@ class ListItemGroup extends StatelessWidget {
                 Radius.circular(10),
               ),
             );
-          } else if (isFirst || isLast) {
+          }
+          if (isFirst || isLast) {
             return RoundedRectangleBorder(
               borderRadius: BorderRadius.vertical(
                 top: Radius.circular(isFirst ? 10 : 5),
                 bottom: Radius.circular(isFirst ? 5 : 10),
               ),
             );
-          } else {
-            return const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(
-                Radius.circular(5),
-              ),
-            );
           }
+          return const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(
+              Radius.circular(5),
+            ),
+          );
         }
 
         return ListItem(

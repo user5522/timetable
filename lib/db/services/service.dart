@@ -42,11 +42,8 @@ Future<void> restoreData(
     FilePickerResult? result = await FilePicker.platform.pickFiles();
     File file;
 
-    if (result != null) {
-      file = File(result.files.single.path!);
-    } else {
-      return;
-    }
+    if (result == null) return;
+    file = File(result.files.single.path!);
 
     final jsonData = await file.readAsString();
     final decodedData = jsonDecode(jsonData) as Map<String, dynamic>;

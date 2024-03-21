@@ -183,32 +183,33 @@ class SubjectScreen extends HookConsumerWidget {
                     Theme.of(context).colorScheme.secondaryContainer,
               ),
               onPressed: () {
-                if (formKey.currentState!.validate()) {
-                  if (!isSubjectNull) {
-                    if (!isOccupiedExceptSelf && !multipleOccupied) {
-                      subjectNotifier.updateSubject(newSubject);
-                      Navigator.pop(context, label.value);
-                    } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          // I don't know how to say the error in french so I translated it :P
-                          content: const Text('time_slots_occupied_error').tr(),
-                        ),
-                      );
-                    }
+                if (!formKey.currentState!.validate()) {
+                  return;
+                }
+                if (isSubjectNull) {
+                  if (isOccupied && multipleOccupied) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: const Text('time_slots_occupied_error').tr(),
+                      ),
+                    );
+                    return;
                   }
-                  if (isSubjectNull) {
-                    if (!isOccupied && !multipleOccupied) {
-                      subjectNotifier.addSubject(newSubject.toCompanion(false));
-                      Navigator.pop(context, label.value);
-                    } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: const Text('time_slots_occupied_error').tr(),
-                        ),
-                      );
-                    }
+                  subjectNotifier.addSubject(newSubject.toCompanion(false));
+                  Navigator.pop(context, label.value);
+                }
+                if (!isSubjectNull) {
+                  if (isOccupiedExceptSelf && multipleOccupied) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        // I don't know how to say the error in french so I translated it :P
+                        content: const Text('time_slots_occupied_error').tr(),
+                      ),
+                    );
+                    return;
                   }
+                  subjectNotifier.updateSubject(newSubject);
+                  Navigator.pop(context, label.value);
                 }
               },
               child: Text(isSubjectNull ? "create".tr() : "save".tr()),

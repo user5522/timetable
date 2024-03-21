@@ -44,12 +44,15 @@ void filterOverlappingSubjectsByRotationWeeks(
   return overlappingSubjects.removeWhere(
     (elem) => elem.any(
       (e) {
-        if (rotationWeek.value == RotationWeeks.a) {
-          return e.rotationWeek == RotationWeeks.b;
-        } else if (rotationWeek.value == RotationWeeks.b) {
-          return e.rotationWeek == RotationWeeks.a;
-        } else {
-          return false;
+        switch (rotationWeek.value) {
+          case RotationWeeks.a:
+            return e.rotationWeek == RotationWeeks.b;
+          case RotationWeeks.b:
+            return e.rotationWeek == RotationWeeks.a;
+          case RotationWeeks.all:
+            return false;
+          case RotationWeeks.none:
+            return false;
         }
       },
     ),
@@ -69,7 +72,7 @@ void filterOverlappingSubjectsByTimetable(
   );
 }
 
-/// geete if 2 subjects overlap in time.
+/// checks if 2 subjects overlap in time
 bool doSubjectsOverlap(SubjectData a, SubjectData b, List<SubjectData> group) {
   return a.day == b.day &&
       (a.startTime.hour < b.endTime.hour ||

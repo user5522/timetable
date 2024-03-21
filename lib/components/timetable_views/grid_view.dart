@@ -136,7 +136,9 @@ class TimetableGridView extends HookConsumerWidget {
 
     // overlapping subjects
     if (overlappingSubjects.isNotEmpty &&
-        overlappingSubjects.any((e) => e.length == 2)) {
+        overlappingSubjects.any(
+          (e) => e.length == 2,
+        )) {
       filterOverlappingSubjectsByRotationWeeks(
         overlappingSubjects,
         rotationWeek,

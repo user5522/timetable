@@ -105,34 +105,32 @@ class SubjectBuilder extends ConsumerWidget {
                 const SizedBox(
                   height: 5,
                 ),
-                if ((location != null))
-                  if (!hideLocation)
-                    if (!hideTransparentSubjects)
-                      Text(
-                        location.toString(),
-                        maxLines:
-                            (subject.endTime.hour - subject.startTime.hour == 1
-                                ? 2
-                                : 3),
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          color: subLabelsColor,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
+                if (location != null &&
+                    (!hideLocation || !hideTransparentSubjects))
+                  Text(
+                    location.toString(),
+                    maxLines:
+                        (subject.endTime.hour - subject.startTime.hour == 1
+                            ? 2
+                            : 3),
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: subLabelsColor,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 if (rotationWeeks) const Spacer(),
-                if (rotationWeeks)
-                  if (!hideTransparentSubjects)
-                    Align(
-                      alignment: Alignment.bottomRight,
-                      child: Text(
-                        getSubjectRotationWeekLabel(subject),
-                        style: TextStyle(
-                          color: subLabelsColor,
-                          fontWeight: FontWeight.bold,
-                        ),
+                if (rotationWeeks || !hideTransparentSubjects)
+                  Align(
+                    alignment: Alignment.bottomRight,
+                    child: Text(
+                      getSubjectRotationWeekLabel(subject),
+                      style: TextStyle(
+                        color: subLabelsColor,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
+                  ),
               ],
             ),
           ),

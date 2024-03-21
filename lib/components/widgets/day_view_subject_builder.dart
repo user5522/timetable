@@ -169,8 +169,7 @@ class DayViewSubjectBuilder extends ConsumerWidget {
           ),
         ),
       );
-    } else {
-      return Container();
     }
+    return Container();
   }
 }

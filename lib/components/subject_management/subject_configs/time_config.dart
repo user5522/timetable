@@ -90,17 +90,18 @@ class TimeConfig extends ConsumerWidget {
               ),
             );
 
-            if (selectedTime != null &&
-                (selectedTime.hour <
-                    getCustomStartTime(customStartTime, ref).hour)) {
+            if (selectedTime == null) return;
+
+            if (selectedTime.hour <
+                getCustomStartTime(customStartTime, ref).hour) {
               showInvalidTimePeriodDialog();
-            } else if (selectedTime != null) {
-              if (isBefore(selectedTime, endTime.value)) {
-                startTime.value = selectedTime;
-              } else {
-                showInvalidTimeDialog(true);
-              }
+              return;
             }
+            if (!isBefore(selectedTime, endTime.value)) {
+              showInvalidTimeDialog(true);
+              return;
+            }
+            startTime.value = selectedTime;
           },
           label: Text("${startTime.value.hour}:00"),
         ),
@@ -120,17 +121,17 @@ class TimeConfig extends ConsumerWidget {
               ),
             );
 
-            if (selectedTime != null &&
-                (selectedTime.hour >
-                    getCustomEndTime(customEndTime, ref).hour)) {
+            if (selectedTime == null) return;
+
+            if (selectedTime.hour > getCustomEndTime(customEndTime, ref).hour) {
               showInvalidTimePeriodDialog();
-            } else if (selectedTime != null) {
-              if (isAfter(selectedTime, startTime.value)) {
-                endTime.value = selectedTime;
-              } else {
-                showInvalidTimeDialog(false);
-              }
+              return;
             }
+            if (!isAfter(selectedTime, startTime.value)) {
+              showInvalidTimeDialog(false);
+              return;
+            }
+            endTime.value = selectedTime;
           },
           label: Text("${endTime.value.hour}:00"),
         ),

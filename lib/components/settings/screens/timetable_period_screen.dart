@@ -94,13 +94,14 @@ class TimetablePeriodScreen extends ConsumerWidget {
                   context,
                   customStartTime,
                 );
-                if (selectedTime != null) {
-                  if (_isBefore(selectedTime, customEndTime)) {
-                    return settings.updateCustomStartTime(selectedTime);
-                  } else {
-                    showInvalidTimeDialog(true);
-                  }
+                if (selectedTime == null) {
+                  return;
                 }
+                if (!_isBefore(selectedTime, customEndTime)) {
+                  showInvalidTimeDialog(true);
+                  return;
+                }
+                return settings.updateCustomStartTime(selectedTime);
               },
             ),
             ListTile(
@@ -114,13 +115,14 @@ class TimetablePeriodScreen extends ConsumerWidget {
                   context,
                   customEndTime,
                 );
-                if (selectedTime != null) {
-                  if (_isAfter(selectedTime, customStartTime)) {
-                    return settings.updateCustomEndTime(selectedTime);
-                  } else {
-                    showInvalidTimeDialog(false);
-                  }
+                if (selectedTime == null) {
+                  return;
                 }
+                if (!_isAfter(selectedTime, customStartTime)) {
+                  showInvalidTimeDialog(false);
+                  return;
+                }
+                return settings.updateCustomEndTime(selectedTime);
               },
             ),
           ],
