@@ -54,6 +54,7 @@
     "start_time": "L'heure de début doit être antérieure à l'heure de fin.",
     "end_time": "L'heure de fin doit être postérieure à l'heure de début."
   },
+  "invalid_equal_time_error": "L'heure de début ne peut pas être la même que l'heure de fin",
   "invalid_time_config": "La période doit être comprise entre {} et {}",
   "time_slots_occupied_error": "Des plages horaires sont déjà occupées par une autre matière",
   "invalid_time": "Heure Invalide",

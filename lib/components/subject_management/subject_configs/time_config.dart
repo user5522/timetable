@@ -55,17 +55,12 @@ class TimeConfig extends ConsumerWidget {
       );
     }
 
-    void showInvalidTimeDialog(bool isStartTime) {
+    void showInvalidTimeDialog() {
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
           title: const Text('invalid_time').tr(),
-          content: Text(
-            // I know using the gender feature to group dialogs together is stupid but whatever
-            isStartTime
-                ? "invalid_time_error".tr(gender: "start_time")
-                : "invalid_time_error".tr(gender: "end_time"),
-          ),
+          content: const Text('invalid_equal_time_error').tr(),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
@@ -74,6 +69,22 @@ class TimeConfig extends ConsumerWidget {
           ],
         ),
       );
+    }
+
+    void switchTimes(TimeOfDay newTime) {
+      if (isAfter(newTime, endTime.value)) {
+        final temp = endTime.value;
+        endTime.value = newTime;
+        startTime.value = temp;
+        return;
+      }
+      if (isBefore(newTime, startTime.value)) {
+        final temp = startTime.value;
+        startTime.value = newTime;
+        endTime.value = temp;
+        return;
+      }
+      showInvalidTimeDialog();
     }
 
     return Row(
@@ -97,11 +108,11 @@ class TimeConfig extends ConsumerWidget {
               showInvalidTimePeriodDialog();
               return;
             }
-            if (!isBefore(selectedTime, endTime.value)) {
-              showInvalidTimeDialog(true);
+            if (selectedTime == endTime.value) {
+              showInvalidTimeDialog();
               return;
             }
-            startTime.value = selectedTime;
+            switchTimes(selectedTime);
           },
           label: Text("${startTime.value.hour}:00"),
         ),
@@ -127,11 +138,11 @@ class TimeConfig extends ConsumerWidget {
               showInvalidTimePeriodDialog();
               return;
             }
-            if (!isAfter(selectedTime, startTime.value)) {
-              showInvalidTimeDialog(false);
+            if (selectedTime == startTime.value) {
+              showInvalidTimeDialog();
               return;
             }
-            endTime.value = selectedTime;
+            switchTimes(selectedTime);
           },
           label: Text("${endTime.value.hour}:00"),
         ),
