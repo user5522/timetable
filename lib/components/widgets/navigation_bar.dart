@@ -27,12 +27,6 @@ class Navigation extends HookConsumerWidget {
     }
 
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          context.setLocale(const Locale('fr', 'FR'));
-        },
-        child: const Icon(Icons.language),
-      ),
       bottomNavigationBar: Visibility(
         visible: navbarToggle,
         child: NavigationBar(
