@@ -55,7 +55,7 @@ class TimeConfig extends ConsumerWidget {
       );
     }
 
-    void showInvalidTimeDialog() {
+    void showInvalidEqualTimeDialog() {
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
@@ -71,25 +71,24 @@ class TimeConfig extends ConsumerWidget {
       );
     }
 
-    void switchTimes(TimeOfDay newTime, bool isEditingStartTime) {
-      if (isAfter(newTime, getCustomEndTime(customEndTime, ref)) ||
-          isBefore(newTime, getCustomStartTime(customStartTime, ref))) {
-        showInvalidTimePeriodDialog();
-        return;
-      }
-      if (!isEditingStartTime && isAfter(newTime, endTime.value)) {
+    void switchStartWithEndTime(TimeOfDay newTime) {
+      if (!isAfter(newTime, getCustomEndTime(customEndTime, ref))) {
         final temp = endTime.value;
         endTime.value = newTime;
         startTime.value = temp;
         return;
       }
-      if (isEditingStartTime && isBefore(newTime, startTime.value)) {
+      showInvalidTimePeriodDialog();
+    }
+
+    void switchEndWithStartTime(TimeOfDay newTime) {
+      if (!isBefore(newTime, getCustomStartTime(customStartTime, ref))) {
         final temp = startTime.value;
         startTime.value = newTime;
         endTime.value = temp;
         return;
       }
-      showInvalidTimeDialog();
+      showInvalidTimePeriodDialog();
     }
 
     return Row(
@@ -108,11 +107,21 @@ class TimeConfig extends ConsumerWidget {
 
             if (selectedTime == null) return;
 
-            if (selectedTime == endTime.value) {
-              showInvalidTimeDialog();
+            if (isBefore(
+                selectedTime, getCustomStartTime(customStartTime, ref))) {
+              showInvalidTimePeriodDialog();
               return;
             }
-            return switchTimes(selectedTime, true);
+
+            if (selectedTime == endTime.value) {
+              showInvalidEqualTimeDialog();
+              return;
+            }
+
+            if (isAfter(selectedTime, endTime.value)) {
+              switchStartWithEndTime(selectedTime);
+              return;
+            }
           },
           label: Text("${startTime.value.hour}:00"),
         ),
@@ -134,11 +143,19 @@ class TimeConfig extends ConsumerWidget {
 
             if (selectedTime == null) return;
 
-            if (selectedTime == startTime.value) {
-              showInvalidTimeDialog();
+            if (isAfter(selectedTime, getCustomEndTime(customEndTime, ref))) {
+              showInvalidTimePeriodDialog();
               return;
             }
-            switchTimes(selectedTime, false);
+
+            if (selectedTime == startTime.value) {
+              showInvalidEqualTimeDialog();
+              return;
+            }
+            if (isBefore(selectedTime, startTime.value)) {
+              switchEndWithStartTime(selectedTime);
+              return;
+            }
           },
           label: Text("${endTime.value.hour}:00"),
         ),
