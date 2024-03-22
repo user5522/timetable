@@ -108,6 +108,8 @@ class TimetablePeriodScreen extends ConsumerWidget {
                   switchStartWithEndTime(selectedTime);
                   return;
                 }
+
+                settings.updateCustomStartTime(selectedTime);
               },
             ),
             ListTile(
@@ -132,6 +134,8 @@ class TimetablePeriodScreen extends ConsumerWidget {
                   switchEndWithStartTime(selectedTime);
                   return;
                 }
+
+                settings.updateCustomEndTime(selectedTime);
               },
             ),
           ],

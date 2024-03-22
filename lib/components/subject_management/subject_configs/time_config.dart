@@ -120,6 +120,8 @@ class TimeConfig extends ConsumerWidget {
               switchStartWithEndTime(selectedTime);
               return;
             }
+
+            startTime.value = selectedTime;
           },
           label: Text("${startTime.value.hour}:00"),
         ),
@@ -154,6 +156,8 @@ class TimeConfig extends ConsumerWidget {
               switchEndWithStartTime(selectedTime);
               return;
             }
+
+            endTime.value = selectedTime;
           },
           label: Text("${endTime.value.hour}:00"),
         ),
