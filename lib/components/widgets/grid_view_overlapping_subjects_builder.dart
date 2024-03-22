@@ -55,7 +55,7 @@ class OverlappingSubjBuilder extends ConsumerWidget {
       color: Colors.grey,
     );
 
-    const double outerPadding = 2;
+    double outerPadding = subjects.length > 2 ? 1 : 2;
 
     return Container(
       decoration: ShapeDecoration(
@@ -78,6 +78,12 @@ class OverlappingSubjBuilder extends ConsumerWidget {
 
           int subjHeight = endTimeHour - startTimeHour;
 
+          int quarterTurns = compactMode
+              ? 1
+              : subjects.length > 2 && !compactMode
+                  ? 1
+                  : 0;
+
           final hideTransparentSubjects =
               hideTransparentSubject && color.opacity == 0;
 
@@ -87,7 +93,7 @@ class OverlappingSubjBuilder extends ConsumerWidget {
                 height: (startTimeHour - earlierStartTimeHour) * (tileHeight),
               ),
               Padding(
-                padding: const EdgeInsets.fromLTRB(
+                padding: EdgeInsets.fromLTRB(
                   outerPadding,
                   outerPadding,
                   outerPadding,
@@ -110,7 +116,11 @@ class OverlappingSubjBuilder extends ConsumerWidget {
                   borderRadius: BorderRadius.circular(5),
                   child: Ink(
                     padding: EdgeInsets.fromLTRB(
-                        compactMode ? 1 : 2, 5, compactMode ? 1 : 2, 5),
+                      compactMode ? 1 : 2,
+                      5,
+                      compactMode ? 1 : 2,
+                      5,
+                    ),
                     decoration: BoxDecoration(
                       color: color,
                       borderRadius: BorderRadius.circular(5),
@@ -131,7 +141,7 @@ class OverlappingSubjBuilder extends ConsumerWidget {
                       children: [
                         if (!hideTransparentSubjects)
                           RotatedBox(
-                            quarterTurns: compactMode ? 1 : 0,
+                            quarterTurns: quarterTurns,
                             child: Text(
                               compactMode
                                   ? label.length > (subjHeight * 5)
@@ -152,7 +162,7 @@ class OverlappingSubjBuilder extends ConsumerWidget {
                         if (location != null &&
                             (!hideLocation || !hideTransparentSubjects))
                           RotatedBox(
-                            quarterTurns: compactMode ? 1 : 0,
+                            quarterTurns: quarterTurns,
                             child: Text(
                               compactMode
                                   ? location.length > (subjHeight * 5)
@@ -172,7 +182,7 @@ class OverlappingSubjBuilder extends ConsumerWidget {
                           Align(
                             alignment: Alignment.bottomRight,
                             child: RotatedBox(
-                              quarterTurns: compactMode ? 1 : 0,
+                              quarterTurns: quarterTurns,
                               child: Text(
                                 getSubjectRotationWeekLabel(subjects[i]),
                                 style: TextStyle(
