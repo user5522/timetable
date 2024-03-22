@@ -9,7 +9,7 @@ import 'package:timetable/components/subject_management/subject_configs/note_til
 import 'package:timetable/constants/days.dart';
 import 'package:timetable/constants/rotation_weeks.dart';
 import 'package:timetable/db/database.dart';
-import 'package:timetable/provider/overlapping_subjects.dart';
+// import 'package:timetable/provider/overlapping_subjects.dart';
 import 'package:timetable/provider/settings.dart';
 import 'package:timetable/provider/subjects.dart';
 import 'package:timetable/provider/timetables.dart';
@@ -35,7 +35,7 @@ class SubjectScreen extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final subjects = ref.watch(subjectProvider);
     final subjectNotifier = ref.watch(subjectProvider.notifier);
-    final overlappingSubjects = ref.watch(overlappingSubjectsProvider);
+    // final overlappingSubjects = ref.watch(overlappingSubjectsProvider);
     final autoCompleteColor = ref.watch(settingsProvider).autoCompleteColor;
     final timetables = ref.watch(timetableProvider);
     final customStartTimeHour =
@@ -88,68 +88,71 @@ class SubjectScreen extends HookConsumerWidget {
       timetable: timetable.value!.name,
     );
 
-    final subjectsInSameDay = subjects
-        .where(
-          (e) => e.day == day.value,
-        )
-        .toList();
+    // final subjectsInSameDay = subjects
+    //     .where(
+    //       (e) => e.day == day.value,
+    //     )
+    //     .toList();
 
-    final multipleOccupied = overlappingSubjects.any((e) {
-      for (var subject in e) {
-        return newSubject == subject;
-      }
-      return false;
-    })
-        ? false
-        : subjectsInSameDay
-                .where((s) {
-                  final sHours = List.generate(
-                    s.endTime.hour - s.startTime.hour,
-                    (index) => index + s.startTime.hour,
-                  );
-                  final inputHours = List.generate(
-                    endTime.value.hour - startTime.value.hour,
-                    (index) => index + startTime.value.hour,
-                  );
+    const multipleOccupied = false;
+    // final multipleOccupied = overlappingSubjects.any((e) {
+    //   for (var subject in e) {
+    //     return newSubject == subject;
+    //   }
+    //   return false;
+    // })
+    //     ? false
+    //     : subjectsInSameDay
+    //             .where((s) {
+    //               final sHours = List.generate(
+    //                 s.endTime.hour - s.startTime.hour,
+    //                 (index) => index + s.startTime.hour,
+    //               );
+    //               final inputHours = List.generate(
+    //                 endTime.value.hour - startTime.value.hour,
+    //                 (index) => index + startTime.value.hour,
+    //               );
 
-                  return sHours.any((hour) => inputHours.contains(hour));
-                })
-                .where((s) => s != subject)
-                .where((e) => e.timetable == newSubject.timetable)
-                .length >
-            1;
+    //               return sHours.any((hour) => inputHours.contains(hour));
+    //             })
+    //             .where((s) => s != subject)
+    //             .where((e) => e.timetable == newSubject.timetable)
+    //             .length >
+    //         1;
 
-    final isOccupied = subjectsInSameDay
-        .where((e) => overlappingSubjects.any((elem) => elem.contains(e)))
-        .where((e) => e.timetable == newSubject.timetable)
-        .any((e) {
-      final eHours = List.generate(
-        e.endTime.hour - e.startTime.hour,
-        (index) => index + e.startTime.hour,
-      );
-      final inputHours = List.generate(
-        endTime.value.hour - startTime.value.hour,
-        (index) => index + startTime.value.hour,
-      );
+    const isOccupied = false;
+    // final isOccupied = subjectsInSameDay
+    //     .where((e) => overlappingSubjects.any((elem) => elem.contains(e)))
+    //     .where((e) => e.timetable == newSubject.timetable)
+    //     .any((e) {
+    //   final eHours = List.generate(
+    //     e.endTime.hour - e.startTime.hour,
+    //     (index) => index + e.startTime.hour,
+    //   );
+    //   final inputHours = List.generate(
+    //     endTime.value.hour - startTime.value.hour,
+    //     (index) => index + startTime.value.hour,
+    //   );
 
-      return eHours.any((hour) => inputHours.contains(hour));
-    });
+    //   return eHours.any((hour) => inputHours.contains(hour));
+    // });
 
-    final isOccupiedExceptSelf = subjectsInSameDay
-        .where((e) => e != subject)
-        .where((e) => !overlappingSubjects.any((elem) => elem.contains(e)))
-        .where((e) => e.timetable == newSubject.timetable)
-        .any((e) {
-      final eHours = List.generate(
-        e.endTime.hour - e.startTime.hour,
-        (index) => index + e.startTime.hour,
-      );
-      final inputHours = List.generate(
-        endTime.value.hour - startTime.value.hour,
-        (index) => index + startTime.value.hour,
-      );
-      return eHours.any((hour) => inputHours.contains(hour));
-    });
+    const isOccupiedExceptSelf = false;
+    // final isOccupiedExceptSelf = subjectsInSameDay
+    //     .where((e) => e != subject)
+    //     .where((e) => !overlappingSubjects.any((elem) => elem.contains(e)))
+    //     .where((e) => e.timetable == newSubject.timetable)
+    //     .any((e) {
+    //   final eHours = List.generate(
+    //     e.endTime.hour - e.startTime.hour,
+    //     (index) => index + e.startTime.hour,
+    //   );
+    //   final inputHours = List.generate(
+    //     endTime.value.hour - startTime.value.hour,
+    //     (index) => index + startTime.value.hour,
+    //   );
+    //   return eHours.any((hour) => inputHours.contains(hour));
+    // });
 
     return Scaffold(
       appBar: AppBar(
@@ -187,27 +190,27 @@ class SubjectScreen extends HookConsumerWidget {
                   return;
                 }
                 if (isSubjectNull) {
-                  if (isOccupied && multipleOccupied) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: const Text('time_slots_occupied_error').tr(),
-                      ),
-                    );
-                    return;
-                  }
+                  // if (isOccupied && multipleOccupied) {
+                  //   ScaffoldMessenger.of(context).showSnackBar(
+                  //     SnackBar(
+                  //       content: const Text('time_slots_occupied_error').tr(),
+                  //     ),
+                  //   );
+                  //   return;
+                  // }
                   subjectNotifier.addSubject(newSubject.toCompanion(false));
                   Navigator.pop(context, label.value);
                 }
                 if (!isSubjectNull) {
-                  if (isOccupiedExceptSelf && multipleOccupied) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        // I don't know how to say the error in french so I translated it :P
-                        content: const Text('time_slots_occupied_error').tr(),
-                      ),
-                    );
-                    return;
-                  }
+                  // if (isOccupiedExceptSelf && multipleOccupied) {
+                  //   ScaffoldMessenger.of(context).showSnackBar(
+                  //     SnackBar(
+                  //       // I don't know how to say the error in french so I translated it :P
+                  //       content: const Text('time_slots_occupied_error').tr(),
+                  //     ),
+                  //   );
+                  //   return;
+                  // }
                   subjectNotifier.updateSubject(newSubject);
                   Navigator.pop(context, label.value);
                 }
