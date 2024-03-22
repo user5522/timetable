@@ -22,19 +22,18 @@ class TimeConfig extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final customStartTime = ref.watch(settingsProvider).customStartTime;
-    final customEndTime = ref.watch(settingsProvider).customEndTime;
-    final customTimePeriod = ref.watch(settingsProvider).customTimePeriod;
+    final chosenCustomStartTime = ref.watch(settingsProvider).customStartTime;
+    final chosenCustomEndTime = ref.watch(settingsProvider).customEndTime;
+    // final customTimePeriod = ref.watch(settingsProvider).customTimePeriod;
+
+    final customStartTime = getCustomStartTime(chosenCustomStartTime, ref);
+    final customEndTime = getCustomEndTime(chosenCustomEndTime, ref);
 
     void showInvalidTimePeriodDialog() {
-      final String customStartTimeHour =
-          customTimePeriod ? getCustomTimeHour(customStartTime) : "08";
-      final String customStartTimeMinute =
-          customTimePeriod ? getCustomTimeMinute(customStartTime) : "00";
-      final String customEndTimeHour =
-          customTimePeriod ? getCustomTimeHour(customEndTime) : "18";
-      final String customEndTimeMinute =
-          customTimePeriod ? getCustomTimeMinute(customEndTime) : "00";
+      final String customStartTimeHour = getCustomTimeHour(customStartTime);
+      final String customStartTimeMinute = getCustomTimeMinute(customStartTime);
+      final String customEndTimeHour = getCustomTimeHour(customEndTime);
+      final String customEndTimeMinute = getCustomTimeMinute(customEndTime);
 
       final String startTime = "$customStartTimeHour:$customStartTimeMinute";
       final String endTime = "$customEndTimeHour:$customEndTimeMinute";
@@ -72,7 +71,7 @@ class TimeConfig extends ConsumerWidget {
     }
 
     void switchStartWithEndTime(TimeOfDay newTime) {
-      if (!isAfter(newTime, getCustomEndTime(customEndTime, ref))) {
+      if (!isAfter(newTime, customEndTime)) {
         final temp = endTime.value;
         endTime.value = newTime;
         startTime.value = temp;
@@ -82,7 +81,7 @@ class TimeConfig extends ConsumerWidget {
     }
 
     void switchEndWithStartTime(TimeOfDay newTime) {
-      if (!isBefore(newTime, getCustomStartTime(customStartTime, ref))) {
+      if (!isBefore(newTime, customStartTime)) {
         final temp = startTime.value;
         startTime.value = newTime;
         endTime.value = temp;
@@ -107,8 +106,7 @@ class TimeConfig extends ConsumerWidget {
 
             if (selectedTime == null) return;
 
-            if (isBefore(
-                selectedTime, getCustomStartTime(customStartTime, ref))) {
+            if (isBefore(selectedTime, customStartTime)) {
               showInvalidTimePeriodDialog();
               return;
             }
@@ -143,7 +141,7 @@ class TimeConfig extends ConsumerWidget {
 
             if (selectedTime == null) return;
 
-            if (isAfter(selectedTime, getCustomEndTime(customEndTime, ref))) {
+            if (isAfter(selectedTime, customEndTime)) {
               showInvalidTimePeriodDialog();
               return;
             }
