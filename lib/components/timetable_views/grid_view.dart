@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:timetable/components/widgets/days_row.dart';
 import 'package:timetable/components/widgets/grid.dart';
 import 'package:timetable/components/widgets/grid_view_overlapping_subjects_builder.dart';
 import 'package:timetable/components/widgets/time_column.dart';
@@ -88,17 +87,19 @@ class TimetableGridView extends HookConsumerWidget {
             const TimeColumn(),
             Column(
               children: [
-                const DaysRow(),
-                Grid(
-                  tileHeight: tileHeight,
-                  tileWidth: tileWidth,
-                  rows: rows(ref),
-                  columns: columns(ref),
-                  grid: generate(
-                    subjects,
-                    columns(ref),
-                    rows(ref),
-                    ref,
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 20),
+                  child: Grid(
+                    tileHeight: tileHeight,
+                    tileWidth: tileWidth,
+                    rows: rows(ref),
+                    columns: columns(ref),
+                    grid: generate(
+                      subjects,
+                      columns(ref),
+                      rows(ref),
+                      ref,
+                    ),
                   ),
                 ),
               ],

@@ -22,24 +22,27 @@ class TimeColumn extends ConsumerWidget {
         children: List.generate(
           rows(ref),
           (i) {
-            return SizedBox(
-              height: compactMode ? 125 : 100,
-              child: Text(
-                is24HoursFormat
-                    ? times24h[i +
-                        (twentyFourHours
-                            ? 0
-                            : customTimePeriod
-                                ? customStartTime.hour
-                                : 8)]
-                    : timespmam[i +
-                        (twentyFourHours
-                            ? 0
-                            : customTimePeriod
-                                ? customStartTime.hour
-                                : 8)],
-                style: const TextStyle(fontSize: 13),
-                textAlign: TextAlign.center,
+            return Transform.translate(
+              offset: const Offset(0, -10),
+              child: SizedBox(
+                height: compactMode ? 125 : 100,
+                child: Text(
+                  is24HoursFormat
+                      ? times24h[i +
+                          (twentyFourHours
+                              ? 0
+                              : customTimePeriod
+                                  ? customStartTime.hour
+                                  : 8)]
+                      : timespmam[i +
+                          (twentyFourHours
+                              ? 0
+                              : customTimePeriod
+                                  ? customStartTime.hour
+                                  : 8)],
+                  style: const TextStyle(fontSize: 13),
+                  textAlign: TextAlign.center,
+                ),
               ),
             );
           },

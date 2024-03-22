@@ -2,15 +2,18 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:timetable/constants/days.dart';
+import 'package:timetable/constants/grid_properties.dart';
 import 'package:timetable/provider/settings.dart';
 
 /// Top navigation bar in the day view that allows to switch between days quickly.
-class DayViewNavigationBar extends ConsumerWidget {
+class DaysBar extends ConsumerWidget {
   final PageController controller;
+  final bool? isGridView;
 
-  const DayViewNavigationBar({
+  const DaysBar({
     super.key,
     required this.controller,
+    this.isGridView = false,
   });
 
   @override
@@ -21,22 +24,26 @@ class DayViewNavigationBar extends ConsumerWidget {
     int daysLength = hideSunday ? days.length - 1 : days.length;
 
     return SizedBox(
-      height: 50,
+      height: 48,
       width: screenWidth,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           Container(
-            color: Theme.of(context).colorScheme.background,
+            padding: EdgeInsets.only(left: isGridView! ? 20 : 0),
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
               itemCount: daysLength,
               shrinkWrap: true,
               itemBuilder: (context, index) {
                 return SizedBox(
-                  width: screenWidth / daysLength,
+                  width: isGridView!
+                      ? ((screenWidth - (timeColumnWidth - 1)) / daysLength)
+                      : (screenWidth / daysLength),
                   child: TextButton(
                     onPressed: () {
+                      if (isGridView!) return;
+
                       controller.animateToPage(
                         index,
                         duration: const Duration(milliseconds: 300),

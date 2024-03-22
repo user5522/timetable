@@ -4,6 +4,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:timetable/components/timetable_views/day_view.dart';
 import 'package:timetable/components/timetable_views/grid_view.dart';
+import 'package:timetable/components/widgets/days_bar.dart';
 import 'package:timetable/components/widgets/grid_day_views_toggle.dart';
 import 'package:timetable/components/widgets/navigation_bar_toggle.dart';
 import 'package:timetable/components/widgets/rotation_week_toggle.dart';
@@ -28,9 +29,12 @@ class TimetableScreen extends HookConsumerWidget {
 
     final subject = ref.watch(subjectProvider);
     final currentTimetable = useState(timetables[0]);
+    final PageController controller;
+    controller = PageController(initialPage: DateTime.now().weekday - 1);
 
     return Scaffold(
       appBar: AppBar(
+        scrolledUnderElevation: isGridView.value ? null : 0.0,
         leading: const NavbarToggle(),
         title: const Text('timetable').plural(1),
         actions: [
@@ -46,6 +50,13 @@ class TimetableScreen extends HookConsumerWidget {
             isGridView: isGridView,
           ),
         ],
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(48.0),
+          child: DaysBar(
+            controller: controller,
+            isGridView: isGridView.value,
+          ),
+        ),
       ),
       body: isGridView.value
           ? TimetableGridView(
@@ -57,6 +68,7 @@ class TimetableScreen extends HookConsumerWidget {
               rotationWeek: rotationWeek,
               subject: subject,
               currentTimetable: currentTimetable,
+              controller: controller,
             ),
     );
   }

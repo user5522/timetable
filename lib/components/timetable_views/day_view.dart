@@ -2,7 +2,6 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:timetable/components/subject_management/subject_screen.dart';
-import 'package:timetable/components/widgets/day_view_navigation_bar.dart';
 import 'package:timetable/components/widgets/day_view_subject_builder.dart';
 import 'package:timetable/constants/days.dart';
 import 'package:timetable/constants/grid_properties.dart';
@@ -19,20 +18,20 @@ class TimetableDayView extends HookConsumerWidget {
   final ValueNotifier<RotationWeeks> rotationWeek;
   final List<SubjectData> subject;
   final ValueNotifier<TimetableData> currentTimetable;
+  final PageController controller;
 
   const TimetableDayView({
     super.key,
     required this.rotationWeek,
     required this.subject,
     required this.currentTimetable,
+    required this.controller,
   });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final timetables = ref.watch(timetableProvider);
     final multipleTimetables = ref.watch(settingsProvider).multipleTimetables;
-    PageController controller;
-    controller = PageController(initialPage: DateTime.now().weekday - 1);
 
     return Scaffold(
       floatingActionButton: FloatingActionButton(
@@ -56,62 +55,55 @@ class TimetableDayView extends HookConsumerWidget {
         tooltip: "create".tr(),
         child: const Icon(Icons.add),
       ),
-      body: Column(
-        children: [
-          DayViewNavigationBar(
-            controller: controller,
-          ),
-          Expanded(
-            child: PageView.builder(
-              itemCount: columns(ref),
-              pageSnapping: true,
-              controller: controller,
-              itemBuilder: (context, index) {
-                int startDay = ((DateTime.monday + index - 1) % 7 + 1);
+      body: PageView.builder(
+        itemCount: columns(ref),
+        pageSnapping: true,
+        controller: controller,
+        itemBuilder: (context, index) {
+          int startDay = ((DateTime.monday + index - 1) % 7 + 1);
 
-                return SingleChildScrollView(
-                  scrollDirection: Axis.vertical,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          days[startDay - 1],
-                          style: const TextStyle(
-                            fontWeight: FontWeight.w400,
-                            fontSize: 20,
+          return ListView(
+            scrollDirection: Axis.vertical,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      days[startDay - 1],
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w400,
+                        fontSize: 20,
+                      ),
+                    ).tr(),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: sortSubjects(
+                        getFilteredByTimetablesSubjects(
+                          currentTimetable,
+                          timetables,
+                          multipleTimetables,
+                          getFilteredByRotationWeeksSubjects(
+                            rotationWeek,
+                            subject,
                           ),
-                        ).tr(),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: sortSubjects(
-                            getFilteredByTimetablesSubjects(
-                              currentTimetable,
-                              timetables,
-                              multipleTimetables,
-                              getFilteredByRotationWeeksSubjects(
-                                rotationWeek,
-                                subject,
-                              ),
+                        ),
+                      )
+                          .where((s) => s.day.index == index)
+                          .map(
+                            (subject) => DayViewSubjectBuilder(
+                              subject: subject,
                             ),
                           )
-                              .where((s) => s.day.index == index)
-                              .map(
-                                (subject) => DayViewSubjectBuilder(
-                                  subject: subject,
-                                ),
-                              )
-                              .toList(),
-                        ),
-                      ],
+                          .toList(),
                     ),
-                  ),
-                );
-              },
-            ),
-          ),
-        ],
+                  ],
+                ),
+              ),
+            ],
+          );
+        },
       ),
     );
   }
