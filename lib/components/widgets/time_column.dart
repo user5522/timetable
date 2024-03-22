@@ -16,36 +16,35 @@ class TimeColumn extends ConsumerWidget {
     final twentyFourHours = ref.watch(settingsProvider).twentyFourHours;
     final is24HoursFormat = MediaQuery.of(context).alwaysUse24HourFormat;
 
-    return Column(
-      children: [
-        Column(
-          children: List.generate(
-            rows(ref),
-            (i) {
-              return SizedBox(
-                height: compactMode ? 125 : 100,
-                child: Text(
-                  is24HoursFormat
-                      ? times24h[i +
-                          (twentyFourHours
-                              ? 0
-                              : customTimePeriod
-                                  ? customStartTime.hour
-                                  : 8)]
-                      : timespmam[i +
-                          (twentyFourHours
-                              ? 0
-                              : customTimePeriod
-                                  ? customStartTime.hour
-                                  : 8)],
-                  style: const TextStyle(fontSize: 13),
-                  textAlign: TextAlign.center,
-                ),
-              );
-            },
-          ),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 3.0),
+      child: Column(
+        children: List.generate(
+          rows(ref),
+          (i) {
+            return SizedBox(
+              height: compactMode ? 125 : 100,
+              child: Text(
+                is24HoursFormat
+                    ? times24h[i +
+                        (twentyFourHours
+                            ? 0
+                            : customTimePeriod
+                                ? customStartTime.hour
+                                : 8)]
+                    : timespmam[i +
+                        (twentyFourHours
+                            ? 0
+                            : customTimePeriod
+                                ? customStartTime.hour
+                                : 8)],
+                style: const TextStyle(fontSize: 13),
+                textAlign: TextAlign.center,
+              ),
+            );
+          },
         ),
-      ],
+      ),
     );
   }
 }
