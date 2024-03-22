@@ -1,9 +1,9 @@
-import 'package:device_info_plus/device_info_plus.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:timetable/components/settings/language_options.dart';
 import 'package:timetable/components/settings/theme_options.dart';
+import 'package:timetable/helpers/get_os_version.dart';
 import 'package:timetable/provider/language.dart';
 import 'package:timetable/provider/settings.dart';
 import 'package:timetable/provider/themes.dart';
@@ -32,16 +32,16 @@ class GeneralOptions extends ConsumerWidget {
           ),
           onTap: () {},
         ),
-        FutureBuilder<AndroidDeviceInfo>(
-          future: DeviceInfoPlugin().androidInfo,
+        FutureBuilder<int>(
+          future: getAndroidVersion(),
           builder: (
             BuildContext context,
-            AsyncSnapshot<AndroidDeviceInfo> snapshot,
+            AsyncSnapshot<int> snapshot,
           ) {
-            final androidDeviceInfo = snapshot.data;
+            final version = snapshot.data;
 
-            if (androidDeviceInfo != null &&
-                androidDeviceInfo.version.sdkInt >= 31) {
+            if (version != null &&
+                version >= 31) {
               return SwitchListTile(
                 title: const Text("monet_theming").tr(),
                 subtitle: const Text("Android 12+"),

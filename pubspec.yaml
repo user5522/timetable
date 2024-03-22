@@ -38,7 +38,6 @@ dependencies:
   flutter_hooks: ^0.20.5
   hooks_riverpod: ^2.5.1
   non_uniform_border: ^1.0.0
-  device_info_plus: ^9.0.3
   drift: ^2.16.0
   sqlite3_flutter_libs: ^0.5.20
   path_provider: ^2.1.2
