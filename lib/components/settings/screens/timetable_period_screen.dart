@@ -20,7 +20,10 @@ class TimetablePeriodScreen extends ConsumerWidget {
     final twentyFourHours = ref.watch(settingsProvider).twentyFourHours;
     final settings = ref.read(settingsProvider.notifier);
 
-    void showInvalidTimeDialog() {
+    // final customStartTime = getCustomStartTime(chosenCustomStartTime, ref);
+    // final customEndTime = getCustomEndTime(chosenCustomEndTime, ref);
+
+    void showInvalidEqualTimeDialog() {
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
@@ -36,20 +39,18 @@ class TimetablePeriodScreen extends ConsumerWidget {
       );
     }
 
-    void swapTimes(TimeOfDay newTime) {
-      if (isAfter(newTime, customEndTime)) {
-        final temp = customEndTime;
-        settings.updateCustomEndTime(newTime);
-        settings.updateCustomStartTime(temp);
-        return;
-      }
-      if (isBefore(newTime, customStartTime)) {
-        final temp = customStartTime;
-        settings.updateCustomStartTime(newTime);
-        settings.updateCustomEndTime(temp);
-        return;
-      }
-      showInvalidTimeDialog();
+    void switchStartWithEndTime(TimeOfDay newTime) {
+      final temp = customEndTime;
+      settings.updateCustomEndTime(newTime);
+      settings.updateCustomStartTime(temp);
+      return;
+    }
+
+    void switchEndWithStartTime(TimeOfDay newTime) {
+      final temp = customStartTime;
+      settings.updateCustomStartTime(newTime);
+      settings.updateCustomEndTime(temp);
+      return;
     }
 
     return Scaffold(
@@ -97,7 +98,16 @@ class TimetablePeriodScreen extends ConsumerWidget {
                   customStartTime,
                 );
                 if (selectedTime == null) return;
-                swapTimes(selectedTime);
+
+                if (selectedTime.hour == customEndTime.hour) {
+                  showInvalidEqualTimeDialog();
+                  return;
+                }
+
+                if (isAfter(selectedTime, customEndTime)) {
+                  switchStartWithEndTime(selectedTime);
+                  return;
+                }
               },
             ),
             ListTile(
@@ -113,7 +123,15 @@ class TimetablePeriodScreen extends ConsumerWidget {
                 );
                 if (selectedTime == null) return;
 
-                swapTimes(selectedTime);
+                if (selectedTime.hour == customStartTime.hour) {
+                  showInvalidEqualTimeDialog();
+                  return;
+                }
+
+                if (isBefore(selectedTime, customStartTime)) {
+                  switchEndWithStartTime(selectedTime);
+                  return;
+                }
               },
             ),
           ],

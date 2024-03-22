@@ -111,7 +111,7 @@ class TimeConfig extends ConsumerWidget {
               return;
             }
 
-            if (selectedTime == endTime.value) {
+            if (selectedTime.hour == endTime.value.hour) {
               showInvalidEqualTimeDialog();
               return;
             }
@@ -146,7 +146,7 @@ class TimeConfig extends ConsumerWidget {
               return;
             }
 
-            if (selectedTime == startTime.value) {
+            if (selectedTime.hour == startTime.value.hour) {
               showInvalidEqualTimeDialog();
               return;
             }
