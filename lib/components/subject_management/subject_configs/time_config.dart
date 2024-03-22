@@ -71,14 +71,19 @@ class TimeConfig extends ConsumerWidget {
       );
     }
 
-    void switchTimes(TimeOfDay newTime) {
-      if (isAfter(newTime, endTime.value)) {
+    void switchTimes(TimeOfDay newTime, bool isEditingStartTime) {
+      if (isAfter(newTime, getCustomEndTime(customEndTime, ref)) ||
+          isBefore(newTime, getCustomStartTime(customStartTime, ref))) {
+        showInvalidTimePeriodDialog();
+        return;
+      }
+      if (!isEditingStartTime && isAfter(newTime, endTime.value)) {
         final temp = endTime.value;
         endTime.value = newTime;
         startTime.value = temp;
         return;
       }
-      if (isBefore(newTime, startTime.value)) {
+      if (isEditingStartTime && isBefore(newTime, startTime.value)) {
         final temp = startTime.value;
         startTime.value = newTime;
         endTime.value = temp;
@@ -103,16 +108,11 @@ class TimeConfig extends ConsumerWidget {
 
             if (selectedTime == null) return;
 
-            if (selectedTime.hour <
-                getCustomStartTime(customStartTime, ref).hour) {
-              showInvalidTimePeriodDialog();
-              return;
-            }
             if (selectedTime == endTime.value) {
               showInvalidTimeDialog();
               return;
             }
-            switchTimes(selectedTime);
+            return switchTimes(selectedTime, true);
           },
           label: Text("${startTime.value.hour}:00"),
         ),
@@ -134,15 +134,11 @@ class TimeConfig extends ConsumerWidget {
 
             if (selectedTime == null) return;
 
-            if (selectedTime.hour > getCustomEndTime(customEndTime, ref).hour) {
-              showInvalidTimePeriodDialog();
-              return;
-            }
             if (selectedTime == startTime.value) {
               showInvalidTimeDialog();
               return;
             }
-            switchTimes(selectedTime);
+            switchTimes(selectedTime, false);
           },
           label: Text("${endTime.value.hour}:00"),
         ),
