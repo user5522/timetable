@@ -15,11 +15,11 @@ class ThemeOptions extends StatelessWidget {
   String getThemeLabel(ThemeOption theme) {
     switch (theme) {
       case ThemeOption.dark:
-        return 'dark'.tr();
+        return 'dark';
       case ThemeOption.auto:
-        return 'system'.tr();
+        return 'system';
       case ThemeOption.light:
-        return 'light'.tr();
+        return 'light';
     }
   }
 
@@ -32,7 +32,7 @@ class ThemeOptions extends StatelessWidget {
         themeEntries.add(
           DropdownMenuEntry<ThemeOption>(
             value: option,
-            label: getThemeLabel(option),
+            label: getThemeLabel(option).tr(),
           ),
         );
       }
