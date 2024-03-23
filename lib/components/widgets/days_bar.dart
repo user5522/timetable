@@ -22,6 +22,8 @@ class DaysBar extends ConsumerWidget {
     final hideSunday = ref.watch(settingsProvider).hideSunday;
     final singleLetterDays = ref.watch(settingsProvider).singleLetterDays;
     int daysLength = hideSunday ? days.length - 1 : days.length;
+    final bool isPortrait =
+        MediaQuery.of(context).orientation == Orientation.portrait;
 
     return SizedBox(
       height: 48,
@@ -58,7 +60,9 @@ class DaysBar extends ConsumerWidget {
                     child: Text(
                       singleLetterDays
                           ? days[index].tr()[0]
-                          : days[index].tr().substring(0, 3),
+                          : isPortrait
+                              ? days[index].tr().substring(0, 3)
+                              : days[index].tr(),
                     ),
                   ),
                 );
