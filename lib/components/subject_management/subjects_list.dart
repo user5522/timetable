@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:timetable/components/widgets/act_chip.dart';
 import 'package:timetable/components/widgets/list_item_group.dart';
+import 'package:timetable/constants/error_emoticons.dart';
 import 'package:timetable/db/database.dart';
 
 class SubjectsList extends HookWidget {
@@ -93,24 +94,48 @@ class SubjectsList extends HookWidget {
           ),
         ),
       ),
-      body: SingleChildScrollView(
-        child: Padding(
+      body: LayoutBuilder(
+        builder: (context, constraints) => ListView(
           padding: const EdgeInsets.all(16),
-          child: ListItemGroup(
-            children: List.generate(filteredSubjects.length, (i) {
-              final subj = filteredSubjects[i];
-              return ListItem(
-                leading: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(50),
-                    color: subj.color,
-                  ),
-                  width: 15,
-                  height: 15,
+          children: [
+            if (filteredSubjects.isEmpty)
+              Container(
+                padding: const EdgeInsets.all(10),
+                constraints: BoxConstraints(
+                  minHeight: constraints.maxHeight,
                 ),
-                title: Text(subj.label),
-                subtitle:
-                    (subj.location != null && subj.location!.isNotEmpty) ||
+                child: Center(
+                  child: Column(
+                    children: [
+                      Text(
+                        getRandomErrorEmoticon(),
+                        style: const TextStyle(fontSize: 25),
+                      ),
+                      const SizedBox(height: 10),
+                      const Text(
+                        "no_subjects_error",
+                        style: TextStyle(fontSize: 18),
+                      ).tr(),
+                    ],
+                  ),
+                ),
+              ),
+            if (filteredSubjects.isNotEmpty)
+              ListItemGroup(
+                children: List.generate(filteredSubjects.length, (i) {
+                  final subj = filteredSubjects[i];
+                  return ListItem(
+                    leading: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(50),
+                        color: subj.color,
+                      ),
+                      width: 15,
+                      height: 15,
+                    ),
+                    title: Text(subj.label),
+                    subtitle: (subj.location != null &&
+                                subj.location!.isNotEmpty) ||
                             (subj.note != null && subj.note!.isNotEmpty)
                         ? Column(
                             children: [
@@ -158,13 +183,14 @@ class SubjectsList extends HookWidget {
                             ],
                           )
                         : null,
-                onTap: () {
-                  value.value = subj.label;
-                  Navigator.of(context).pop();
-                },
-              );
-            }),
-          ),
+                    onTap: () {
+                      value.value = subj.label;
+                      Navigator.of(context).pop();
+                    },
+                  );
+                }),
+              ),
+          ],
         ),
       ),
     );

@@ -61,6 +61,7 @@
   "subject_deleted_snackbar": "Subject Deleted!",
   "subject_input_error": "Please enter a subject name",
   "create_backup_snackbar": "Data exported successfully!",
+  "no_subjects_error": "There are no subjects here",
 
   "subject": "Subject",
   "choose_subject": "Choose a Subject",

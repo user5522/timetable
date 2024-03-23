@@ -61,6 +61,7 @@
   "subject_deleted_snackbar": "Matière Supprimée!",
   "subject_input_error": "Veuillez entrer un nom du matière",
   "create_backup_snackbar": "Données exportées avec succès !",
+  "no_subjects_error": "Il n'y a pas de matières ici",
 
   "subject": "Matière",
   "choose_subject": "Choisir une Matière",

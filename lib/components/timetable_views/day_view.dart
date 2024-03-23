@@ -4,6 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:timetable/components/subject_management/subject_screen.dart';
 import 'package:timetable/components/widgets/day_view_subject_builder.dart';
 import 'package:timetable/constants/days.dart';
+import 'package:timetable/constants/error_emoticons.dart';
 import 'package:timetable/constants/grid_properties.dart';
 import 'package:timetable/constants/rotation_weeks.dart';
 import 'package:timetable/helpers/rotation_weeks.dart';
@@ -61,47 +62,75 @@ class TimetableDayView extends HookConsumerWidget {
         controller: controller,
         itemBuilder: (context, index) {
           int startDay = ((DateTime.monday + index - 1) % 7 + 1);
+          final filteredSubjects = sortSubjects(
+            getFilteredByTimetablesSubjects(
+              currentTimetable,
+              timetables,
+              multipleTimetables,
+              getFilteredByRotationWeeksSubjects(
+                rotationWeek,
+                subject,
+              ),
+            ),
+          ).where((s) => s.day.index == index).toList();
 
-          return ListView(
-            scrollDirection: Axis.vertical,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      days[startDay - 1],
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w400,
-                        fontSize: 20,
+          return LayoutBuilder(
+            builder: (context, constraints) => ListView(
+              padding: const EdgeInsets.all(10),
+              children: [
+                Text(
+                  days[startDay - 1],
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w400,
+                    fontSize: 20,
+                  ),
+                ).tr(),
+                if (filteredSubjects.isEmpty)
+                  Container(
+                    padding: const EdgeInsets.all(10),
+                    constraints: BoxConstraints(
+                      minHeight: constraints.maxHeight,
+                    ),
+                    child: Center(
+                      child: Column(
+                        children: [
+                          Text(
+                            getRandomErrorEmoticon(),
+                            style: const TextStyle(fontSize: 25),
+                          ),
+                          const SizedBox(height: 10),
+                          const Text(
+                            "no_subjects_error",
+                            style: TextStyle(fontSize: 18),
+                          ).tr(),
+                        ],
                       ),
-                    ).tr(),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: sortSubjects(
-                        getFilteredByTimetablesSubjects(
-                          currentTimetable,
-                          timetables,
-                          multipleTimetables,
-                          getFilteredByRotationWeeksSubjects(
-                            rotationWeek,
-                            subject,
+                    ),
+                  ),
+                if (filteredSubjects.isNotEmpty)
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Column(
+                        children: List.generate(
+                          filteredSubjects.length,
+                          (index) => DayViewSubjectBuilder(
+                            subject: filteredSubjects[index],
                           ),
                         ),
-                      )
-                          .where((s) => s.day.index == index)
-                          .map(
-                            (subject) => DayViewSubjectBuilder(
-                              subject: subject,
-                            ),
-                          )
-                          .toList(),
-                    ),
-                  ],
-                ),
-              ),
-            ],
+                      ),
+
+                      // Align(
+                      //   alignment: Alignment.bottomCenter,
+                      //   child: Text(
+                      //     getRandomErrorEmoticon(),
+                      //     style: const TextStyle(fontSize: 30),
+                      //   ),
+                      // ),
+                    ],
+                  ),
+              ],
+            ),
           );
         },
       ),
