@@ -39,6 +39,8 @@ class RotationWeekToggle extends HookWidget {
         child: Center(
           child: Text(
             getRotationWeekButtonLabel(labels[clickCount.value]),
+            overflow: TextOverflow.clip,
+            softWrap: false,
             style: const TextStyle(
               fontWeight: FontWeight.bold,
             ),

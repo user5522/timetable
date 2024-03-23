@@ -58,6 +58,8 @@ class DaysBar extends ConsumerWidget {
                       ),
                     ),
                     child: Text(
+                      overflow: TextOverflow.clip,
+                      softWrap: false,
                       singleLetterDays
                           ? days[index].tr()[0]
                           : isPortrait
