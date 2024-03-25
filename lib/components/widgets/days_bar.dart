@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -9,11 +11,13 @@ import 'package:timetable/provider/settings.dart';
 class DaysBar extends ConsumerWidget {
   final PageController controller;
   final bool? isGridView;
+  final int currentDay;
 
   const DaysBar({
     super.key,
     required this.controller,
     this.isGridView = false,
+    required this.currentDay,
   });
 
   @override
@@ -56,6 +60,11 @@ class DaysBar extends ConsumerWidget {
                       foregroundColor: MaterialStateProperty.all<Color>(
                         Theme.of(context).colorScheme.onBackground,
                       ),
+                      backgroundColor: isGridView! && (currentDay == index)
+                          ? MaterialStateProperty.all<Color>(
+                              Theme.of(context).colorScheme.surfaceVariant,
+                            )
+                          : null,
                     ),
                     child: Text(
                       overflow: TextOverflow.clip,
@@ -73,6 +82,63 @@ class DaysBar extends ConsumerWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class DayBarUpdater extends StatefulWidget {
+  final PageController controller;
+  final bool isGridView;
+
+  const DayBarUpdater({
+    super.key,
+    required this.controller,
+    required this.isGridView,
+  });
+
+  @override
+  State<DayBarUpdater> createState() => _DayBarUpdaterState();
+}
+
+class _DayBarUpdaterState extends State<DayBarUpdater> {
+  late Timer timer;
+  int currentDay = DateTime.now().weekday - 1;
+
+  @override
+  void initState() {
+    super.initState();
+    updateTimer();
+  }
+
+  @override
+  void dispose() {
+    timer.cancel();
+    super.dispose();
+  }
+
+  void updateTimer() {
+    final nextMidnight = DateTime(
+      DateTime.now().add(const Duration(days: 1)).day,
+      0,
+      0,
+      0,
+    );
+    timer = Timer(nextMidnight.difference(DateTime.now()), updateDay);
+  }
+
+  void updateDay() {
+    setState(() {
+      currentDay = DateTime.now().weekday - 1;
+    });
+    updateTimer();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return DaysBar(
+      controller: widget.controller,
+      isGridView: widget.isGridView,
+      currentDay: currentDay,
     );
   }
 }

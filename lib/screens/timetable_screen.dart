@@ -52,7 +52,7 @@ class TimetableScreen extends HookConsumerWidget {
         ],
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(48.0),
-          child: DaysBar(
+          child: DayBarUpdater(
             controller: controller,
             isGridView: isGridView.value,
           ),
