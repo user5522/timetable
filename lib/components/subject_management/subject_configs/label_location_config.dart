@@ -27,16 +27,18 @@ class LabelLocationConfig extends StatefulWidget {
 
 class _LabelLocationConfigState extends State<LabelLocationConfig> {
   late FocusNode locationFieldFocusNode;
+  late TextEditingController labelController;
 
   @override
   void initState() {
     super.initState();
-
+    labelController = TextEditingController(text: widget.label.value);
     locationFieldFocusNode = FocusNode();
   }
 
   @override
   void dispose() {
+    labelController.dispose();
     locationFieldFocusNode.dispose();
 
     super.dispose();
@@ -48,9 +50,8 @@ class _LabelLocationConfigState extends State<LabelLocationConfig> {
       children: [
         ListItem(
           title: TextFormField(
-            // key: Key(widget.label.value),
-            initialValue: widget.label.value,
             autofocus: true,
+            controller: labelController,
             textInputAction: TextInputAction.next,
             decoration: InputDecoration(
               hintText: "subject".tr(),
@@ -88,10 +89,10 @@ class _LabelLocationConfigState extends State<LabelLocationConfig> {
                         ),
                         builder: (context) => SubjectsList(
                           subjects: widget.subjects,
-                          value: widget.label,
                           label: widget.label,
                           location: widget.location,
                           color: widget.color,
+                          controller: labelController,
                         ),
                       ),
                     );

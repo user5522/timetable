@@ -8,7 +8,7 @@ import 'package:timetable/db/database.dart';
 
 class SubjectsList extends HookWidget {
   final List<SubjectData> subjects;
-  final ValueNotifier<String> value;
+  final TextEditingController controller;
   final ValueNotifier<String> label;
   final ValueNotifier<String?> location;
   final ValueNotifier<Color> color;
@@ -16,7 +16,7 @@ class SubjectsList extends HookWidget {
   const SubjectsList({
     super.key,
     required this.subjects,
-    required this.value,
+    required this.controller,
     required this.label,
     required this.location,
     required this.color,
@@ -184,7 +184,9 @@ class SubjectsList extends HookWidget {
                           )
                         : null,
                     onTap: () {
-                      value.value = subj.label;
+                      controller.text = subj.label;
+                      label.value = subj.label;
+                      color.value = subj.color;
                       Navigator.of(context).pop();
                     },
                   );
