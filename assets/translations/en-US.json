@@ -35,6 +35,9 @@
   "rotation_weeks_description": "alternating Subjects biweekly. (A and B)",
   "auto_complete_colors": "Auto Complete Colors",
   "auto_complete_colors_description": "auto assigns colors from previously made subjects that have matching names",
+  "default_tb_view": "Default View",
+  "view": "View",
+  "grid": "Grid",
 
   "delete_timetable_dialog": "Deleting a timetable will delete its corresponding subjects.",
   "reset_timetables_dialog": "Resetting timetables will also delete all subjects.",
@@ -66,12 +69,12 @@
   "color": "Color",
   "choose_color": "Choose a Color",
   "day": {
-    "zero": "days",
-    "one": "day",
-    "two": "days",
-    "few": "days",
-    "many": "days",
-    "other": "days"
+    "zero": "Days",
+    "one": "Day",
+    "two": "Days",
+    "few": "Days",
+    "many": "Days",
+    "other": "Days"
   },
   "rotation_week": {
     "zero": "Rotation Weeks",

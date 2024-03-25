@@ -35,6 +35,9 @@
   "rotation_weeks_description": "alternance des matières par quinzaine. (A et B)",
   "auto_complete_colors": "Saisie Automatique des Couleurs",
   "auto_complete_colors_description": "attribue automatiquement les couleurs des sujets créés précédemment qui portent des noms correspondants",
+  "default_tb_view": "Vue par défaut",
+  "view": "Vue",
+  "grid": "Grille",
 
   "delete_timetable_dialog": "La suppression d'un tableau supprimera ses sujets correspondants.",
   "reset_timetables_dialog": "La réinitialisation des emplois de temps supprimera toutes les matières aussi.",

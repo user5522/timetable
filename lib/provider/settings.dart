@@ -2,12 +2,21 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:timetable/constants/timetable_views.dart';
 import 'package:timetable/db/models/settings.dart';
 
 /// Settings' [StateNotifier].
 class SettingsNotifier extends StateNotifier<Settings> {
   SettingsNotifier() : super(Settings()) {
     loadSettings();
+  }
+
+  void updateDefaultTbView(TbViews tbView) {
+    final newState = state.copyWith(
+      defaultTimetableView: tbView,
+    );
+    state = newState;
+    saveSettings();
   }
 
   void update24Hours(bool twentyFourHours) {

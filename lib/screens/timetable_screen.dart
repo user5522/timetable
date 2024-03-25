@@ -10,6 +10,7 @@ import 'package:timetable/components/widgets/navigation_bar_toggle.dart';
 import 'package:timetable/components/widgets/rotation_week_toggle.dart';
 import 'package:timetable/components/widgets/timetable_toggle.dart';
 import 'package:timetable/constants/rotation_weeks.dart';
+import 'package:timetable/constants/timetable_views.dart';
 import 'package:timetable/provider/settings.dart';
 import 'package:timetable/provider/subjects.dart';
 import 'package:timetable/provider/timetables.dart';
@@ -23,8 +24,10 @@ class TimetableScreen extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final rotationWeeks = ref.watch(settingsProvider).rotationWeeks;
     final multipleTimetables = ref.watch(settingsProvider).multipleTimetables;
+    final defaultTimetableView =
+        ref.watch(settingsProvider).defaultTimetableView;
     final timetables = ref.watch(timetableProvider);
-    final isGridView = useState(true);
+    final isGridView = useState(defaultTimetableView == TbViews.grid);
     final rotationWeek = useState(RotationWeeks.all);
 
     final subject = ref.watch(subjectProvider);

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:timetable/constants/timetable_views.dart';
 
 /// Settings data model.
 class Settings {
@@ -16,6 +17,7 @@ class Settings {
   final bool monetTheming;
   final bool multipleTimetables;
   final bool twentyFourHours;
+  final TbViews defaultTimetableView;
 
   // settings defaults
   Settings({
@@ -33,6 +35,7 @@ class Settings {
     this.monetTheming = false,
     this.multipleTimetables = false,
     this.twentyFourHours = false,
+    this.defaultTimetableView = TbViews.grid,
   });
 
   Settings copyWith({
@@ -50,6 +53,7 @@ class Settings {
     bool? monetTheming,
     bool? multipleTimetables,
     bool? twentyFourHours,
+    TbViews? defaultTimetableView,
   }) =>
       Settings(
         customTimePeriod: customTimePeriod ?? this.customTimePeriod,
@@ -67,6 +71,7 @@ class Settings {
         monetTheming: monetTheming ?? this.monetTheming,
         multipleTimetables: multipleTimetables ?? this.multipleTimetables,
         twentyFourHours: twentyFourHours ?? this.twentyFourHours,
+        defaultTimetableView: defaultTimetableView ?? this.defaultTimetableView,
       );
 
   Map<String, dynamic> toJson() => {
@@ -86,6 +91,7 @@ class Settings {
         'monetTheming': monetTheming,
         'multipleTimetables': multipleTimetables,
         'twentyFourHours': twentyFourHours,
+        'defaultTimetableView': defaultTimetableView.name,
       };
 
   factory Settings.fromJson(Map<String, dynamic> json) {
@@ -118,6 +124,11 @@ class Settings {
       monetTheming: json['monetTheming'] as bool?,
       multipleTimetables: json['multipleTimetables'] as bool?,
       twentyFourHours: json['twentyFourHours'] as bool?,
+      defaultTimetableView: json['defaultTimetableView'] != null
+          ? TbViews.values.firstWhere(
+              (e) => e.name == json['defaultTimetableView'] as String,
+            )
+          : null,
     );
   }
 }

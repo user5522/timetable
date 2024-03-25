@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:timetable/components/settings/default_view_options.dart';
 import 'package:timetable/provider/settings.dart';
 
 /// All the settings that allow for customizing the timetable.
@@ -16,9 +17,18 @@ class CustomizeTimetableOptions extends ConsumerWidget {
     final singleLetterDays = ref.watch(settingsProvider).singleLetterDays;
     final hideTransparentSubject =
         ref.watch(settingsProvider).hideTransparentSubject;
+    final defaultTimetableView =
+        ref.watch(settingsProvider).defaultTimetableView;
 
     return Column(
       children: [
+        ListTile(
+          title: DefaultViewOptions(
+            settings: settings,
+            defaultTimetableView: defaultTimetableView,
+          ),
+          onTap: () {},
+        ),
         SwitchListTile(
           title: const Text("compact_mode").tr(),
           value: compactMode,

@@ -12,19 +12,19 @@ class ThemeOptions extends StatelessWidget {
     required this.theme,
   });
 
-  String getThemeLabel(ThemeOption theme) {
-    switch (theme) {
-      case ThemeOption.dark:
-        return 'dark';
-      case ThemeOption.auto:
-        return 'system';
-      case ThemeOption.light:
-        return 'light';
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
+    String getThemeLabel(ThemeOption theme) {
+      switch (theme) {
+        case ThemeOption.dark:
+          return 'dark';
+        case ThemeOption.auto:
+          return 'system';
+        case ThemeOption.light:
+          return 'light';
+      }
+    }
+
     List<DropdownMenuEntry<ThemeOption>> themeEntries() {
       final themeEntries = <DropdownMenuEntry<ThemeOption>>[];
 
