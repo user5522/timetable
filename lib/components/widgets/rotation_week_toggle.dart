@@ -4,6 +4,8 @@ import 'package:timetable/constants/rotation_weeks.dart';
 import 'package:timetable/helpers/rotation_weeks.dart';
 
 /// Toggles between all rotation weeks.
+///
+/// used for filtering.
 class RotationWeekToggle extends HookWidget {
   final ValueNotifier<RotationWeeks> rotationWeek;
   const RotationWeekToggle({

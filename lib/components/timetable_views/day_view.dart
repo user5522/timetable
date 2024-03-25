@@ -15,7 +15,7 @@ import 'package:timetable/helpers/timetables.dart';
 import 'package:timetable/provider/settings.dart';
 import 'package:timetable/provider/timetables.dart';
 
-/// Timetable view that shows each day's subjects in a single screen.
+/// Timetable view that shows each day's subjects in a single screen each.
 class TimetableDayView extends HookConsumerWidget {
   final ValueNotifier<RotationWeeks> rotationWeek;
   final List<SubjectData> subject;

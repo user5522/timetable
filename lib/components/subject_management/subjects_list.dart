@@ -6,6 +6,8 @@ import 'package:timetable/components/widgets/list_item_group.dart';
 import 'package:timetable/constants/error_emoticons.dart';
 import 'package:timetable/db/database.dart';
 
+/// lists all subjects to choose a label &
+/// color from an already existing one
 class SubjectsList extends HookWidget {
   final List<SubjectData> subjects;
   final TextEditingController controller;
@@ -29,7 +31,7 @@ class SubjectsList extends HookWidget {
     final ValueNotifier<bool> colorFilterEnabled = useState(false);
     Set<String> uniqueSubjects = {};
 
-    // remove duplicate subjects by label
+    /// places 1 subject from duplicates in a set (filtered by label)
     List<SubjectData> filteredSubjects = [];
     for (SubjectData subject in subjects) {
       final label = subject.label;

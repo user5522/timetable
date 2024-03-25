@@ -9,6 +9,8 @@ import 'package:timetable/provider/settings.dart';
 
 /// Time configuration part of the Subject creation screen.
 class TimeConfig extends ConsumerWidget {
+  /// whether or not the current time slot ((endTime - startTime) - tbCustomStartTime) is occupied
+  /// used to show the error icon when the time is not valid/unavailable
   final bool occupied;
   final ValueNotifier<TimeOfDay> startTime;
   final ValueNotifier<TimeOfDay> endTime;
@@ -24,7 +26,6 @@ class TimeConfig extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final chosenCustomStartTime = ref.watch(settingsProvider).customStartTime;
     final chosenCustomEndTime = ref.watch(settingsProvider).customEndTime;
-    // final customTimePeriod = ref.watch(settingsProvider).customTimePeriod;
 
     final customStartTime = getCustomStartTime(chosenCustomStartTime, ref);
     final customEndTime = getCustomEndTime(chosenCustomEndTime, ref);

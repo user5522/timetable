@@ -5,10 +5,16 @@ import 'package:timetable/components/widgets/list_item_group.dart';
 import 'package:timetable/constants/basic_subject.dart';
 import 'package:timetable/db/database.dart';
 
+/// Label & Location configuration part of the Subject creation screen.
+///
+/// Groups the label (+ the [SubjectsList] button) & the
+/// location [TextFormField]s in a [ListItemGroup].
 class LabelLocationConfig extends StatefulWidget {
   final List<SubjectData> subjects;
   final ValueNotifier<String> label;
   final ValueNotifier<String?> location;
+
+  /// color is used for the color auto complete feature
   final ValueNotifier<Color> color;
   final bool autoCompleteColor;
 
@@ -26,7 +32,11 @@ class LabelLocationConfig extends StatefulWidget {
 }
 
 class _LabelLocationConfigState extends State<LabelLocationConfig> {
+  // bro this text field focusing stuff took for fucking ever to get working properly
   late FocusNode locationFieldFocusNode;
+
+  /// handles the label [TextFormField] initial value and refreshes the widget
+  /// if changed from [SubjectsList]
   late TextEditingController labelController;
 
   @override

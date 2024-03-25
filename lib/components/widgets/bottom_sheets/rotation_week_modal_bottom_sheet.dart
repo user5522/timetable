@@ -17,6 +17,7 @@ class RotationWeekModalBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    /// actual usable rotation weeks
     final rws = rotationWeeks.where((r) => r != RotationWeeks.all).toList();
 
     return SubjectDataBottomSheet(

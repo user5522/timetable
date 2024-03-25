@@ -20,9 +20,7 @@ class TimetablePeriodScreen extends ConsumerWidget {
     final twentyFourHours = ref.watch(settingsProvider).twentyFourHours;
     final settings = ref.read(settingsProvider.notifier);
 
-    // final customStartTime = getCustomStartTime(chosenCustomStartTime, ref);
-    // final customEndTime = getCustomEndTime(chosenCustomEndTime, ref);
-
+    /// error dialog when the start time and end time have the same value (equal)
     void showInvalidEqualTimeDialog() {
       showDialog(
         context: context,
@@ -39,6 +37,9 @@ class TimetablePeriodScreen extends ConsumerWidget {
       );
     }
 
+    /// switches the start and end time of the timetable
+    ///
+    /// used when the start time is after the end time that
     void switchStartWithEndTime(TimeOfDay newTime) {
       final temp = customEndTime;
       settings.updateCustomEndTime(newTime);
@@ -46,6 +47,9 @@ class TimetablePeriodScreen extends ConsumerWidget {
       return;
     }
 
+    /// switches the end and start time of the timetable
+    ///
+    /// used when the end time is before the start time that
     void switchEndWithStartTime(TimeOfDay newTime) {
       final temp = customStartTime;
       settings.updateCustomStartTime(newTime);

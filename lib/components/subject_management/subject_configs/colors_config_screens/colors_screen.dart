@@ -1,10 +1,13 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:timetable/components/subject_management/subject_configs/colors_config_screens/color_picker_screen.dart';
-import 'package:timetable/components/subject_management/subject_configs/colors_config_screens/preset_colors_scren.dart';
+import 'package:timetable/components/subject_management/subject_configs/colors_config_screens/preset_colors_screen.dart';
 
 /// Colors configuration screen, basically groups [ColorPickerScreen] and [PresetColorsScreen].
+
+// i use a stateful widget because the tab controller doesn't really behave properly in a Stateless widget
 class ColorsScreen extends StatefulWidget {
+  /// the color that will be manipulated
   final ValueNotifier<Color> color;
 
   const ColorsScreen({
@@ -18,6 +21,7 @@ class ColorsScreen extends StatefulWidget {
 
 class _ColorsScreenState extends State<ColorsScreen>
     with TickerProviderStateMixin {
+  /// TabBarView controller
   late final TabController _tabController;
 
   @override

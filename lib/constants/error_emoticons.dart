@@ -1,4 +1,5 @@
 // credits go to https://looks.wtf/
+/// List of emoticons used for empty lists messages
 const List<String> errorEmoticons = [
   "(╯°□°)╯︵ ┻━┻",
   "(；￣Д￣）",

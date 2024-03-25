@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+/// a custom chip to handle actions
 class ActChip extends StatelessWidget {
   final Widget label;
   final VoidCallback? onPressed;

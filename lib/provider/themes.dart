@@ -8,15 +8,18 @@ class ThemeNotifier extends StateNotifier<ThemeOption> {
     loadTheme();
   }
 
+  /// changes the current theme to a provided one
   void changeTheme(ThemeOption newTheme) {
     state = newTheme;
     saveTheme(newTheme);
   }
 
+  /// returns the current theme from state
   ThemeOption getTheme() {
     return state;
   }
 
+  /// loads current theme from shared preferences
   Future<void> loadTheme() async {
     final prefs = await SharedPreferences.getInstance();
     final savedTheme = prefs.getString('theme');
@@ -27,6 +30,7 @@ class ThemeNotifier extends StateNotifier<ThemeOption> {
     );
   }
 
+  /// saves current theme to shared preferences
   Future<void> saveTheme(ThemeOption theme) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(

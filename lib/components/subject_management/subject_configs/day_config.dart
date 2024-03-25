@@ -6,6 +6,7 @@ import 'package:timetable/constants/days.dart';
 
 /// Day configuration part of the Subject creation screen.
 class DayConfig extends StatelessWidget {
+  /// the subject day that will be manipulated
   final ValueNotifier<Days> day;
 
   const DayConfig({
@@ -13,10 +14,11 @@ class DayConfig extends StatelessWidget {
     required this.day,
   });
 
-  static const List<Days> daysList = Days.values;
-
   @override
   Widget build(BuildContext context) {
+    // maybe move this to the enum declaration file
+    const List<Days> daysList = Days.values;
+
     return Row(
       children: [
         const Text("day").plural(1),

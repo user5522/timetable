@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:timetable/db/database.dart';
 
+/// filters subjects based on the current selected timetable
+// this should probably be in the subjects helper since it handles subjects
 List<SubjectData> getFilteredByTimetablesSubjects(
   ValueNotifier<TimetableData> currentTimetable,
   List<TimetableData> timetables,

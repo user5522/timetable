@@ -4,6 +4,7 @@ import 'package:timetable/constants/colors.dart';
 
 /// Preset colors screen for the color configuration screen.
 class PresetColorsScreen extends HookWidget {
+  /// the color that will be changed by one of the presets
   final ValueNotifier<Color> color;
 
   const PresetColorsScreen({
@@ -13,6 +14,8 @@ class PresetColorsScreen extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
+    /// used for highlighting the selected color by default no color is selected
+    // the default color is black, maybe i should have it as the default selected color
     final selectedColorIndex = useState(-1);
     final List<ColorsList> colors = ColorsList.values.toList();
     const int colorsPerRow = 3;

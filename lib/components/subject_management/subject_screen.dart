@@ -75,6 +75,7 @@ class SubjectScreen extends HookConsumerWidget {
     final color = useState(subject?.color ?? Colors.black);
     final rotationWeek = useState(subject?.rotationWeek ?? RotationWeeks.none);
 
+    // I DONT KNOW WHY I AM USING [SubjectData] I SHOULD BE USING [SubjectCompanion]
     final SubjectData newSubject = SubjectData(
       id: id,
       label: label.value,
@@ -93,6 +94,10 @@ class SubjectScreen extends HookConsumerWidget {
           (e) => e.day == day.value,
         )
         .toList();
+
+// all the upcomming variables are checks to
+// limit the amount of overlapping subjects.
+// i should really work and find a solution to that issue..
 
     final multipleOccupied = overlappingSubjects.any((e) {
       for (var subject in e) {
@@ -150,6 +155,8 @@ class SubjectScreen extends HookConsumerWidget {
       );
       return eHours.any((hour) => inputHours.contains(hour));
     });
+
+// end of checks
 
     return Scaffold(
       appBar: AppBar(

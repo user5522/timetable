@@ -16,6 +16,8 @@ class DefaultViewOptions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    /// for each value of the enum it will give a corresponding label.
+    // maybe this should be a function inside the enum declaration file?
     String getViewLabel(TbViews view) {
       switch (view) {
         case TbViews.grid:
@@ -25,6 +27,7 @@ class DefaultViewOptions extends StatelessWidget {
       }
     }
 
+    /// The dropdown menu entries of each TbViews value.
     List<DropdownMenuEntry<TbViews>> viewsEntries() {
       final viewEntries = <DropdownMenuEntry<TbViews>>[];
 

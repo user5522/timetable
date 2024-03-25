@@ -7,7 +7,8 @@ import 'package:timetable/constants/days.dart';
 import 'package:timetable/constants/grid_properties.dart';
 import 'package:timetable/provider/settings.dart';
 
-/// Top navigation bar in the day view that allows to switch between days quickly.
+/// Top navigation bar in the day view that allows to switch between days quickly
+/// merged with the days row in the grid view.
 class DaysBar extends ConsumerWidget {
   final PageController controller;
   final bool? isGridView;

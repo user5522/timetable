@@ -5,6 +5,8 @@ import 'package:timetable/db/database.dart';
 import 'package:timetable/provider/timetables.dart';
 
 /// Toggles between all Timetables.
+///
+/// used for filtering
 class TimetableToggle extends HookConsumerWidget {
   final ValueNotifier<TimetableData> timetable;
   const TimetableToggle({

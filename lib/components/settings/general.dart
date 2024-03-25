@@ -8,6 +8,7 @@ import 'package:timetable/provider/language.dart';
 import 'package:timetable/provider/settings.dart';
 import 'package:timetable/provider/themes.dart';
 
+/// All the general app settings (mostly appearance).
 class GeneralOptions extends ConsumerWidget {
   const GeneralOptions({super.key});
 
@@ -40,8 +41,7 @@ class GeneralOptions extends ConsumerWidget {
           ) {
             final version = snapshot.data;
 
-            if (version != null &&
-                version >= 31) {
+            if (version != null && version >= 31) {
               return SwitchListTile(
                 title: const Text("monet_theming").tr(),
                 subtitle: const Text("Android 12+"),

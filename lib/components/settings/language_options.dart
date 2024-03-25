@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:timetable/constants/languages.dart';
 import 'package:timetable/provider/language.dart';
 
-/// app theme options drop-down menu.
+/// app language options dropdown menu.
 class LanguageOptions extends StatelessWidget {
   final LanguageNotifier language;
 
@@ -14,6 +14,8 @@ class LanguageOptions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    /// for each value of the enum it will give a corresponding label.
+    // maybe this should be a function inside the List declaration file?
     String getLanguageLabel(Locale language) {
       const en = Locale('en', 'US');
       const fr = Locale('fr', 'FR');
@@ -28,14 +30,17 @@ class LanguageOptions extends StatelessWidget {
       }
     }
 
-    List<DropdownMenuEntry<Locale>> themeEntries() {
+    /// The dropdown menu entries of each language.
+    List<DropdownMenuEntry<Locale>> languageEntries() {
       final themeEntries = <DropdownMenuEntry<Locale>>[];
 
       for (final Locale option in languages) {
+        final label = getLanguageLabel(option);
+
         themeEntries.add(
           DropdownMenuEntry<Locale>(
             value: option,
-            label: getLanguageLabel(option),
+            label: label,
           ),
         );
       }
@@ -48,7 +53,7 @@ class LanguageOptions extends StatelessWidget {
         const Spacer(),
         DropdownMenu<Locale>(
           width: 130,
-          dropdownMenuEntries: themeEntries(),
+          dropdownMenuEntries: languageEntries(),
           label: const Text("language").tr(),
           initialSelection: language.getLanguage(),
           onSelected: (value) {

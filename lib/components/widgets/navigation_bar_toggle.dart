@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:timetable/provider/settings.dart';
 
-/// Toggles the navbar on and off.
+/// Toggles the navbar on and off to gain more screen space.
 class NavbarToggle extends HookConsumerWidget {
   const NavbarToggle({
     super.key,

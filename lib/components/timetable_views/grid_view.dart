@@ -65,6 +65,7 @@ class TimetableGridView extends HookConsumerWidget {
       },
     ).toList();
 
+    /// this basically finds overlapping subjects and puts them in the overlapping subjects [StateNotifier]
     Future.delayed(
       Duration.zero,
       () async {
@@ -122,6 +123,7 @@ class TimetableGridView extends HookConsumerWidget {
     );
   }
 
+  /// generates the grid
   List<List<Tile?>> generate(
     List<SubjectData> subjects,
     int totalDays,

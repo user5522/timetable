@@ -5,6 +5,7 @@ import 'package:timetable/components/widgets/list_item_group.dart';
 
 /// Color configuration part of the Subject creation screen.
 class ColorsConfig extends StatelessWidget {
+  /// the color that will be manipulated
   final ValueNotifier<Color> color;
 
   const ColorsConfig({

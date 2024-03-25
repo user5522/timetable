@@ -14,6 +14,8 @@ class ThemeOptions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    /// for each value of the enum it will give a corresponding label.
+    // maybe this should be a function inside the enum declaration file?
     String getThemeLabel(ThemeOption theme) {
       switch (theme) {
         case ThemeOption.dark:
@@ -25,14 +27,17 @@ class ThemeOptions extends StatelessWidget {
       }
     }
 
+    /// The dropdown menu entries of each ThemeOption value.
     List<DropdownMenuEntry<ThemeOption>> themeEntries() {
       final themeEntries = <DropdownMenuEntry<ThemeOption>>[];
 
       for (final ThemeOption option in ThemeOption.values) {
+        final label = getThemeLabel(option).tr();
+
         themeEntries.add(
           DropdownMenuEntry<ThemeOption>(
             value: option,
-            label: getThemeLabel(option).tr(),
+            label: label,
           ),
         );
       }
