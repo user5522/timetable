@@ -32,12 +32,23 @@ class TimetableGridView extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final compactMode = ref.watch(settingsProvider).compactMode;
-    final customStartTime = ref.watch(settingsProvider).customStartTime;
-    final customEndTime = ref.watch(settingsProvider).customEndTime;
-    final timetables = ref.watch(timetableProvider);
-    final multipleTimetables = ref.watch(settingsProvider).multipleTimetables;
-    final subjects = getFilteredByTimetablesSubjects(
+    final bool compactMode = ref.watch(settingsProvider).compactMode;
+    final bool multipleTimetables =
+        ref.watch(settingsProvider).multipleTimetables;
+    final bool twentyFourHoursMode =
+        ref.watch(settingsProvider).twentyFourHours;
+    final List<TimetableData> timetables = ref.watch(timetableProvider);
+
+    final TimeOfDay chosenCustomStartTime =
+        ref.watch(settingsProvider).customStartTime;
+    final TimeOfDay chosenCustomEndTime =
+        ref.watch(settingsProvider).customEndTime;
+
+    final TimeOfDay customStartTime =
+        getCustomStartTime(chosenCustomStartTime, ref);
+    final TimeOfDay customEndTime = getCustomEndTime(chosenCustomEndTime, ref);
+
+    final List<SubjectData> subjects = getFilteredByTimetablesSubjects(
       currentTimetable,
       timetables,
       multipleTimetables,
@@ -45,13 +56,14 @@ class TimetableGridView extends HookConsumerWidget {
         rotationWeek,
         subject,
       ),
-    )
-        .where(
-          (e) =>
-              e.endTime.hour <= getCustomEndTime(customEndTime, ref).hour &&
-              e.startTime.hour >= getCustomStartTime(customStartTime, ref).hour,
-        )
-        .toList();
+    ).where(
+      (e) {
+        if (twentyFourHoursMode) return true;
+
+        return e.endTime.hour <= customEndTime.hour &&
+            e.startTime.hour >= customStartTime.hour;
+      },
+    ).toList();
 
     Future.delayed(
       Duration.zero,

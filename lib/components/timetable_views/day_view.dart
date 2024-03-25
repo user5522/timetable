@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:timetable/components/subject_management/subject_screen.dart';
 import 'package:timetable/components/widgets/day_view_subject_builder.dart';
+import 'package:timetable/constants/custom_times.dart';
 import 'package:timetable/constants/days.dart';
 import 'package:timetable/constants/error_emoticons.dart';
 import 'package:timetable/constants/grid_properties.dart';
@@ -33,6 +34,12 @@ class TimetableDayView extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final timetables = ref.watch(timetableProvider);
     final multipleTimetables = ref.watch(settingsProvider).multipleTimetables;
+    final twentyFourHoursMode = ref.watch(settingsProvider).twentyFourHours;
+    final chosenCustomStartTime = ref.watch(settingsProvider).customStartTime;
+    final chosenCustomEndTime = ref.watch(settingsProvider).customEndTime;
+
+    final customStartTime = getCustomStartTime(chosenCustomStartTime, ref);
+    final customEndTime = getCustomEndTime(chosenCustomEndTime, ref);
 
     return Scaffold(
       floatingActionButton: FloatingActionButton(
@@ -72,7 +79,14 @@ class TimetableDayView extends HookConsumerWidget {
                 subject,
               ),
             ),
-          ).where((s) => s.day.index == index).toList();
+          ).where((s) => s.day.index == index).where(
+            (e) {
+              if (!twentyFourHoursMode) return true;
+
+              return e.endTime.hour <= customEndTime.hour &&
+                  e.startTime.hour >= customStartTime.hour;
+            },
+          ).toList();
 
           return LayoutBuilder(
             builder: (context, constraints) => ListView(
@@ -119,14 +133,6 @@ class TimetableDayView extends HookConsumerWidget {
                           ),
                         ),
                       ),
-
-                      // Align(
-                      //   alignment: Alignment.bottomCenter,
-                      //   child: Text(
-                      //     getRandomErrorEmoticon(),
-                      //     style: const TextStyle(fontSize: 30),
-                      //   ),
-                      // ),
                     ],
                   ),
               ],
