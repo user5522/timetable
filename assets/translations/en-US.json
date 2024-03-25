@@ -50,10 +50,6 @@
   "custom": "Custom",
   "filter_by": "Filter by",
 
-  "invalid_time_error": {
-    "start_time": "The start time must be before the end time.",
-    "end_time": "The end time must be after the start time."
-  },
   "invalid_equal_time_error": "The start time can't be the same as the end time",
   "invalid_time_config": "Time period must be between {} and {}",
   "time_slots_occupied_error": "Time slots are already occupied!",

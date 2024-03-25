@@ -44,11 +44,8 @@ class TimetableDataOptions extends ConsumerWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // I know using the gender feature to group dialogs together is stupid but whatever
-                        const Text("restore_backup_dialog")
-                            .tr(gender: "dialog_1"),
-                        const Text("restore_backup_dialog")
-                            .tr(gender: "dialog_2"),
+                        const Text("restore_backup_dialog.dialog_1").tr(),
+                        const Text("restore_backup_dialog.dialog_2").tr(),
                       ],
                     ),
                   ),
