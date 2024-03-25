@@ -21,20 +21,26 @@ class Grid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      children: grid
-          .map((c) => Column(
-                children: c
-                    .whereType<Tile>()
-                    .map(
-                      (e) => SizedBox(
-                        height: e.height * tileHeight,
-                        width: e.width * tileWidth,
-                        child: e.child,
-                      ),
-                    )
-                    .toList(),
-              ))
-          .toList(),
+      children: List.generate(
+        grid.length,
+        (i) {
+          final c = grid[i];
+          final fc = c.whereType<Tile>().toList();
+          return Column(
+            children: List.generate(
+              fc.length,
+              (i) {
+                final e = fc[i];
+                return SizedBox(
+                  height: e.height * tileHeight,
+                  width: e.width * tileWidth,
+                  child: e.child,
+                );
+              },
+            ),
+          );
+        },
+      ),
     );
   }
 }

@@ -21,14 +21,16 @@ class TimetablesModalBottomSheet extends ConsumerWidget {
     return SingleChildScrollView(
       child: SubjectDataBottomSheet(
         title: "timetable".plural(2),
-        children: timetables.map(
-          (t) {
-            bool isSelected = (t == timetable.value);
+        children: List.generate(
+          timetables.length,
+          (i) {
+            final tb = timetables[i];
+            bool isSelected = (tb == timetable.value);
 
             return ListTile(
               title: Row(
                 children: [
-                  Text("${"timetable".plural(1)} ${t.name}"),
+                  Text("${"timetable".plural(1)} ${tb.name}"),
                   const Spacer(),
                   Visibility(
                     visible: isSelected,
@@ -40,12 +42,12 @@ class TimetablesModalBottomSheet extends ConsumerWidget {
               ),
               visualDensity: VisualDensity.compact,
               onTap: () {
-                timetable.value = t;
+                timetable.value = tb;
                 Navigator.pop(context);
               },
             );
           },
-        ).toList(),
+        ),
       ),
     );
   }

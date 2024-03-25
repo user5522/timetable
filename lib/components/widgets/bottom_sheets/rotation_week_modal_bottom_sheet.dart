@@ -17,35 +17,36 @@ class RotationWeekModalBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final rws = rotationWeeks.where((r) => r != RotationWeeks.all).toList();
+
     return SubjectDataBottomSheet(
       title: "rotation_week".plural(2),
-      children: rotationWeeks.where((r) => r != RotationWeeks.all).map(
-        (r) {
-          bool isSelected = (r == rotationWeek.value);
+      children: List.generate(rws.length, (i) {
+        final rw = rws[i];
+        bool isSelected = (rw == rotationWeek.value);
 
-          return ListTile(
-            title: Row(
-              children: [
-                Text(
-                  getRotationWeekLabel(r),
+        return ListTile(
+          title: Row(
+            children: [
+              Text(
+                getRotationWeekLabel(rw),
+              ),
+              const Spacer(),
+              Visibility(
+                visible: isSelected,
+                child: const Icon(
+                  Icons.check,
                 ),
-                const Spacer(),
-                Visibility(
-                  visible: isSelected,
-                  child: const Icon(
-                    Icons.check,
-                  ),
-                ),
-              ],
-            ),
-            visualDensity: VisualDensity.compact,
-            onTap: () {
-              rotationWeek.value = r;
-              Navigator.pop(context);
-            },
-          );
-        },
-      ).toList(),
+              ),
+            ],
+          ),
+          visualDensity: VisualDensity.compact,
+          onTap: () {
+            rotationWeek.value = rw;
+            Navigator.pop(context);
+          },
+        );
+      }),
     );
   }
 }

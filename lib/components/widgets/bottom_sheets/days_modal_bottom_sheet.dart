@@ -18,8 +18,10 @@ class DaysModalBottomSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     return SubjectDataBottomSheet(
       title: "week_days".tr(),
-      children: daysList.map(
-        (d) {
+      children: List.generate(
+        daysList.length,
+        (i) {
+          final d = daysList[i];
           bool isSelected = (d == day.value);
 
           return ListTile(
@@ -44,7 +46,7 @@ class DaysModalBottomSheet extends StatelessWidget {
             },
           );
         },
-      ).toList(),
+      ),
     );
   }
 }
