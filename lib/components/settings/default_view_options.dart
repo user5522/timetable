@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:timetable/constants/timetable_views.dart';
+import 'package:timetable/helpers/views.dart';
 import 'package:timetable/provider/settings.dart';
 
 /// default timetable view options dropdown menu.
@@ -16,17 +17,6 @@ class DefaultViewOptions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    /// for each value of the enum it will give a corresponding label.
-    // maybe this should be a function inside the enum declaration file?
-    String getViewLabel(TbViews view) {
-      switch (view) {
-        case TbViews.grid:
-          return 'grid'.tr();
-        case TbViews.day:
-          return 'day'.plural(1);
-      }
-    }
-
     /// The dropdown menu entries of each TbViews value.
     List<DropdownMenuEntry<TbViews>> viewsEntries() {
       final viewEntries = <DropdownMenuEntry<TbViews>>[];

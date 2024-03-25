@@ -5,12 +5,10 @@ import 'package:timetable/constants/days.dart';
 
 /// Bottom Sheet Modal Widget used to select a subject's day.
 class DaysModalBottomSheet extends StatelessWidget {
-  final List<Days> daysList;
   final ValueNotifier<Days> day;
 
   const DaysModalBottomSheet({
     super.key,
-    required this.daysList,
     required this.day,
   });
 

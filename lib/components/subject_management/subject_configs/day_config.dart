@@ -16,9 +16,6 @@ class DayConfig extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // maybe move this to the enum declaration file
-    const List<Days> daysList = Days.values;
-
     return Row(
       children: [
         const Text("day").plural(1),
@@ -34,7 +31,6 @@ class DayConfig extends StatelessWidget {
                 return Wrap(
                   children: [
                     DaysModalBottomSheet(
-                      daysList: daysList,
                       day: day,
                     ),
                   ],

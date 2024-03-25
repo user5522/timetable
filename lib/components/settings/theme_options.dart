@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:timetable/constants/theme_options.dart';
 import 'package:timetable/provider/themes.dart';
+import 'package:timetable/helpers/themes.dart';
 
 /// app theme me options dropdown menu.
 class ThemeOptions extends StatelessWidget {
@@ -14,19 +15,6 @@ class ThemeOptions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    /// for each value of the enum it will give a corresponding label.
-    // maybe this should be a function inside the enum declaration file?
-    String getThemeLabel(ThemeOption theme) {
-      switch (theme) {
-        case ThemeOption.dark:
-          return 'dark';
-        case ThemeOption.auto:
-          return 'system';
-        case ThemeOption.light:
-          return 'light';
-      }
-    }
-
     /// The dropdown menu entries of each ThemeOption value.
     List<DropdownMenuEntry<ThemeOption>> themeEntries() {
       final themeEntries = <DropdownMenuEntry<ThemeOption>>[];

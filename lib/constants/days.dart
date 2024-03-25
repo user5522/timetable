@@ -19,3 +19,5 @@ List<String> days = [
   'saturday',
   'sunday'
 ];
+
+const List<Days> daysList = Days.values;

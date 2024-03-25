@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:timetable/constants/languages.dart';
+import 'package:timetable/helpers/languages.dart';
 import 'package:timetable/provider/language.dart';
 
 /// app language options dropdown menu.
@@ -14,22 +15,6 @@ class LanguageOptions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    /// for each value of the enum it will give a corresponding label.
-    // maybe this should be a function inside the List declaration file?
-    String getLanguageLabel(Locale language) {
-      const en = Locale('en', 'US');
-      const fr = Locale('fr', 'FR');
-
-      switch (language) {
-        case en:
-          return 'English';
-        case fr:
-          return 'Français';
-        default:
-          return 'English';
-      }
-    }
-
     /// The dropdown menu entries of each language.
     List<DropdownMenuEntry<Locale>> languageEntries() {
       final themeEntries = <DropdownMenuEntry<Locale>>[];
