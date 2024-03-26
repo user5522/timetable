@@ -25,35 +25,37 @@ class SettingsScreen extends ConsumerWidget {
         title: const Text("settings").tr(),
         leading: navbarToggle ? null : const NavbarToggle(),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            ListTile(
-              dense: true,
-              title: const Text("general").tr(),
-              textColor: Theme.of(context).colorScheme.primary,
-            ),
-            const GeneralOptions(),
-            ListTile(
-              dense: true,
-              title: const Text("customize_timetable").tr(),
-              textColor: Theme.of(context).colorScheme.primary,
-            ),
-            const CustomizeTimetableOptions(),
-            ListTile(
-              dense: true,
-              title: const Text("timetable_features").tr(),
-              textColor: Theme.of(context).colorScheme.primary,
-            ),
-            const TimetableFeaturesOptions(),
-            ListTile(
-              dense: true,
-              title: const Text("timetable_data").tr(),
-              textColor: Theme.of(context).colorScheme.primary,
-            ),
-            const TimetableDataOptions(),
-          ],
-        ),
+      body: ListView(
+        children: [
+          Column(
+            children: [
+              ListTile(
+                dense: true,
+                title: const Text("general").tr(),
+                textColor: Theme.of(context).colorScheme.primary,
+              ),
+              const GeneralOptions(),
+              ListTile(
+                dense: true,
+                title: const Text("customize_timetable").tr(),
+                textColor: Theme.of(context).colorScheme.primary,
+              ),
+              const CustomizeTimetableOptions(),
+              ListTile(
+                dense: true,
+                title: const Text("timetable_features").tr(),
+                textColor: Theme.of(context).colorScheme.primary,
+              ),
+              const TimetableFeaturesOptions(),
+              ListTile(
+                dense: true,
+                title: const Text("timetable_data").tr(),
+                textColor: Theme.of(context).colorScheme.primary,
+              ),
+              const TimetableDataOptions(),
+            ],
+          ),
+        ],
       ),
     );
   }

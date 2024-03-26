@@ -60,89 +60,91 @@ class TimetablePeriodScreen extends ConsumerWidget {
       appBar: AppBar(
         title: const Text("period_preferences").tr(),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            SwitchListTile(
-              title: const Text("custom_time_period").tr(),
-              value: customTimePeriod,
-              onChanged: (bool value) {
-                settings.updateCustomTimePeriod(value);
-                if (twentyFourHours) {
-                  settings.update24Hours(!value);
-                }
-              },
-            ),
-            SwitchListTile(
-              title: const Text("24_hour_period").tr(),
-              value: twentyFourHours,
-              onChanged: (bool value) {
-                settings.update24Hours(value);
-                if (customTimePeriod) {
-                  settings.updateCustomTimePeriod(false);
-                }
-              },
-            ),
-            ListTile(
-              dense: true,
-              title: const Text("configuration").tr(),
-              enabled: customTimePeriod ? true : false,
-              textColor: Theme.of(context).colorScheme.primary,
-            ),
-            ListTile(
-              title: const Text("start_time").tr(),
-              enabled: customTimePeriod ? true : false,
-              subtitle: Text(
-                "${getCustomTimeHour(customStartTime)}:${getCustomTimeMinute(customStartTime)}",
+      body: ListView(
+        children: [
+          Column(
+            children: [
+              SwitchListTile(
+                title: const Text("custom_time_period").tr(),
+                value: customTimePeriod,
+                onChanged: (bool value) {
+                  settings.updateCustomTimePeriod(value);
+                  if (twentyFourHours) {
+                    settings.update24Hours(!value);
+                  }
+                },
               ),
-              onTap: () async {
-                final TimeOfDay? selectedTime = await timePicker(
-                  context,
-                  customStartTime,
-                );
-                if (selectedTime == null) return;
-
-                if (selectedTime.hour == customEndTime.hour) {
-                  showInvalidEqualTimeDialog();
-                  return;
-                }
-
-                if (isAfter(selectedTime, customEndTime)) {
-                  switchStartWithEndTime(selectedTime);
-                  return;
-                }
-
-                settings.updateCustomStartTime(selectedTime);
-              },
-            ),
-            ListTile(
-              title: const Text("end_time").tr(),
-              enabled: customTimePeriod ? true : false,
-              subtitle: Text(
-                "${getCustomTimeHour(customEndTime)}:${getCustomTimeMinute(customEndTime)}",
+              SwitchListTile(
+                title: const Text("24_hour_period").tr(),
+                value: twentyFourHours,
+                onChanged: (bool value) {
+                  settings.update24Hours(value);
+                  if (customTimePeriod) {
+                    settings.updateCustomTimePeriod(false);
+                  }
+                },
               ),
-              onTap: () async {
-                final TimeOfDay? selectedTime = await timePicker(
-                  context,
-                  customEndTime,
-                );
-                if (selectedTime == null) return;
+              ListTile(
+                dense: true,
+                title: const Text("configuration").tr(),
+                enabled: customTimePeriod ? true : false,
+                textColor: Theme.of(context).colorScheme.primary,
+              ),
+              ListTile(
+                title: const Text("start_time").tr(),
+                enabled: customTimePeriod ? true : false,
+                subtitle: Text(
+                  "${getCustomTimeHour(customStartTime)}:${getCustomTimeMinute(customStartTime)}",
+                ),
+                onTap: () async {
+                  final TimeOfDay? selectedTime = await timePicker(
+                    context,
+                    customStartTime,
+                  );
+                  if (selectedTime == null) return;
 
-                if (selectedTime.hour == customStartTime.hour) {
-                  showInvalidEqualTimeDialog();
-                  return;
-                }
+                  if (selectedTime.hour == customEndTime.hour) {
+                    showInvalidEqualTimeDialog();
+                    return;
+                  }
 
-                if (isBefore(selectedTime, customStartTime)) {
-                  switchEndWithStartTime(selectedTime);
-                  return;
-                }
+                  if (isAfter(selectedTime, customEndTime)) {
+                    switchStartWithEndTime(selectedTime);
+                    return;
+                  }
 
-                settings.updateCustomEndTime(selectedTime);
-              },
-            ),
-          ],
-        ),
+                  settings.updateCustomStartTime(selectedTime);
+                },
+              ),
+              ListTile(
+                title: const Text("end_time").tr(),
+                enabled: customTimePeriod ? true : false,
+                subtitle: Text(
+                  "${getCustomTimeHour(customEndTime)}:${getCustomTimeMinute(customEndTime)}",
+                ),
+                onTap: () async {
+                  final TimeOfDay? selectedTime = await timePicker(
+                    context,
+                    customEndTime,
+                  );
+                  if (selectedTime == null) return;
+
+                  if (selectedTime.hour == customStartTime.hour) {
+                    showInvalidEqualTimeDialog();
+                    return;
+                  }
+
+                  if (isBefore(selectedTime, customStartTime)) {
+                    switchEndWithStartTime(selectedTime);
+                    return;
+                  }
+
+                  settings.updateCustomEndTime(selectedTime);
+                },
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }

@@ -42,9 +42,6 @@ class ColorsConfig extends StatelessWidget {
           onTap: () => Navigator.push(
             context,
             MaterialPageRoute(
-              settings: const RouteSettings(
-                name: "ColorsScreen",
-              ),
               builder: (context) => ColorsScreen(color: color),
             ),
           ),

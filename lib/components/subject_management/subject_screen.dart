@@ -224,10 +224,10 @@ class SubjectScreen extends HookConsumerWidget {
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Form(
+      body: ListView(
+        padding: const EdgeInsets.all(16.0),
+        children: [
+          Form(
             key: formKey,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -262,7 +262,7 @@ class SubjectScreen extends HookConsumerWidget {
               ],
             ),
           ),
-        ),
+        ],
       ),
     );
   }

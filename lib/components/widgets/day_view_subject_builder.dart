@@ -38,9 +38,6 @@ class DayViewSubjectBuilder extends ConsumerWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                settings: const RouteSettings(
-                  name: "CellScreen",
-                ),
                 builder: (context) => SubjectScreen(
                   subject: subject,
                 ),

@@ -94,9 +94,6 @@ class _LabelLocationConfigState extends State<LabelLocationConfig> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        settings: const RouteSettings(
-                          name: "SubjectsList",
-                        ),
                         builder: (context) => SubjectsList(
                           subjects: widget.subjects,
                           label: widget.label,

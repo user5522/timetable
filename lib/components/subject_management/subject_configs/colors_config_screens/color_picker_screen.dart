@@ -18,17 +18,17 @@ class ColorPickerScreen extends HookWidget {
     final TextEditingController hexInputController = TextEditingController();
 
     return Scaffold(
-      body: Padding(
+      body: ListView(
         padding: const EdgeInsets.all(16.0),
-        child: SingleChildScrollView(
-          child: ColorPicker(
+        children: [
+          ColorPicker(
             pickerColor: color.value,
             hexInputBar: true,
             onColorChanged: (Color newColor) => color.value = newColor,
             pickerAreaBorderRadius: BorderRadius.circular(10),
             hexInputController: hexInputController,
           ),
-        ),
+        ],
       ),
     );
   }

@@ -49,9 +49,6 @@ class TimetableDayView extends HookConsumerWidget {
           Navigator.push(
             context,
             MaterialPageRoute(
-              settings: const RouteSettings(
-                name: "CellScreen",
-              ),
               builder: (context) => SubjectScreen(
                 rowIndex: 0,
                 columnIndex: day,

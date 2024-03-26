@@ -22,9 +22,6 @@ class TimetableFeaturesOptions extends ConsumerWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                settings: const RouteSettings(
-                  name: "TimetablePeriodConfigScreen",
-                ),
                 builder: (context) => const TimetablePeriodScreen(),
               ),
             );
@@ -36,9 +33,6 @@ class TimetableFeaturesOptions extends ConsumerWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                settings: const RouteSettings(
-                  name: "TimetablesManagementScreen",
-                ),
                 builder: (context) => const TimetableManagementScreen(),
               ),
             );

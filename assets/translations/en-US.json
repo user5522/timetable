@@ -23,6 +23,8 @@
   "light": "Light",
   "system": "System",
 
+  "app_color": "App Color",
+  "choose_app_color": "Choose a color",
   "compact_mode": "Compact Mode",
   "hide_locations": "Hide Locations",
   "single_letter_days": "Single Letter Days",
@@ -119,5 +121,17 @@
   "thursday": "Thursday",
   "friday": "Friday",
   "saturday": "Saturday",
-  "sunday": "Sunday"
+  "sunday": "Sunday",
+
+  "yellow": "Yellow",
+  "orange": "Orange",
+  "pink": "Pink",
+  "deep_purple": "Deep Purple",
+  "indigo": "Indigo",
+  "blue": "Blue",
+  "light_green": "Light Green",
+  "green": "Green",
+  "teal": "Teal",
+  "red": "Red",
+  "light_red": "Light Red"
 }

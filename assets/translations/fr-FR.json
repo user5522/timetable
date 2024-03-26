@@ -23,6 +23,8 @@
   "light": "Clair",
   "system": "Système",
 
+  "app_color": "Couleur de l'Application",
+  "choose_app_color": "Choisir une couleur",
   "compact_mode": "Mode Compact",
   "hide_locations": "Cacher les lieux",
   "single_letter_days": "Jours à une Seule Lettre",
@@ -119,5 +121,17 @@
   "thursday": "Jeudi",
   "friday": "Vendredi",
   "saturday": "Samedi",
-  "sunday": "Dimanche"
+  "sunday": "Dimanche",
+
+  "yellow": "Jaune",
+  "orange": "Orange",
+  "pink": "Rose",
+  "deep_purple": "Violet Profond",
+  "indigo": "Indigo",
+  "blue": "Bleue",
+  "light_green": "Vert Clair",
+  "green": "Vert",
+  "teal": "Sarcelle",
+  "red": "Rouge",
+  "light_red": "Rouge Clair"
 }

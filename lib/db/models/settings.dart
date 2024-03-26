@@ -18,6 +18,7 @@ class Settings {
   final bool multipleTimetables;
   final bool twentyFourHours;
   final TbViews defaultTimetableView;
+  final Color appThemeColor;
 
   // settings defaults
   Settings({
@@ -36,6 +37,7 @@ class Settings {
     this.multipleTimetables = false,
     this.twentyFourHours = false,
     this.defaultTimetableView = TbViews.grid,
+    this.appThemeColor = Colors.deepPurple,
   });
 
   Settings copyWith({
@@ -54,6 +56,7 @@ class Settings {
     bool? multipleTimetables,
     bool? twentyFourHours,
     TbViews? defaultTimetableView,
+    Color? appThemeColor,
   }) =>
       Settings(
         customTimePeriod: customTimePeriod ?? this.customTimePeriod,
@@ -72,6 +75,7 @@ class Settings {
         multipleTimetables: multipleTimetables ?? this.multipleTimetables,
         twentyFourHours: twentyFourHours ?? this.twentyFourHours,
         defaultTimetableView: defaultTimetableView ?? this.defaultTimetableView,
+        appThemeColor: appThemeColor ?? this.appThemeColor,
       );
 
   Map<String, dynamic> toJson() => {
@@ -92,6 +96,7 @@ class Settings {
         'multipleTimetables': multipleTimetables,
         'twentyFourHours': twentyFourHours,
         'defaultTimetableView': defaultTimetableView.name,
+        'appThemeColorValue': appThemeColor.value,
       };
 
   factory Settings.fromJson(Map<String, dynamic> json) {
@@ -128,6 +133,9 @@ class Settings {
           ? TbViews.values.firstWhere(
               (e) => e.name == json['defaultTimetableView'] as String,
             )
+          : null,
+      appThemeColor: json['appThemeColorValue'] != null
+          ? Color(json['appThemeColorValue'] as int)
           : null,
     );
   }

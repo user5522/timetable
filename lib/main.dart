@@ -34,6 +34,7 @@ class TimetableApp extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = ref.watch(themeProvider);
     final monetTheming = ref.watch(settingsProvider).monetTheming;
+    final appThemeColor = ref.watch(settingsProvider).appThemeColor;
     final Brightness systemBrightness =
         MediaQuery.of(context).platformBrightness;
 
@@ -58,7 +59,7 @@ class TimetableApp extends ConsumerWidget {
                         ? lightDynamic
                         : darkDynamic
                 : ColorScheme.fromSeed(
-                    seedColor: Colors.deepPurple,
+                    seedColor: appThemeColor,
                     brightness: theme == ThemeOption.auto
                         ? systemBrightness
                         : theme == ThemeOption.dark

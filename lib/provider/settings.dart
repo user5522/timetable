@@ -11,6 +11,14 @@ class SettingsNotifier extends StateNotifier<Settings> {
     loadSettings();
   }
 
+  void updateAppThemeColor(Color appThemeColor) {
+    final newState = state.copyWith(
+      appThemeColor: appThemeColor,
+    );
+    state = newState;
+    saveSettings();
+  }
+
   void updateDefaultTbView(TbViews tbView) {
     final newState = state.copyWith(
       defaultTimetableView: tbView,

@@ -6,10 +6,14 @@ import 'package:timetable/constants/colors.dart';
 class PresetColorsScreen extends HookWidget {
   /// the color that will be changed by one of the presets
   final ValueNotifier<Color> color;
+  final List<ColorsList> colors;
+  final int colorsPerRow;
 
   const PresetColorsScreen({
     super.key,
     required this.color,
+    required this.colors,
+    this.colorsPerRow = 3,
   });
 
   @override
@@ -17,16 +21,15 @@ class PresetColorsScreen extends HookWidget {
     /// used for highlighting the selected color by default no color is selected
     // the default color is black, maybe i should have it as the default selected color
     final selectedColorIndex = useState(-1);
-    final List<ColorsList> colors = ColorsList.values.toList();
     const int colorsPerRow = 3;
     final int rowCount = (colors.length / colorsPerRow).ceil();
 
     return Scaffold(
-      body: Padding(
+      body: ListView(
         padding: const EdgeInsets.all(16.0),
-        child: SingleChildScrollView(
-          scrollDirection: Axis.vertical,
-          child: Column(
+        scrollDirection: Axis.vertical,
+        children: [
+          Column(
             children: List.generate(
               rowCount,
               (rowIndex) {
@@ -101,7 +104,7 @@ class PresetColorsScreen extends HookWidget {
               },
             ),
           ),
-        ),
+        ],
       ),
     );
   }

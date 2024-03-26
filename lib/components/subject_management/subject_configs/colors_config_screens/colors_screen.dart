@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:timetable/components/subject_management/subject_configs/colors_config_screens/color_picker_screen.dart';
 import 'package:timetable/components/subject_management/subject_configs/colors_config_screens/preset_colors_screen.dart';
+import 'package:timetable/constants/colors.dart';
 
 /// Colors configuration screen, basically groups [ColorPickerScreen] and [PresetColorsScreen].
 
@@ -38,6 +39,8 @@ class _ColorsScreenState extends State<ColorsScreen>
 
   @override
   Widget build(BuildContext context) {
+    final List<ColorsList> colors = ColorsList.values.toList();
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('choose_color').tr(),
@@ -61,6 +64,7 @@ class _ColorsScreenState extends State<ColorsScreen>
           Center(
             child: PresetColorsScreen(
               color: widget.color,
+              colors: colors,
             ),
           ),
           Center(

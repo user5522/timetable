@@ -23,94 +23,96 @@ class TimetableManagementScreen extends ConsumerWidget {
       appBar: AppBar(
         title: const Text("manage_timetables").tr(),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            SwitchListTile(
-              title: const Text("multiple_timetables").tr(),
-              value: multipleTimetables,
-              onChanged: (bool value) {
-                settings.updateMultipleTimetables(value);
-              },
-            ),
-            ListTile(
-              title: const Text("reset").tr(),
-              onTap: () {
-                showDialog<void>(
-                  context: context,
-                  barrierDismissible: true,
-                  builder: (BuildContext context) {
-                    return ShowAlertDialog(
-                      content: const Text("reset_timetables_dialog").tr(),
-                      approveButtonText: "reset".tr(),
-                      onApprove: () {
-                        timetable.resetData();
-                        Navigator.of(context).pop();
-                      },
-                    );
-                  },
-                );
-              },
-            ),
-            ListTile(
-              dense: true,
-              title: const Text("manage").tr(),
-              enabled: multipleTimetables ? true : false,
-              textColor: Theme.of(context).colorScheme.primary,
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16, 0, 16, 75),
-              child: ListItemGroup(
-                children: List.generate(
-                  timetables.length,
-                  (i) => ListItem(
-                    title: Opacity(
-                      opacity: timetables[i] != timetables[0]
-                          ? multipleTimetables
-                              ? 1
-                              : .5
-                          : 1,
-                      child: Row(
-                        children: [
-                          Text(
-                            "${"timetable".plural(1)} ${timetables[i].name}",
-                          ),
-                          const Spacer(),
-                          if (timetables[i] != timetables[0] &&
-                              multipleTimetables)
-                            IconButton(
-                              onPressed: () {
-                                showDialog<void>(
-                                  context: context,
-                                  barrierDismissible: true,
-                                  builder: (BuildContext context) {
-                                    return ShowAlertDialog(
-                                      content:
-                                          const Text("delete_timetable_dialog")
-                                              .tr(),
-                                      approveButtonText: "delete".tr(),
-                                      onApprove: () {
-                                        timetable
-                                            .deleteTimetable(timetables[i]);
-                                        Navigator.of(context).pop();
-                                      },
-                                    );
-                                  },
-                                );
-                              },
-                              icon: const Icon(Icons.delete_outline),
-                              tooltip: "delete".tr(),
+      body: ListView(
+        children: [
+          Column(
+            children: [
+              SwitchListTile(
+                title: const Text("multiple_timetables").tr(),
+                value: multipleTimetables,
+                onChanged: (bool value) {
+                  settings.updateMultipleTimetables(value);
+                },
+              ),
+              ListTile(
+                title: const Text("reset").tr(),
+                onTap: () {
+                  showDialog<void>(
+                    context: context,
+                    barrierDismissible: true,
+                    builder: (BuildContext context) {
+                      return ShowAlertDialog(
+                        content: const Text("reset_timetables_dialog").tr(),
+                        approveButtonText: "reset".tr(),
+                        onApprove: () {
+                          timetable.resetData();
+                          Navigator.of(context).pop();
+                        },
+                      );
+                    },
+                  );
+                },
+              ),
+              ListTile(
+                dense: true,
+                title: const Text("manage").tr(),
+                enabled: multipleTimetables ? true : false,
+                textColor: Theme.of(context).colorScheme.primary,
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 75),
+                child: ListItemGroup(
+                  children: List.generate(
+                    timetables.length,
+                    (i) => ListItem(
+                      title: Opacity(
+                        opacity: timetables[i] != timetables[0]
+                            ? multipleTimetables
+                                ? 1
+                                : .5
+                            : 1,
+                        child: Row(
+                          children: [
+                            Text(
+                              "${"timetable".plural(1)} ${timetables[i].name}",
                             ),
-                        ],
+                            const Spacer(),
+                            if (timetables[i] != timetables[0] &&
+                                multipleTimetables)
+                              IconButton(
+                                onPressed: () {
+                                  showDialog<void>(
+                                    context: context,
+                                    barrierDismissible: true,
+                                    builder: (BuildContext context) {
+                                      return ShowAlertDialog(
+                                        content: const Text(
+                                                "delete_timetable_dialog")
+                                            .tr(),
+                                        approveButtonText: "delete".tr(),
+                                        onApprove: () {
+                                          timetable
+                                              .deleteTimetable(timetables[i]);
+                                          Navigator.of(context).pop();
+                                        },
+                                      );
+                                    },
+                                  );
+                                },
+                                icon: const Icon(Icons.delete_outline),
+                                tooltip: "delete".tr(),
+                              ),
+                          ],
+                        ),
                       ),
+                      onTap: () {},
                     ),
-                    onTap: () {},
                   ),
                 ),
               ),
-            ),
-          ],
-        ),
+            ],
+          ),
+        ],
       ),
       floatingActionButton: Visibility(
         visible: timetables.length < 5 && multipleTimetables,
