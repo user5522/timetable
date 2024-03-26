@@ -2,7 +2,7 @@ import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:timetable/components/widgets/eager_initilization.dart';
-import 'package:timetable/components/widgets/navigation_bar.dart';
+import 'package:timetable/components/widgets/bottom_navigation_bar.dart';
 import 'package:timetable/constants/languages.dart';
 import 'package:timetable/constants/theme_options.dart';
 import 'package:timetable/provider/settings.dart';
@@ -68,7 +68,7 @@ class TimetableApp extends ConsumerWidget {
             useMaterial3: true,
           ),
           home: const EagerInitialization(
-            child: Navigation(),
+            child: BottomNavigation(),
           ),
         );
       },
