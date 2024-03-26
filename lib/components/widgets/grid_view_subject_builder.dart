@@ -31,7 +31,7 @@ class SubjectBuilder extends ConsumerWidget {
     Color color = subject.color;
 
     final hideTransparentSubjects =
-        hideTransparentSubject && color.opacity == Colors.transparent.opacity;
+        hideTransparentSubject && (color.opacity == Colors.transparent.opacity);
 
     Color labelColor =
         color.computeLuminance() > .7 ? Colors.black : Colors.white;
