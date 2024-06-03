@@ -1,7 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:timetable/constants/custom_times.dart';
 import 'package:timetable/extensions/time_of_day.dart';
 import 'package:timetable/helpers/time_management.dart';
 import 'package:timetable/provider/settings.dart';
@@ -19,6 +18,8 @@ class TimetablePeriodScreen extends ConsumerWidget {
     final customEndTime = ref.watch(settingsProvider).customEndTime;
     final twentyFourHours = ref.watch(settingsProvider).twentyFourHours;
     final settings = ref.read(settingsProvider.notifier);
+
+    final uses24HoursFormat = MediaQuery.of(context).alwaysUse24HourFormat;
 
     /// error dialog when the start time and end time have the same value (equal)
     void showInvalidEqualTimeDialog() {
@@ -55,6 +56,24 @@ class TimetablePeriodScreen extends ConsumerWidget {
       settings.updateCustomStartTime(newTime);
       settings.updateCustomEndTime(temp);
       return;
+    }
+
+    String getTime(TimeOfDay time) {
+      final formattedTimeHour = time.hour < 10
+          ? "0${time.hour}"
+          : uses24HoursFormat
+              ? time.hour
+              : time.hour > 12
+                  ? time.hour - 12
+                  : time.hour;
+      final amORpm = time.hour > 12 ? "PM" : "AM";
+      final formattedTimeMinute = time.minute == 0
+          ? "00"
+          : time.minute < 10
+              ? "0${time.minute}"
+              : "${time.minute}";
+
+      return "$formattedTimeHour:$formattedTimeMinute${uses24HoursFormat ? "" : " $amORpm"}";
     }
 
     return Scaffold(
@@ -94,9 +113,7 @@ class TimetablePeriodScreen extends ConsumerWidget {
               ListTile(
                 title: const Text("start_time").tr(),
                 enabled: customTimePeriod ? true : false,
-                subtitle: Text(
-                  "${getCustomTimeHour(customStartTime)}:${getCustomTimeMinute(customStartTime)}",
-                ),
+                subtitle: Text(getTime(customStartTime)),
                 onTap: () async {
                   final TimeOfDay? selectedTime = await timePicker(
                     context,
@@ -120,9 +137,7 @@ class TimetablePeriodScreen extends ConsumerWidget {
               ListTile(
                 title: const Text("end_time").tr(),
                 enabled: customTimePeriod ? true : false,
-                subtitle: Text(
-                  "${getCustomTimeHour(customEndTime)}:${getCustomTimeMinute(customEndTime)}",
-                ),
+                subtitle: Text(getTime(customEndTime)),
                 onTap: () async {
                   final TimeOfDay? selectedTime = await timePicker(
                     context,
