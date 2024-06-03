@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:timetable/components/widgets/act_chip.dart';
+import 'package:timetable/extensions/time_of_day.dart';
 import 'package:timetable/helpers/time_management.dart';
 import 'package:timetable/constants/custom_times.dart';
 import 'package:timetable/provider/settings.dart';
@@ -73,7 +74,7 @@ class TimeConfig extends ConsumerWidget {
     }
 
     void switchStartWithEndTime(TimeOfDay newTime) {
-      if (!isAfter(newTime, customEndTime)) {
+      if (!newTime.isAfter(customEndTime)) {
         final temp = endTime.value;
         endTime.value = newTime;
         startTime.value = temp;
@@ -83,7 +84,7 @@ class TimeConfig extends ConsumerWidget {
     }
 
     void switchEndWithStartTime(TimeOfDay newTime) {
-      if (!isBefore(newTime, customStartTime)) {
+      if (!newTime.isBefore(customStartTime)) {
         final temp = startTime.value;
         startTime.value = newTime;
         endTime.value = temp;
@@ -128,7 +129,7 @@ class TimeConfig extends ConsumerWidget {
 
             if (selectedTime == null) return;
 
-            if (isBefore(selectedTime, customStartTime)) {
+            if (selectedTime.isBefore(customStartTime)) {
               showInvalidTimePeriodDialog();
               return;
             }
@@ -138,7 +139,7 @@ class TimeConfig extends ConsumerWidget {
               return;
             }
 
-            if (isAfter(selectedTime, endTime.value)) {
+            if (selectedTime.isAfter(endTime.value)) {
               switchStartWithEndTime(selectedTime);
               return;
             }
@@ -165,7 +166,7 @@ class TimeConfig extends ConsumerWidget {
 
             if (selectedTime == null) return;
 
-            if (isAfter(selectedTime, customEndTime)) {
+            if (selectedTime.isAfter(customEndTime)) {
               showInvalidTimePeriodDialog();
               return;
             }
@@ -174,7 +175,7 @@ class TimeConfig extends ConsumerWidget {
               showInvalidEqualTimeDialog();
               return;
             }
-            if (isBefore(selectedTime, startTime.value)) {
+            if (selectedTime.isBefore(startTime.value)) {
               switchEndWithStartTime(selectedTime);
               return;
             }
