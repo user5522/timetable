@@ -29,6 +29,8 @@ class TimeConfig extends ConsumerWidget {
     final customStartTime = getCustomStartTime(chosenCustomStartTime, ref);
     final customEndTime = getCustomEndTime(chosenCustomEndTime, ref);
 
+    final uses24HoursFormat = MediaQuery.of(context).alwaysUse24HourFormat;
+
     void showInvalidTimePeriodDialog() {
       final String customStartTimeHour = getCustomTimeHour(customStartTime);
       final String customStartTimeMinute = getCustomTimeMinute(customStartTime);
@@ -90,6 +92,26 @@ class TimeConfig extends ConsumerWidget {
       showInvalidTimePeriodDialog();
     }
 
+    String getTime(TimeOfDay time) {
+      final formattedTimeHour = uses24HoursFormat
+          ? time.hour
+          : time.hour > 12
+              ? time.hour - 12
+              : time.hour;
+      final amORpm = uses24HoursFormat
+          ? null
+          : time.hour > 12
+              ? "PM"
+              : "AM";
+      final formattedTimeMinute = time.minute == 0
+          ? "00"
+          : time.minute < 10
+              ? "0${time.minute}"
+              : "${time.minute}";
+
+      return "$formattedTimeHour:$formattedTimeMinute $amORpm";
+    }
+
     return Row(
       children: [
         const Text("time").tr(),
@@ -123,7 +145,7 @@ class TimeConfig extends ConsumerWidget {
 
             startTime.value = selectedTime;
           },
-          label: Text("${startTime.value.hour}:00"),
+          label: Text(getTime(startTime.value)),
         ),
         const Padding(
           padding: EdgeInsets.symmetric(
@@ -159,7 +181,7 @@ class TimeConfig extends ConsumerWidget {
 
             endTime.value = selectedTime;
           },
-          label: Text("${endTime.value.hour}:00"),
+          label: Text(getTime(endTime.value)),
         ),
         if (occupied)
           const Padding(
