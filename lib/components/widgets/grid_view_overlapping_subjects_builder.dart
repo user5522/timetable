@@ -78,7 +78,7 @@ class OverlappingSubjBuilder extends ConsumerWidget {
 
           int subjHeight = endTimeHour - startTimeHour;
 
-          int quarterTurns = compactMode
+          int quarterTurns = compactMode && isPortrait
               ? 1
               : subjects.length > 2 && !compactMode
                   ? 1
@@ -113,9 +113,9 @@ class OverlappingSubjBuilder extends ConsumerWidget {
                   borderRadius: BorderRadius.circular(5),
                   child: Ink(
                     padding: EdgeInsets.fromLTRB(
-                      compactMode ? 1 : 2,
+                      compactMode && isPortrait ? 1 : 2,
                       5,
-                      compactMode ? 1 : 2,
+                      compactMode && isPortrait ? 1 : 2,
                       5,
                     ),
                     decoration: BoxDecoration(
@@ -140,12 +140,14 @@ class OverlappingSubjBuilder extends ConsumerWidget {
                           RotatedBox(
                             quarterTurns: quarterTurns,
                             child: Text(
-                              compactMode
+                              compactMode && isPortrait
                                   ? label.length > (subjHeight * 5)
                                       ? '${label.substring(0, (subjHeight * 5))}..'
                                       : label
                                   : label,
-                              maxLines: compactMode ? 1 : subjHeight * 2,
+                              maxLines: compactMode && isPortrait
+                                  ? 1
+                                  : subjHeight * 2,
                               style: TextStyle(
                                 color: labelColor,
                                 fontWeight: FontWeight.bold,
@@ -154,19 +156,20 @@ class OverlappingSubjBuilder extends ConsumerWidget {
                             ),
                           ),
                         SizedBox(
-                          height: compactMode ? 8 : 5,
+                          height: compactMode && isPortrait ? 8 : 5,
                         ),
                         if (location != null &&
                             (!hideLocation || !hideTransparentSubjects))
                           RotatedBox(
                             quarterTurns: quarterTurns,
                             child: Text(
-                              compactMode
+                              compactMode && !isPortrait
                                   ? location.length > (subjHeight * 5)
                                       ? '${location.substring(0, (subjHeight * 5))}..'
                                       : location
                                   : location,
-                              maxLines: compactMode ? 1 : subjHeight,
+                              maxLines:
+                                  compactMode && isPortrait ? 1 : subjHeight,
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
                                 color: subLabelsColor,
