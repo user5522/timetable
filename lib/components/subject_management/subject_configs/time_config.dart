@@ -99,18 +99,14 @@ class TimeConfig extends ConsumerWidget {
           : time.hour > 12
               ? time.hour - 12
               : time.hour;
-      final amORpm = uses24HoursFormat
-          ? null
-          : time.hour > 12
-              ? "PM"
-              : "AM";
+      final amORpm = time.hour > 12 ? "PM" : "AM";
       final formattedTimeMinute = time.minute == 0
           ? "00"
           : time.minute < 10
               ? "0${time.minute}"
               : "${time.minute}";
 
-      return "$formattedTimeHour:$formattedTimeMinute $amORpm";
+      return "$formattedTimeHour:$formattedTimeMinute${uses24HoursFormat ? "" : " $amORpm"}";
     }
 
     return Row(
