@@ -58,12 +58,14 @@ class DaysBar extends ConsumerWidget {
                       );
                     },
                     style: ButtonStyle(
-                      foregroundColor: MaterialStateProperty.all<Color>(
-                        Theme.of(context).colorScheme.onBackground,
+                      foregroundColor: WidgetStateProperty.all<Color>(
+                        Theme.of(context).colorScheme.onSurface,
                       ),
                       backgroundColor: isGridView! && (currentDay == index)
-                          ? MaterialStateProperty.all<Color>(
-                              Theme.of(context).colorScheme.surfaceVariant,
+                          ? WidgetStateProperty.all<Color>(
+                              Theme.of(context)
+                                  .colorScheme
+                                  .surfaceContainerHighest,
                             )
                           : null,
                     ),
