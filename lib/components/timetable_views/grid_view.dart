@@ -65,18 +65,6 @@ class TimetableGridView extends HookConsumerWidget {
       },
     ).toList();
 
-    /// this basically finds overlapping subjects and puts them in the overlapping subjects [StateNotifier]
-    Future.delayed(
-      Duration.zero,
-      () async {
-        final overlappingSubjectsNotifier =
-            ref.read(overlappingSubjectsProvider.notifier);
-
-        overlappingSubjectsNotifier
-            .addInBulk(findOverlappingSubjects(subjects));
-      },
-    );
-
     final double screenWidth = MediaQuery.of(context).size.width;
     final bool isPortrait =
         MediaQuery.of(context).orientation == Orientation.portrait;
@@ -148,6 +136,8 @@ class TimetableGridView extends HookConsumerWidget {
         ),
       ),
     );
+
+    overlappingSubjects.addAll(findOverlappingSubjects(subjects));
 
     // overlapping subjects
     if (overlappingSubjects.isNotEmpty &&
