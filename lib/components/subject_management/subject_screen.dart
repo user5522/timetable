@@ -38,6 +38,7 @@ class SubjectScreen extends HookConsumerWidget {
     final overlappingSubjects = ref.watch(overlappingSubjectsProvider);
     final autoCompleteColor = ref.watch(settingsProvider).autoCompleteColor;
     final timetables = ref.watch(timetableProvider);
+    final tfHours = ref.watch(settingsProvider).twentyFourHours;
     final customStartTimeHour =
         ref.watch(settingsProvider).customStartTime.hour;
 
@@ -56,13 +57,15 @@ class SubjectScreen extends HookConsumerWidget {
     );
     final startTime = useState(
       TimeOfDay(
-        hour: subject?.startTime.hour ?? (rowIndex! + customStartTimeHour),
+        hour: subject?.startTime.hour ??
+            (rowIndex! + (tfHours ? 0 : customStartTimeHour)),
         minute: 0,
       ),
     );
     final ValueNotifier<TimeOfDay> endTime = useState(
       TimeOfDay(
-        hour: subject?.endTime.hour ?? (rowIndex! + customStartTimeHour + 1),
+        hour: subject?.endTime.hour ??
+            (rowIndex! + (tfHours ? 0 : customStartTimeHour) + 1),
         minute: 0,
       ),
     );

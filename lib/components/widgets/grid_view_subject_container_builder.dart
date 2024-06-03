@@ -4,7 +4,6 @@ import 'package:non_uniform_border/non_uniform_border.dart';
 import 'package:timetable/constants/grid_properties.dart';
 import 'package:timetable/components/subject_management/subject_screen.dart';
 import 'package:timetable/db/database.dart';
-import 'package:timetable/provider/settings.dart';
 
 /// Subject container tile builder.
 /// (the one you click on to create a Subject in the grid view.)
@@ -22,7 +21,6 @@ class SubjectContainerBuilder extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final customStartTime = ref.watch(settingsProvider).customStartTime;
     final shape = NonUniformBorder(
       leftWidth: columnIndex == 0 ? 0 : 1,
       rightWidth: columnIndex == (columns(ref) - 1) ? 0 : 1,
@@ -38,7 +36,7 @@ class SubjectContainerBuilder extends ConsumerWidget {
           context,
           MaterialPageRoute(
             builder: (context) => SubjectScreen(
-              rowIndex: rowIndex - customStartTime.hour,
+              rowIndex: rowIndex,
               columnIndex: columnIndex,
               currentTimetable: currentTimetable,
             ),
