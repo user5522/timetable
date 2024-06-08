@@ -205,7 +205,7 @@ class SubjectScreen extends HookConsumerWidget {
                     );
                     return;
                   }
-                  subjectNotifier.addSubject(newSubject.toCompanion(false));
+                  subjectNotifier.addSubject(newSubject.toCompanion(true));
                   Navigator.pop(context, label.value);
                 }
                 if (!isSubjectNull) {

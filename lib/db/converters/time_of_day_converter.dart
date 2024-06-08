@@ -6,16 +6,20 @@ class TimeOfDayConverter extends TypeConverter<TimeOfDay, String> {
 
   @override
   TimeOfDay fromSql(String fromDb) {
-    // Parse TimeOfDay from String
-    return TimeOfDay(
-      hour: int.parse(fromDb.split(':')[0].replaceAll("TimeOfDay(", "")),
-      minute: int.parse(fromDb.split(':')[1].replaceAll(")", "")),
-    );
+    String timeOnly = fromDb.substring(10, fromDb.length - 1);
+
+    List<String> parts = timeOnly.split(":");
+    int hour = int.parse(parts[0]);
+    int minute = int.parse(parts[1]);
+
+    TimeOfDay timeOfDay = TimeOfDay(hour: hour, minute: minute);
+
+    return timeOfDay;
   }
 
   @override
   String toSql(TimeOfDay value) {
     // Convert TimeOfDay to String
-    return value.toString();
+    return "TimeOfDay(${value.hour}:${value.minute})";
   }
 }
