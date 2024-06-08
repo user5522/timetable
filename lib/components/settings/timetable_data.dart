@@ -69,9 +69,10 @@ class TimetableDataOptions extends ConsumerWidget {
                 return ShowAlertDialog(
                   content: const Text("remove_all_subjects_dialog").tr(),
                   approveButtonText: "delete".tr(),
-                  onApprove: () {
-                    subjNotifier.resetData();
-                    Navigator.of(context).pop();
+                  onApprove: () async {
+                    await subjNotifier
+                        .resetData()
+                        .then((r) => Navigator.of(context).pop());
                   },
                 );
               },

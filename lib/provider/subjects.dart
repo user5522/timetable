@@ -84,8 +84,8 @@ class SubjectNotifier extends StateNotifier<List<SubjectData>> {
   /// deletes all subjects from db ([$SubjectTable]) and state
   ///
   /// also resets the overlapping subjects notifier.
-  void resetData() {
-    db.subject.delete();
+  Future<void> resetData() async {
+    await db.delete($SubjectTable(db)).go();
     state = [];
 
     overlappingSubjectsNotifier.reset();
