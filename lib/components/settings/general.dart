@@ -63,10 +63,7 @@ class GeneralOptions extends ConsumerWidget {
             children: [
               const Text("app_color").tr(),
               const Spacer(),
-              Opacity(
-                opacity: !monetTheming ? 1 : .5,
-                child: ColorIndicator(color: appThemeColor),
-              ),
+              ColorIndicator(color: appThemeColor, monetTheming: monetTheming),
             ],
           ),
           onTap: () {
