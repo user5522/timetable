@@ -171,14 +171,15 @@ class SubjectScreen extends HookConsumerWidget {
                 backgroundColor: Theme.of(context).colorScheme.error,
                 foregroundColor: Theme.of(context).colorScheme.errorContainer,
               ),
-              onPressed: () {
-                subjectNotifier.deleteSubject(newSubject);
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: const Text('subject_deleted_snackbar').tr(),
-                  ),
-                );
-                Navigator.pop(context);
+              onPressed: () async {
+                await subjectNotifier.deleteSubject(newSubject).then((r) {
+                  Navigator.pop(context);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: const Text('subject_deleted_snackbar').tr(),
+                    ),
+                  );
+                });
               },
               child: const Text("delete").tr(),
             ),
@@ -192,34 +193,29 @@ class SubjectScreen extends HookConsumerWidget {
                 foregroundColor:
                     Theme.of(context).colorScheme.secondaryContainer,
               ),
-              onPressed: () {
+              onPressed: () async {
                 if (!formKey.currentState!.validate()) {
                   return;
                 }
+                if (isOccupied && multipleOccupied) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: const Text('time_slots_occupied_error').tr(),
+                    ),
+                  );
+                  return;
+                }
                 if (isSubjectNull) {
-                  if (isOccupied && multipleOccupied) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: const Text('time_slots_occupied_error').tr(),
-                      ),
-                    );
-                    return;
-                  }
-                  subjectNotifier.addSubject(newSubject.toCompanion(true));
-                  Navigator.pop(context, label.value);
+                  await subjectNotifier
+                      .addSubject(newSubject.toCompanion(true))
+                      .then(
+                        (r) => Navigator.pop(context, label.value),
+                      );
                 }
                 if (!isSubjectNull) {
-                  if (isOccupiedExceptSelf && multipleOccupied) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        // I don't know how to say the error in french so I translated it :P
-                        content: const Text('time_slots_occupied_error').tr(),
-                      ),
-                    );
-                    return;
-                  }
-                  subjectNotifier.updateSubject(newSubject);
-                  Navigator.pop(context, label.value);
+                  await subjectNotifier.updateSubject(newSubject).then(
+                        (r) => Navigator.pop(context, label.value),
+                      );
                 }
               },
               child: Text(isSubjectNull ? "create".tr() : "save".tr()),
