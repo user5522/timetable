@@ -5,7 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:timetable/constants/days.dart';
 import 'package:timetable/constants/grid_properties.dart';
+import 'package:timetable/constants/theme_options.dart';
 import 'package:timetable/provider/settings.dart';
+import 'package:timetable/provider/themes.dart';
 
 /// Top navigation bar in the day view that allows to switch between days quickly
 /// merged with the days row in the grid view.
@@ -29,6 +31,14 @@ class DaysBar extends ConsumerWidget {
     int daysLength = hideSunday ? days.length - 1 : days.length;
     final bool isPortrait =
         MediaQuery.of(context).orientation == Orientation.portrait;
+
+    final theme = ref.watch(themeProvider);
+    final Brightness systemBrightness =
+        MediaQuery.of(context).platformBrightness;
+    final darkCurrentDayColorScheme =
+        Theme.of(context).colorScheme.onInverseSurface;
+    final lightCurrentDayColorScheme =
+        Theme.of(context).colorScheme.outlineVariant;
 
     return SizedBox(
       height: 48,
@@ -63,9 +73,13 @@ class DaysBar extends ConsumerWidget {
                       ),
                       backgroundColor: isGridView! && (currentDay == index)
                           ? WidgetStateProperty.all<Color>(
-                              Theme.of(context)
-                                  .colorScheme
-                                  .surfaceContainerHighest,
+                              theme == ThemeOption.auto
+                                  ? systemBrightness == Brightness.dark
+                                      ? darkCurrentDayColorScheme
+                                      : lightCurrentDayColorScheme
+                                  : theme == ThemeOption.dark
+                                      ? darkCurrentDayColorScheme
+                                      : lightCurrentDayColorScheme,
                             )
                           : null,
                     ),
