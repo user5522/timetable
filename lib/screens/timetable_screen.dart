@@ -37,7 +37,7 @@ class TimetableScreen extends HookConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        scrolledUnderElevation: isGridView.value ? null : 0.0,
+        scrolledUnderElevation: 0.0,
         leading: const NavbarToggle(),
         title: const Text('timetable').plural(1),
         actions: [
