@@ -21,6 +21,9 @@ class AppDatabase extends _$AppDatabase {
   @override
   MigrationStrategy get migration {
     return MigrationStrategy(
+      beforeOpen: (details) async {
+        await customStatement('PRAGMA journal_mode=WAL');
+      },
       onCreate: (Migrator m) async {
         await m.createAll();
       },
