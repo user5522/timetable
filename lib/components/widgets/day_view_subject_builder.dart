@@ -27,6 +27,9 @@ class DayViewSubjectBuilder extends ConsumerWidget {
     Color color = subject.color;
     String? note = subject.note;
 
+    final bool locationCheck = location != null && location.isNotEmpty;
+    final bool noteCheck = note != null && note.isNotEmpty;
+
     final hideTransparentSubjects =
         hideTransparentSubject && color.opacity == Colors.transparent.opacity;
 
@@ -113,13 +116,16 @@ class DayViewSubjectBuilder extends ConsumerWidget {
                       ),
                     ],
                   ),
-                  if (location != null && location.isNotEmpty)
+                  if (locationCheck)
                     Row(
                       children: [
-                        Icon(
-                          Icons.location_on_outlined,
-                          size: 19,
-                          color: subLabelsColor,
+                        Padding(
+                          padding: const EdgeInsets.only(right: 10),
+                          child: Icon(
+                            Icons.location_on_outlined,
+                            size: 19,
+                            color: subLabelsColor,
+                          ),
                         ),
                         Expanded(
                           child: Text(
@@ -135,7 +141,11 @@ class DayViewSubjectBuilder extends ConsumerWidget {
                         ),
                       ],
                     ),
-                  if (note != null && note.isNotEmpty)
+                  if (locationCheck && noteCheck)
+                    const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 5),
+                    ),
+                  if (noteCheck)
                     Row(
                       children: [
                         Padding(
