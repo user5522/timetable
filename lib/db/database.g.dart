@@ -427,23 +427,13 @@ class SubjectData extends DataClass implements Insertable<SubjectData> {
       label: serializer.fromJson<String>(json['label']),
       location: serializer.fromJson<String?>(json['location']),
       note: serializer.fromJson<String?>(json['note']),
-      color: serializer.fromJson<material.Color>(material.Color(json['color'])),
+      color: serializer.fromJson<material.Color>(json['color']),
       rotationWeek: $SubjectTable.$converterrotationWeek
           .fromJson(serializer.fromJson<int>(json['rotationWeek'])),
       day: $SubjectTable.$converterday
           .fromJson(serializer.fromJson<int>(json['day'])),
-      startTime: serializer.fromJson<material.TimeOfDay>(
-        material.TimeOfDay(
-          hour: json['startTimeHour'],
-          minute: json['startTimeMinute'],
-        ),
-      ),
-      endTime: serializer.fromJson<material.TimeOfDay>(
-        material.TimeOfDay(
-          hour: json['endTimeHour'],
-          minute: json['endTimeMinute'],
-        ),
-      ),
+      startTime: serializer.fromJson<material.TimeOfDay>(json['startTime']),
+      endTime: serializer.fromJson<material.TimeOfDay>(json['endTime']),
       timetable: serializer.fromJson<String>(json['timetable']),
     );
   }
@@ -455,14 +445,12 @@ class SubjectData extends DataClass implements Insertable<SubjectData> {
       'label': serializer.toJson<String>(label),
       'location': serializer.toJson<String?>(location),
       'note': serializer.toJson<String?>(note),
-      'color': serializer.toJson<int>(color.value),
+      'color': serializer.toJson<material.Color>(color),
       'rotationWeek': serializer.toJson<int>(
           $SubjectTable.$converterrotationWeek.toJson(rotationWeek)),
       'day': serializer.toJson<int>($SubjectTable.$converterday.toJson(day)),
-      'startTimeHour': serializer.toJson<int>(startTime.hour),
-      'startTimeMinute': serializer.toJson<int>(startTime.minute),
-      'endTimeHour': serializer.toJson<int>(endTime.hour),
-      'endTimeMinute': serializer.toJson<int>(endTime.minute),
+      'startTime': serializer.toJson<material.TimeOfDay>(startTime),
+      'endTime': serializer.toJson<material.TimeOfDay>(endTime),
       'timetable': serializer.toJson<String>(timetable),
     };
   }
