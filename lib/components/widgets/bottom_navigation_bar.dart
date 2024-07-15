@@ -5,8 +5,8 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:timetable/provider/settings.dart';
 import 'package:timetable/provider/subjects.dart';
-import 'package:timetable/screens/settings_screen.dart';
-import 'package:timetable/screens/timetable_screen.dart';
+import 'package:timetable/screens/settings.dart';
+import 'package:timetable/screens/timetable.dart';
 
 /// The app's bottom navigation bar.
 class BottomNavigation extends HookConsumerWidget {

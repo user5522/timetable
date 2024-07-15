@@ -1,9 +1,9 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:timetable/components/settings/screens/timetable_management_screen.dart';
+import 'package:timetable/components/settings/screens/timetable_management.dart';
 import 'package:timetable/provider/settings.dart';
-import 'package:timetable/components/settings/screens/timetable_period_screen.dart';
+import 'package:timetable/components/settings/screens/timetable_period.dart';
 
 /// All the settings for changing some timetable features.
 class TimetableFeaturesOptions extends ConsumerWidget {

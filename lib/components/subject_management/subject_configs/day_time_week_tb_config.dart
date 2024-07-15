@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:timetable/components/subject_management/subject_configs/day_config.dart';
-import 'package:timetable/components/subject_management/subject_configs/rotation_week_config.dart';
-import 'package:timetable/components/subject_management/subject_configs/time_config.dart';
-import 'package:timetable/components/subject_management/subject_configs/timetable_config.dart';
+import 'package:timetable/components/subject_management/subject_configs/day.dart';
+import 'package:timetable/components/subject_management/subject_configs/rotation_week.dart';
+import 'package:timetable/components/subject_management/subject_configs/time.dart';
+import 'package:timetable/components/subject_management/subject_configs/timetable.dart';
 import 'package:timetable/components/widgets/list_item_group.dart';
 import 'package:timetable/constants/days.dart';
 import 'package:timetable/constants/rotation_weeks.dart';

@@ -1,7 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:timetable/components/subject_management/subject_configs/colors_config_screens/color_picker_screen.dart';
-import 'package:timetable/components/subject_management/subject_configs/colors_config_screens/preset_colors_screen.dart';
+import 'package:timetable/components/subject_management/subject_configs/colors_screens/color_picker.dart';
+import 'package:timetable/components/subject_management/subject_configs/colors_screens/preset_colors.dart';
 import 'package:timetable/constants/colors.dart';
 
 /// Colors configuration screen, basically groups [ColorPickerScreen] and [PresetColorsScreen].

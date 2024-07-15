@@ -1,8 +1,8 @@
 import 'package:drift/drift.dart';
 import 'package:timetable/constants/days.dart';
 import 'package:timetable/constants/rotation_weeks.dart';
-import 'package:timetable/db/converters/color_converter.dart';
-import 'package:timetable/db/converters/time_of_day_converter.dart';
+import 'package:timetable/db/converters/color.dart';
+import 'package:timetable/db/converters/time_of_day.dart';
 import 'package:timetable/db/database.dart';
 
 class Subject extends Table {

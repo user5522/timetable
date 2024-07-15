@@ -2,7 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:timetable/components/subject_management/subject_screen.dart';
-import 'package:timetable/components/widgets/day_view_subject_builder.dart';
+import 'package:timetable/components/widgets/day_view/day_view_subject_builder.dart';
 import 'package:timetable/constants/custom_times.dart';
 import 'package:timetable/constants/days.dart';
 import 'package:timetable/constants/error_emoticons.dart';

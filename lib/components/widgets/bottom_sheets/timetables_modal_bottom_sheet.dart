@@ -1,7 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:timetable/components/widgets/subject_data_bottom_sheet.dart';
+import 'package:timetable/components/widgets/bottom_sheets/subject_data_bottom_sheet.dart';
 import 'package:timetable/db/database.dart';
 import 'package:timetable/provider/timetables.dart';
 

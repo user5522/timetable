@@ -4,8 +4,8 @@ import 'package:flutter/material.dart' as material;
 import 'package:timetable/db/connection/native.dart';
 import 'package:timetable/constants/rotation_weeks.dart';
 import 'package:timetable/constants/days.dart';
-import 'package:timetable/db/converters/color_converter.dart';
-import 'package:timetable/db/converters/time_of_day_converter.dart';
+import 'package:timetable/db/converters/color.dart';
+import 'package:timetable/db/converters/time_of_day.dart';
 import 'package:timetable/db/models/timetable.dart';
 import 'package:timetable/db/models/subject.dart';
 
