@@ -25,12 +25,22 @@ class GeneralOptions extends ConsumerWidget {
     return Column(
       children: [
         ListTile(
+          leading: const Icon(
+            Icons.translate,
+            size: 20,
+          ),
+          horizontalTitleGap: 8,
           title: LanguageOptions(
             language: language,
           ),
           onTap: () {},
         ),
         ListTile(
+          leading: const Icon(
+            Icons.palette_outlined,
+            size: 20,
+          ),
+          horizontalTitleGap: 8,
           title: ThemeOptions(
             theme: theme,
           ),
@@ -46,6 +56,12 @@ class GeneralOptions extends ConsumerWidget {
 
             if (version != null && version >= 31) {
               return SwitchListTile(
+                secondary: const Icon(
+                  Icons.wallpaper_outlined,
+                  size: 20,
+                ),
+                // this is dumb.. I couldn't find a better way to change the gap size on switch list tiles
+                visualDensity: const VisualDensity(horizontal: -4),
                 title: const Text("monet_theming").tr(),
                 subtitle: const Text("Android 12+"),
                 value: monetTheming,
@@ -59,6 +75,11 @@ class GeneralOptions extends ConsumerWidget {
         ),
         ListTile(
           enabled: !monetTheming,
+          leading: const Icon(
+            Icons.colorize_outlined,
+            size: 20,
+          ),
+          horizontalTitleGap: 8,
           title: Row(
             children: [
               const Text("app_color").tr(),

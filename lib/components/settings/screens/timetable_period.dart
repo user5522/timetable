@@ -85,6 +85,11 @@ class TimetablePeriodScreen extends ConsumerWidget {
           Column(
             children: [
               SwitchListTile(
+                secondary: const Icon(
+                  Icons.edit_outlined,
+                  size: 20,
+                ),
+                visualDensity: const VisualDensity(horizontal: -4),
                 title: const Text("custom_time_period").tr(),
                 value: customTimePeriod,
                 onChanged: (bool value) {
@@ -95,6 +100,11 @@ class TimetablePeriodScreen extends ConsumerWidget {
                 },
               ),
               SwitchListTile(
+                secondary: const Icon(
+                  Icons.schedule_outlined,
+                  size: 20,
+                ),
+                visualDensity: const VisualDensity(horizontal: -4),
                 title: const Text("24_hour_period").tr(),
                 value: twentyFourHours,
                 onChanged: (bool value) {
@@ -111,6 +121,11 @@ class TimetablePeriodScreen extends ConsumerWidget {
                 textColor: Theme.of(context).colorScheme.primary,
               ),
               ListTile(
+                leading: const Icon(
+                  Icons.play_arrow_outlined,
+                  size: 20,
+                ),
+                horizontalTitleGap: 8,
                 title: const Text("start_time").tr(),
                 enabled: customTimePeriod ? true : false,
                 subtitle: Text(getTime(customStartTime)),
@@ -135,6 +150,11 @@ class TimetablePeriodScreen extends ConsumerWidget {
                 },
               ),
               ListTile(
+                leading: const Icon(
+                  Icons.stop_outlined,
+                  size: 20,
+                ),
+                horizontalTitleGap: 8,
                 title: const Text("end_time").tr(),
                 enabled: customTimePeriod ? true : false,
                 subtitle: Text(getTime(customEndTime)),

@@ -23,6 +23,11 @@ class CustomizeTimetableOptions extends ConsumerWidget {
     return Column(
       children: [
         ListTile(
+          leading: const Icon(
+            Icons.table_chart_outlined,
+            size: 20,
+          ),
+          horizontalTitleGap: 8,
           title: DefaultViewOptions(
             settings: settings,
             defaultTimetableView: defaultTimetableView,
@@ -30,6 +35,11 @@ class CustomizeTimetableOptions extends ConsumerWidget {
           onTap: () {},
         ),
         SwitchListTile(
+          secondary: const Icon(
+            Icons.close_fullscreen_outlined,
+            size: 20,
+          ),
+          visualDensity: const VisualDensity(horizontal: -4),
           title: const Text("compact_mode").tr(),
           value: compactMode,
           onChanged: (bool value) {
@@ -37,13 +47,11 @@ class CustomizeTimetableOptions extends ConsumerWidget {
           },
         ),
         SwitchListTile(
-          title: const Text("hide_locations").tr(),
-          value: hideLocation,
-          onChanged: (bool value) {
-            settings.updateHideLocation(value);
-          },
-        ),
-        SwitchListTile(
+          secondary: const Icon(
+            Icons.title_outlined,
+            size: 20,
+          ),
+          visualDensity: const VisualDensity(horizontal: -4),
           title: const Text("single_letter_days").tr(),
           value: singleLetterDays,
           onChanged: (bool value) {
@@ -51,6 +59,23 @@ class CustomizeTimetableOptions extends ConsumerWidget {
           },
         ),
         SwitchListTile(
+          secondary: const Icon(
+            Icons.location_off_outlined,
+            size: 20,
+          ),
+          visualDensity: const VisualDensity(horizontal: -4),
+          title: const Text("hide_locations").tr(),
+          value: hideLocation,
+          onChanged: (bool value) {
+            settings.updateHideLocation(value);
+          },
+        ),
+        SwitchListTile(
+          secondary: const Icon(
+            Icons.visibility_off_outlined,
+            size: 20,
+          ),
+          visualDensity: const VisualDensity(horizontal: -4),
           title: const Text("hide_sunday").tr(),
           value: hideSunday,
           onChanged: (bool value) {
@@ -58,6 +83,11 @@ class CustomizeTimetableOptions extends ConsumerWidget {
           },
         ),
         SwitchListTile(
+          secondary: const Icon(
+            Icons.visibility_off_outlined,
+            size: 20,
+          ),
+          visualDensity: const VisualDensity(horizontal: -4),
           title: const Text("hide_transparent_subjects").tr(),
           value: hideTransparentSubject,
           onChanged: (bool value) {

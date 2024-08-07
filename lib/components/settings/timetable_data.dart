@@ -22,6 +22,11 @@ class TimetableDataOptions extends ConsumerWidget {
     return Column(
       children: [
         ListTile(
+          leading: const Icon(
+            Icons.file_download_outlined,
+            size: 20,
+          ),
+          horizontalTitleGap: 8,
           onTap: () {
             final ScaffoldFeatureController<SnackBar, SnackBarClosedReason>
                 snackBar = ScaffoldMessenger.of(context).showSnackBar(
@@ -34,6 +39,11 @@ class TimetableDataOptions extends ConsumerWidget {
           title: const Text("create_backup").tr(),
         ),
         ListTile(
+          leading: const Icon(
+            Icons.file_upload_outlined,
+            size: 20,
+          ),
+          horizontalTitleGap: 8,
           onTap: () async {
             showDialog<void>(
               context: context,
@@ -61,6 +71,11 @@ class TimetableDataOptions extends ConsumerWidget {
           title: const Text("restore_backup").tr(),
         ),
         ListTile(
+          leading: const Icon(
+            Icons.delete_forever_outlined,
+            size: 20,
+          ),
+          horizontalTitleGap: 8,
           onTap: () {
             showDialog<void>(
               context: context,

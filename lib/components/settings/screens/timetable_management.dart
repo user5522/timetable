@@ -28,6 +28,11 @@ class TimetableManagementScreen extends ConsumerWidget {
           Column(
             children: [
               SwitchListTile(
+                secondary: const Icon(
+                  Icons.backup_table_outlined,
+                  size: 20,
+                ),
+                visualDensity: const VisualDensity(horizontal: -4),
                 title: const Text("multiple_timetables").tr(),
                 value: multipleTimetables,
                 onChanged: (bool value) {
@@ -35,6 +40,11 @@ class TimetableManagementScreen extends ConsumerWidget {
                 },
               ),
               ListTile(
+                leading: const Icon(
+                  Icons.delete_forever_outlined,
+                  size: 20,
+                ),
+                horizontalTitleGap: 8,
                 title: const Text("reset").tr(),
                 onTap: () {
                   showDialog<void>(

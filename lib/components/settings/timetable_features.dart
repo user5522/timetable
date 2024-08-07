@@ -18,6 +18,12 @@ class TimetableFeaturesOptions extends ConsumerWidget {
     return Column(
       children: [
         ListTile(
+          leading: const Icon(
+            Icons.schedule_outlined,
+            size: 20,
+          ),
+          horizontalTitleGap: 8,
+          title: const Text("timetable_period_config").tr(),
           onTap: () {
             Navigator.push(
               context,
@@ -26,9 +32,13 @@ class TimetableFeaturesOptions extends ConsumerWidget {
               ),
             );
           },
-          title: const Text("timetable_period_config").tr(),
         ),
         ListTile(
+          leading: const Icon(
+            Icons.table_view_outlined,
+            size: 20,
+          ),
+          horizontalTitleGap: 8,
           onTap: () {
             Navigator.push(
               context,
@@ -40,6 +50,11 @@ class TimetableFeaturesOptions extends ConsumerWidget {
           title: const Text("manage_timetables").tr(),
         ),
         SwitchListTile(
+          secondary: const Icon(
+            Icons.rotate_90_degrees_ccw_outlined,
+            size: 20,
+          ),
+          visualDensity: const VisualDensity(horizontal: -4),
           title: const Text("rotation_week").plural(2),
           value: rotationWeeks,
           onChanged: (bool value) {
@@ -47,6 +62,11 @@ class TimetableFeaturesOptions extends ConsumerWidget {
           },
         ),
         SwitchListTile(
+          secondary: const Icon(
+            Icons.format_color_fill_outlined,
+            size: 20,
+          ),
+          visualDensity: const VisualDensity(horizontal: -4),
           title: const Text("auto_complete_colors").tr(),
           subtitle: const Text("auto_complete_colors_description").tr(),
           value: autoCompleteColor,
