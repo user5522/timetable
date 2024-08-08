@@ -19,6 +19,7 @@ class Settings {
   final bool twentyFourHours;
   final TbViews defaultTimetableView;
   final Color appThemeColor;
+  final Duration defaultSubjectDuration;
 
   // settings defaults
   Settings({
@@ -38,6 +39,7 @@ class Settings {
     this.twentyFourHours = false,
     this.defaultTimetableView = TbViews.grid,
     this.appThemeColor = Colors.deepPurple,
+    this.defaultSubjectDuration = const Duration(minutes: 60),
   });
 
   Settings copyWith({
@@ -57,6 +59,7 @@ class Settings {
     bool? twentyFourHours,
     TbViews? defaultTimetableView,
     Color? appThemeColor,
+    Duration? defaultSubjectDuration,
   }) =>
       Settings(
         customTimePeriod: customTimePeriod ?? this.customTimePeriod,
@@ -76,6 +79,8 @@ class Settings {
         twentyFourHours: twentyFourHours ?? this.twentyFourHours,
         defaultTimetableView: defaultTimetableView ?? this.defaultTimetableView,
         appThemeColor: appThemeColor ?? this.appThemeColor,
+        defaultSubjectDuration:
+            defaultSubjectDuration ?? this.defaultSubjectDuration,
       );
 
   Map<String, dynamic> toJson() => {
@@ -97,6 +102,7 @@ class Settings {
         'twentyFourHours': twentyFourHours,
         'defaultTimetableView': defaultTimetableView.name,
         'appThemeColorValue': appThemeColor.value,
+        'defaultSubjectDuration': defaultSubjectDuration.inMinutes,
       };
 
   factory Settings.fromJson(Map<String, dynamic> json) {
@@ -136,6 +142,9 @@ class Settings {
           : null,
       appThemeColor: json['appThemeColorValue'] != null
           ? Color(json['appThemeColorValue'] as int)
+          : null,
+      defaultSubjectDuration: json['defaultSubjectDuration'] != null
+          ? Duration(minutes: json['defaultSubjectDuration'] as int)
           : null,
     );
   }

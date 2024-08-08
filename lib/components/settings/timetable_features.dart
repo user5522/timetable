@@ -1,12 +1,14 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:timetable/components/settings/screens/timetable_management.dart';
+import 'package:timetable/components/widgets/bottom_sheets/subject_duration_modal_bottom_sheet.dart';
 import 'package:timetable/provider/settings.dart';
 import 'package:timetable/components/settings/screens/timetable_period.dart';
 
 /// All the settings for changing some timetable features.
-class TimetableFeaturesOptions extends ConsumerWidget {
+class TimetableFeaturesOptions extends HookConsumerWidget {
   const TimetableFeaturesOptions({super.key});
 
   @override
@@ -14,6 +16,9 @@ class TimetableFeaturesOptions extends ConsumerWidget {
     final settings = ref.read(settingsProvider.notifier);
     final rotationWeeks = ref.watch(settingsProvider).rotationWeeks;
     final autoCompleteColor = ref.watch(settingsProvider).autoCompleteColor;
+    final defaultSubjectDuration =
+        ref.watch(settingsProvider).defaultSubjectDuration;
+    final duration = useState(defaultSubjectDuration);
 
     return Column(
       children: [
@@ -48,6 +53,34 @@ class TimetableFeaturesOptions extends ConsumerWidget {
             );
           },
           title: const Text("manage_timetables").tr(),
+        ),
+        ListTile(
+          leading: const Icon(
+            Icons.timer_outlined,
+            size: 20,
+          ),
+          horizontalTitleGap: 8,
+          title: const Text("default_subject_duration").tr(),
+          trailing: Text("${defaultSubjectDuration.inMinutes}min"),
+          onTap: () {
+            showModalBottomSheet(
+              showDragHandle: true,
+              enableDrag: true,
+              isDismissible: true,
+              context: context,
+              builder: (context) {
+                return Wrap(
+                  children: [
+                    SubjectDurationModalBottomSheet(
+                      duration: duration,
+                    ),
+                  ],
+                );
+              },
+            ).then(
+              (_) => settings.updateDefaultSubjectDuration(duration.value),
+            );
+          },
         ),
         SwitchListTile(
           secondary: const Icon(

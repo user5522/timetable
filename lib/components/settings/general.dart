@@ -80,13 +80,9 @@ class GeneralOptions extends ConsumerWidget {
             size: 20,
           ),
           horizontalTitleGap: 8,
-          title: Row(
-            children: [
-              const Text("app_color").tr(),
-              const Spacer(),
+          title: const Text("app_color").tr(),
+          trailing:
               ColorIndicator(color: appThemeColor, monetTheming: monetTheming),
-            ],
-          ),
           onTap: () {
             Navigator.push(
               context,

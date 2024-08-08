@@ -40,6 +40,8 @@
   "default_tb_view": "Default View",
   "view": "View",
   "grid": "Grid",
+  "default_subject_duration": "Default Subject Duration",
+  "choose_duration": "Choose a Duration",
 
   "delete_timetable_dialog": "Deleting a timetable will delete its corresponding subjects.",
   "reset_timetables_dialog": "Resetting timetables will also delete all subjects.",

@@ -11,6 +11,14 @@ class SettingsNotifier extends StateNotifier<Settings> {
     loadSettings();
   }
 
+  void updateDefaultSubjectDuration(Duration defaultSubjectDuration) {
+    final newState = state.copyWith(
+      defaultSubjectDuration: defaultSubjectDuration,
+    );
+    state = newState;
+    saveSettings();
+  }
+
   void updateAppThemeColor(Color appThemeColor) {
     final newState = state.copyWith(
       appThemeColor: appThemeColor,

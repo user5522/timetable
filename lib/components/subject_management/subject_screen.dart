@@ -41,6 +41,8 @@ class SubjectScreen extends HookConsumerWidget {
     final tfHours = ref.watch(settingsProvider).twentyFourHours;
     final customStartTimeHour =
         ref.watch(settingsProvider).customStartTime.hour;
+    final defaultSubjectDuration =
+        ref.watch(settingsProvider).defaultSubjectDuration;
 
     final bool isSubjectNull = (subject == null);
     final bool isCTimetableNull = (currentTimetable == null);
@@ -65,7 +67,9 @@ class SubjectScreen extends HookConsumerWidget {
     final ValueNotifier<TimeOfDay> endTime = useState(
       TimeOfDay(
         hour: subject?.endTime.hour ??
-            (rowIndex! + (tfHours ? 0 : customStartTimeHour) + 1),
+            (rowIndex! +
+                (tfHours ? 0 : customStartTimeHour) +
+                defaultSubjectDuration.inHours),
         minute: 0,
       ),
     );

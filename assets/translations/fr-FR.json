@@ -40,6 +40,8 @@
   "default_tb_view": "Vue par défaut",
   "view": "Vue",
   "grid": "Grille",
+  "default_subject_duration": "Durée par défaut d'un matière",
+  "choose_duration": "Choisir une Durée",
 
   "delete_timetable_dialog": "La suppression d'un tableau supprimera ses sujets correspondants.",
   "reset_timetables_dialog": "La réinitialisation des emplois de temps supprimera toutes les matières aussi.",
