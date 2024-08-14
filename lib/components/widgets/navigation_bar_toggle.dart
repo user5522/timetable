@@ -1,12 +1,13 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:timetable/provider/settings.dart';
 
-/// Toggles the navbar.
+/// Toggles the navbar on and off to gain more screen space.
 class NavbarToggle extends HookConsumerWidget {
   const NavbarToggle({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -17,6 +18,9 @@ class NavbarToggle extends HookConsumerWidget {
       onPressed: () {
         settings.updateNavbarVisible(!navbarToggle);
       },
+      tooltip: navbarToggle
+          ? "fullscreen_tooltip_hide".tr()
+          : "fullscreen_tooltip_show".tr(),
       selectedIcon: const Icon(
         Icons.fullscreen,
         size: 25,

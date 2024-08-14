@@ -8,11 +8,8 @@ const double timeColumnWidth = 22.5;
 int columns(WidgetRef ref) {
   final hideSunday = ref.watch(settingsProvider).hideSunday;
 
-  if (hideSunday) {
-    return 6;
-  } else {
-    return 7;
-  }
+  if (!hideSunday) return 7;
+  return 6;
 }
 
 /// Number of rows in the grid view based on the custom start time and custom end time (if customTimePeriod is true),
@@ -22,13 +19,17 @@ int rows(WidgetRef ref) {
   final customTimePeriod = ref.watch(settingsProvider).customTimePeriod;
   final customStartTime = ref.watch(settingsProvider).customStartTime;
   final customEndTime = ref.watch(settingsProvider).customEndTime;
+  final twentyFourHours = ref.watch(settingsProvider).twentyFourHours;
 
-  if (customTimePeriod && (customEndTime.hour - customStartTime.hour != 0)) {
+  if (customTimePeriod && ((customEndTime.hour - customStartTime.hour) != 0)) {
     return (customEndTime.hour - customStartTime.hour).abs();
-  } else if (customTimePeriod &&
-      (customEndTime.hour - customStartTime.hour == 0)) {
-    return 24;
-  } else {
-    return 10;
   }
+  if (customTimePeriod &&
+      (customStartTime.hour == 0 &&
+          customStartTime.hour == customEndTime.hour)) {
+    return 24;
+  }
+  if (twentyFourHours) return 24;
+
+  return 10;
 }

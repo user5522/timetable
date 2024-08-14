@@ -1,66 +1,88 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:timetable/components/subject_management/subject_configs/colors_config.dart';
-import 'package:timetable/components/subject_management/subject_configs/day_time_week_config.dart';
-import 'package:timetable/components/subject_management/subject_configs/note_tile.dart';
-import 'package:timetable/components/widgets/list_tile_group.dart';
-import 'package:timetable/constants/basic_subject.dart';
+import 'package:timetable/components/subject_management/subject_configs/color.dart';
+import 'package:timetable/components/subject_management/subject_configs/day_time_week_tb_config.dart';
+import 'package:timetable/components/subject_management/subject_configs/label_location.dart';
+import 'package:timetable/components/subject_management/subject_configs/note.dart';
 import 'package:timetable/constants/days.dart';
 import 'package:timetable/constants/rotation_weeks.dart';
 import 'package:timetable/db/database.dart';
 import 'package:timetable/provider/overlapping_subjects.dart';
 import 'package:timetable/provider/settings.dart';
 import 'package:timetable/provider/subjects.dart';
+import 'package:timetable/provider/timetables.dart';
 
 /// The Subject creation/modification screen.
-/// Uses [TimeDayRotationWeekConfig], [NotesTile] and [ColorsConfig]
 class SubjectScreen extends HookConsumerWidget {
   final int? rowIndex;
   final int? columnIndex;
   final SubjectData? subject;
+  final ValueNotifier<TimetableData>? currentTimetable;
 
   const SubjectScreen({
     super.key,
+    this.subject,
     this.rowIndex,
     this.columnIndex,
-    this.subject,
+    this.currentTimetable,
   });
 
   static final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final subjects = ref.watch(subjProvider);
-    final subjectNotifier = ref.watch(subjProvider.notifier);
+    final subjects = ref.watch(subjectProvider);
+    final subjectNotifier = ref.watch(subjectProvider.notifier);
     final overlappingSubjects = ref.watch(overlappingSubjectsProvider);
     final autoCompleteColor = ref.watch(settingsProvider).autoCompleteColor;
+    final timetables = ref.watch(timetableProvider);
+    final tfHours = ref.watch(settingsProvider).twentyFourHours;
+    final customStartTimeHour =
+        ref.watch(settingsProvider).customStartTime.hour;
+    final defaultSubjectDuration =
+        ref.watch(settingsProvider).defaultSubjectDuration;
 
-    final bool isSubjectNull = subject == null;
+    final bool isSubjectNull = (subject == null);
+    final bool isCTimetableNull = (currentTimetable == null);
     final int id = isSubjectNull ? subjects.length : subject!.id;
+
+    final timetable = useState(
+      isSubjectNull
+          ? isCTimetableNull
+              ? timetables
+                  .where((t) => t.name == subject!.timetable)
+                  .firstOrNull
+              : currentTimetable!.value
+          : timetables.where((t) => t.name == subject!.timetable).firstOrNull,
+    );
     final startTime = useState(
       TimeOfDay(
-        hour: isSubjectNull ? (rowIndex! + 8) : subject!.startTime.hour,
+        hour: subject?.startTime.hour ??
+            (rowIndex! + (tfHours ? 0 : customStartTimeHour)),
         minute: 0,
       ),
     );
-    final endTime = useState(
+    final ValueNotifier<TimeOfDay> endTime = useState(
       TimeOfDay(
-        hour: isSubjectNull ? (rowIndex! + 8 + 1) : subject!.endTime.hour,
+        hour: subject?.endTime.hour ??
+            (rowIndex! +
+                (tfHours ? 0 : customStartTimeHour) +
+                defaultSubjectDuration.inHours),
         minute: 0,
       ),
     );
-
-    final day = useState(
-        Days.values[isSubjectNull ? columnIndex! : subject!.day.index]);
-    final rotationWeek =
-        useState(isSubjectNull ? RotationWeeks.none : subject!.rotationWeek);
-    final color = useState(isSubjectNull ? Colors.black : subject!.color);
 
     final label = useState(subject?.label ?? "");
     final location = useState(subject?.location ?? "");
     final note = useState(subject?.note ?? "");
+    final ValueNotifier<Days> day =
+        useState(Days.values[subject?.day.index ?? columnIndex!]);
+    final color = useState(subject?.color ?? Colors.black);
+    final rotationWeek = useState(subject?.rotationWeek ?? RotationWeeks.none);
 
+    // I DONT KNOW WHY I AM USING [SubjectData] I SHOULD BE USING [SubjectCompanion]
     final SubjectData newSubject = SubjectData(
       id: id,
       label: label.value,
@@ -71,6 +93,7 @@ class SubjectScreen extends HookConsumerWidget {
       day: day.value,
       rotationWeek: rotationWeek.value,
       note: note.value,
+      timetable: timetable.value!.name,
     );
 
     final subjectsInSameDay = subjects
@@ -79,8 +102,38 @@ class SubjectScreen extends HookConsumerWidget {
         )
         .toList();
 
+// all the upcomming variables are checks to
+// limit the amount of overlapping subjects.
+// i should really work and find a solution to that issue..
+
+    final multipleOccupied = overlappingSubjects.any((e) {
+      for (var subject in e) {
+        return newSubject == subject;
+      }
+      return false;
+    })
+        ? false
+        : subjectsInSameDay
+                .where((s) {
+                  final sHours = List.generate(
+                    s.endTime.hour - s.startTime.hour,
+                    (index) => index + s.startTime.hour,
+                  );
+                  final inputHours = List.generate(
+                    endTime.value.hour - startTime.value.hour,
+                    (index) => index + startTime.value.hour,
+                  );
+
+                  return sHours.any((hour) => inputHours.contains(hour));
+                })
+                .where((s) => s != subject)
+                .where((e) => e.timetable == newSubject.timetable)
+                .length >
+            1;
+
     final isOccupied = subjectsInSameDay
         .where((e) => overlappingSubjects.any((elem) => elem.contains(e)))
+        .where((e) => e.timetable == newSubject.timetable)
         .any((e) {
       final eHours = List.generate(
         e.endTime.hour - e.startTime.hour,
@@ -97,6 +150,7 @@ class SubjectScreen extends HookConsumerWidget {
     final isOccupiedExceptSelf = subjectsInSameDay
         .where((e) => e != subject)
         .where((e) => !overlappingSubjects.any((elem) => elem.contains(e)))
+        .where((e) => e.timetable == newSubject.timetable)
         .any((e) {
       final eHours = List.generate(
         e.endTime.hour - e.startTime.hour,
@@ -109,6 +163,8 @@ class SubjectScreen extends HookConsumerWidget {
       return eHours.any((hour) => inputHours.contains(hour));
     });
 
+// end of checks
+
     return Scaffold(
       appBar: AppBar(
         actions: [
@@ -119,16 +175,17 @@ class SubjectScreen extends HookConsumerWidget {
                 backgroundColor: Theme.of(context).colorScheme.error,
                 foregroundColor: Theme.of(context).colorScheme.errorContainer,
               ),
-              onPressed: () {
-                subjectNotifier.deleteSubject(newSubject);
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Subject Deleted!'),
-                  ),
-                );
-                Navigator.pop(context);
+              onPressed: () async {
+                await subjectNotifier.deleteSubject(newSubject).then((r) {
+                  Navigator.pop(context);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: const Text('subject_deleted_snackbar').tr(),
+                    ),
+                  );
+                });
               },
-              child: const Text("Delete"),
+              child: const Text("delete").tr(),
             ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -140,100 +197,64 @@ class SubjectScreen extends HookConsumerWidget {
                 foregroundColor:
                     Theme.of(context).colorScheme.secondaryContainer,
               ),
-              onPressed: () {
-                if (formKey.currentState!.validate()) {
-                  if (isSubjectNull) {
-                    if (!isOccupied) {
-                      subjectNotifier.addSubject(newSubject.toCompanion(false));
-                      Navigator.pop(context, label.value);
-                    } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Time slots are already occupied!'),
-                        ),
+              onPressed: () async {
+                if (!formKey.currentState!.validate()) {
+                  return;
+                }
+                if (isOccupied && multipleOccupied) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: const Text('time_slots_occupied_error').tr(),
+                    ),
+                  );
+                  return;
+                }
+                if (isSubjectNull) {
+                  await subjectNotifier
+                      .addSubject(newSubject.toCompanion(true))
+                      .then(
+                        (r) => Navigator.pop(context, label.value),
                       );
-                    }
-                  } else {
-                    if (!isOccupiedExceptSelf) {
-                      subjectNotifier.updateSubject(newSubject);
-                      Navigator.pop(context, label.value);
-                    } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Time slots are already occupied!'),
-                        ),
+                }
+                if (!isSubjectNull) {
+                  await subjectNotifier.updateSubject(newSubject).then(
+                        (r) => Navigator.pop(context, label.value),
                       );
-                    }
-                  }
                 }
               },
-              child: Text(isSubjectNull ? "Create" : "Save"),
+              child: Text(isSubjectNull ? "create".tr() : "save".tr()),
             ),
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Form(
+      body: ListView(
+        padding: const EdgeInsets.all(16.0),
+        children: [
+          Form(
             key: formKey,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                ListTileGroup(
-                  children: [
-                    ListItem(
-                      title: TextFormField(
-                        initialValue: label.value,
-                        decoration: const InputDecoration(
-                          hintText: "Subject",
-                          border: InputBorder.none,
-                        ),
-                        validator: (value) {
-                          if (value == null || value.trim().isEmpty) {
-                            return 'Please enter a Subject.';
-                          }
-                          return null;
-                        },
-                        onChanged: (value) {
-                          label.value = value;
-                          if (autoCompleteColor) {
-                            color.value = subjects
-                                .firstWhere(
-                                  (subj) =>
-                                      label.value.toLowerCase().trim() ==
-                                      subj.label.toLowerCase().trim(),
-                                  orElse: () => basicSubject,
-                                )
-                                .color;
-                          }
-                        },
-                      ),
-                    ),
-                    ListItem(
-                      title: TextFormField(
-                        initialValue: location.value,
-                        decoration: const InputDecoration(
-                          hintText: "Location",
-                          border: InputBorder.none,
-                        ),
-                        onChanged: (value) {
-                          location.value = value;
-                        },
-                      ),
-                    ),
-                  ],
+                LabelLocationConfig(
+                  subjects: subjects,
+                  label: label,
+                  location: location,
+                  color: color,
+                  autoCompleteColor: autoCompleteColor,
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 10),
                   child: ColorsConfig(color: color),
                 ),
-                TimeDayRotationWeekConfig(
+                TimeDayRotationWeekTimetableConfig(
                   day: day,
                   rotationWeek: rotationWeek,
                   startTime: startTime,
                   endTime: endTime,
-                  occupied: isSubjectNull ? isOccupied : isOccupiedExceptSelf,
+                  timetable: timetable,
+                  occupied: isSubjectNull
+                      ? (isOccupied || multipleOccupied)
+                      : (isOccupiedExceptSelf || multipleOccupied),
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 10),
@@ -244,7 +265,7 @@ class SubjectScreen extends HookConsumerWidget {
               ],
             ),
           ),
-        ),
+        ],
       ),
     );
   }

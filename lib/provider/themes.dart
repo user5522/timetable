@@ -3,40 +3,43 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timetable/constants/theme_options.dart';
 
 /// Themes' [StateNotifier].
-class ThemeModeNotifier extends StateNotifier<ThemeModeOption> {
-  ThemeModeNotifier() : super(ThemeModeOption.auto) {
-    _loadThemeFromSharedPreferences();
+class ThemeNotifier extends StateNotifier<ThemeOption> {
+  ThemeNotifier() : super(ThemeOption.auto) {
+    loadTheme();
   }
 
-  void changeTheme(ThemeModeOption newThemeMode) {
-    state = newThemeMode;
-    _saveThemePreference(newThemeMode);
+  /// changes the current theme to a provided one
+  void changeTheme(ThemeOption newTheme) {
+    state = newTheme;
+    saveTheme(newTheme);
   }
 
-  ThemeModeOption getTheme() {
+  /// returns the current theme from state
+  ThemeOption getTheme() {
     return state;
   }
 
-  Future<void> _loadThemeFromSharedPreferences() async {
+  /// loads current theme from shared preferences
+  Future<void> loadTheme() async {
     final prefs = await SharedPreferences.getInstance();
-    final savedTheme = prefs.getString('themeMode');
-    if (savedTheme != null) {
-      state = ThemeModeOption.values.firstWhere(
-        (element) => element.toString() == savedTheme,
-      );
-    }
+    final savedTheme = prefs.getString('theme');
+    if (savedTheme == null) return;
+
+    state = ThemeOption.values.firstWhere(
+      (element) => element.toString() == savedTheme,
+    );
   }
 
-  Future<void> _saveThemePreference(ThemeModeOption themeMode) async {
+  /// saves current theme to shared preferences
+  Future<void> saveTheme(ThemeOption theme) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(
-      'themeMode',
-      themeMode.toString(),
+      'theme',
+      theme.toString(),
     );
   }
 }
 
-final themeModeProvider =
-    StateNotifierProvider<ThemeModeNotifier, ThemeModeOption>(
-  (ref) => ThemeModeNotifier(),
+final themeProvider = StateNotifierProvider<ThemeNotifier, ThemeOption>(
+  (ref) => ThemeNotifier(),
 );

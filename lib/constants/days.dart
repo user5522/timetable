@@ -10,12 +10,14 @@ enum Days {
 }
 
 /// The week's days as a list of strings.
-const List<String> days = [
-  'Monday',
-  'Tuesday',
-  'Wednesday',
-  'Thursday',
-  'Friday',
-  'Saturday',
-  'Sunday'
+List<String> days = [
+  'monday',
+  'tuesday',
+  'wednesday',
+  'thursday',
+  'friday',
+  'saturday',
+  'sunday'
 ];
+
+const List<Days> daysList = Days.values;

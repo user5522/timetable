@@ -30,3 +30,28 @@ enum ColorsList {
   final String label;
   final Color color;
 }
+
+/// hand picked colors for the app theme color.
+enum AppColorsList {
+  yellow('yellow', Colors.yellow),
+  orange('orange', Colors.orange),
+
+  pink('pink', Colors.pink),
+  deepPurple('deep_purple', Colors.deepPurple),
+
+  indigo('indigo', Colors.indigo),
+  blue('blue', Colors.blue),
+
+  lightGreen('light_green', Colors.lightGreen),
+  green('green', Colors.green),
+  teal('teal', Colors.teal),
+
+  red('red', Colors.red),
+  // i have no idea what the color name is in french
+  // so i just renamed it to light red because it's similar tbh
+  lightRed('light_red', Colors.redAccent);
+
+  const AppColorsList(this.label, this.color);
+  final String label;
+  final Color color;
+}

@@ -1,4 +1,6 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:timetable/components/widgets/bottom_sheets/subject_data_bottom_sheet.dart';
 import 'package:timetable/constants/rotation_weeks.dart';
 import 'package:timetable/helpers/rotation_weeks.dart';
 
@@ -15,38 +17,37 @@ class RotationWeekModalBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Padding(
-          padding: EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 16.0),
-          child: Text(
-            "Rotation Weeks",
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 20,
-            ),
-          ),
-        ),
-        ListView(
-          shrinkWrap: true,
-          primary: false,
-          children: rotationWeeks.where((e) => e != RotationWeeks.all).map(
-            (e) {
-              return ListTile(
-                title: Text(
-                  getRotationWeekLabel(e),
+    /// actual usable rotation weeks
+    final rws = rotationWeeks.where((r) => r != RotationWeeks.all).toList();
+
+    return SubjectDataBottomSheet(
+      title: "rotation_week".plural(2),
+      children: List.generate(rws.length, (i) {
+        final rw = rws[i];
+        bool isSelected = (rw == rotationWeek.value);
+
+        return ListTile(
+          title: Row(
+            children: [
+              Text(
+                getRotationWeekLabel(rw),
+              ),
+              const Spacer(),
+              Visibility(
+                visible: isSelected,
+                child: const Icon(
+                  Icons.check,
                 ),
-                visualDensity: VisualDensity.compact,
-                onTap: () {
-                  rotationWeek.value = e;
-                  Navigator.pop(context);
-                },
-              );
-            },
-          ).toList(),
-        ),
-      ],
+              ),
+            ],
+          ),
+          visualDensity: VisualDensity.compact,
+          onTap: () {
+            rotationWeek.value = rw;
+            Navigator.pop(context);
+          },
+        );
+      }),
     );
   }
 }

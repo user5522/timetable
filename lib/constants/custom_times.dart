@@ -6,26 +6,24 @@ import 'package:timetable/provider/settings.dart';
 /// otherwise returns the default start time. (8:00)
 TimeOfDay getCustomStartTime(TimeOfDay customTime, WidgetRef ref) {
   final customTimePeriod = ref.watch(settingsProvider).customTimePeriod;
+  final twentyFourHours = ref.watch(settingsProvider).twentyFourHours;
 
-  if (customTimePeriod) {
-    if (customTime.hour != 0) return customTime;
-    return const TimeOfDay(hour: 0, minute: 0);
-  } else {
-    return const TimeOfDay(hour: 8, minute: 0);
-  }
+  if (customTimePeriod) return customTime;
+  if (twentyFourHours) return const TimeOfDay(hour: 0, minute: 0);
+
+  return const TimeOfDay(hour: 8, minute: 0);
 }
 
 /// Returns the custom end time set by the user if customTimePeriod is true,
 /// otherwise returns the default end time. (18:00)
 TimeOfDay getCustomEndTime(TimeOfDay customTime, WidgetRef ref) {
   final customTimePeriod = ref.watch(settingsProvider).customTimePeriod;
+  final twentyFourHours = ref.watch(settingsProvider).twentyFourHours;
 
-  if (customTimePeriod) {
-    if (customTime.hour != 0) return customTime;
-    return const TimeOfDay(hour: 24, minute: 0);
-  } else {
-    return const TimeOfDay(hour: 18, minute: 0);
-  }
+  if (customTimePeriod) return customTime;
+  if (twentyFourHours) return const TimeOfDay(hour: 0, minute: 0);
+
+  return const TimeOfDay(hour: 18, minute: 0);
 }
 
 /// Returns a formatted custom time hour.

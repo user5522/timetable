@@ -1,37 +1,31 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:timetable/constants/theme_options.dart';
 import 'package:timetable/provider/themes.dart';
+import 'package:timetable/helpers/themes.dart';
 
-/// application's theme mode options drop-down menu.
+/// app theme me options dropdown menu.
 class ThemeOptions extends StatelessWidget {
+  final ThemeNotifier theme;
+
   const ThemeOptions({
     super.key,
-    required this.themeMode,
+    required this.theme,
   });
-
-  final ThemeModeNotifier themeMode;
-
-  String getThemeModeLabel(ThemeModeOption themeMode) {
-    switch (themeMode) {
-      case ThemeModeOption.dark:
-        return 'Dark';
-      case ThemeModeOption.auto:
-        return 'System';
-      case ThemeModeOption.light:
-        return 'Light';
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
-    List<DropdownMenuEntry<ThemeModeOption>> themeEntries() {
-      final themeEntries = <DropdownMenuEntry<ThemeModeOption>>[];
+    /// The dropdown menu entries of each ThemeOption value.
+    List<DropdownMenuEntry<ThemeOption>> themeEntries() {
+      final themeEntries = <DropdownMenuEntry<ThemeOption>>[];
 
-      for (final ThemeModeOption option in ThemeModeOption.values) {
+      for (final ThemeOption option in ThemeOption.values) {
+        final label = getThemeLabel(option).tr();
+
         themeEntries.add(
-          DropdownMenuEntry<ThemeModeOption>(
+          DropdownMenuEntry<ThemeOption>(
             value: option,
-            label: getThemeModeLabel(option),
+            label: label,
           ),
         );
       }
@@ -40,15 +34,15 @@ class ThemeOptions extends StatelessWidget {
 
     return Row(
       children: [
-        const Text('Theme Mode'),
+        const Text('theme_mode').tr(),
         const Spacer(),
-        DropdownMenu<ThemeModeOption>(
-          width: 120,
+        DropdownMenu<ThemeOption>(
+          width: 130,
           dropdownMenuEntries: themeEntries(),
-          label: const Text("Theme"),
-          initialSelection: themeMode.getTheme(),
+          label: const Text("theme").tr(),
+          initialSelection: theme.getTheme(),
           onSelected: (value) {
-            themeMode.changeTheme(value!);
+            theme.changeTheme(value!);
           },
         ),
       ],

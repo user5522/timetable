@@ -1,8 +1,9 @@
 import 'package:drift/drift.dart';
 import 'package:timetable/constants/days.dart';
 import 'package:timetable/constants/rotation_weeks.dart';
-import 'package:timetable/db/converters/color_converter.dart';
-import 'package:timetable/db/converters/time_of_day_converter.dart';
+import 'package:timetable/db/converters/color.dart';
+import 'package:timetable/db/converters/time_of_day.dart';
+import 'package:timetable/db/database.dart';
 
 class Subject extends Table {
   IntColumn get id => integer().autoIncrement()();
@@ -16,4 +17,6 @@ class Subject extends Table {
   IntColumn get day => intEnum<Days>()();
   TextColumn get startTime => text().map(const TimeOfDayConverter())();
   TextColumn get endTime => text().map(const TimeOfDayConverter())();
+  // added in v3
+  TextColumn get timetable => text().references($TimetableTable, #name)();
 }

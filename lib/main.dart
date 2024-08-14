@@ -1,28 +1,40 @@
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:timetable/components/widgets/navigation_bar.dart';
+import 'package:timetable/components/widgets/eager_initilization.dart';
+import 'package:timetable/components/widgets/bottom_navigation_bar.dart';
+import 'package:timetable/constants/languages.dart';
 import 'package:timetable/constants/theme_options.dart';
 import 'package:timetable/provider/settings.dart';
 import 'package:timetable/provider/themes.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await EasyLocalization.ensureInitialized();
+  EasyLocalization.logger.enableLevels = [];
+
   runApp(
-    const ProviderScope(
-      child: Timetable(),
+    ProviderScope(
+      child: EasyLocalization(
+        supportedLocales: languages,
+        path: 'assets/translations',
+        fallbackLocale: languages[0],
+        child: const TimetableApp(),
+      ),
     ),
   );
 }
 
 /// The main class of the application.
-class Timetable extends ConsumerWidget {
-  const Timetable({super.key});
+class TimetableApp extends ConsumerWidget {
+  const TimetableApp({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final themeMode = ref.watch(themeModeProvider);
+    final theme = ref.watch(themeProvider);
     final monetTheming = ref.watch(settingsProvider).monetTheming;
+    final appThemeColor = ref.watch(settingsProvider).appThemeColor;
     final Brightness systemBrightness =
         MediaQuery.of(context).platformBrightness;
 
@@ -32,28 +44,33 @@ class Timetable extends ConsumerWidget {
         ColorScheme? darkDynamic,
       ) {
         return MaterialApp(
+          localizationsDelegates: context.localizationDelegates,
+          supportedLocales: context.supportedLocales,
+          locale: context.locale,
           title: 'Timetable',
           color: Colors.white,
           theme: ThemeData(
             colorScheme: monetTheming
-                ? themeMode == ThemeModeOption.auto
+                ? theme == ThemeOption.auto
                     ? systemBrightness == Brightness.light
                         ? lightDynamic
                         : darkDynamic
-                    : themeMode == ThemeModeOption.light
+                    : theme == ThemeOption.light
                         ? lightDynamic
                         : darkDynamic
                 : ColorScheme.fromSeed(
-                    seedColor: Colors.deepPurple,
-                    brightness: themeMode == ThemeModeOption.auto
+                    seedColor: appThemeColor,
+                    brightness: theme == ThemeOption.auto
                         ? systemBrightness
-                        : themeMode == ThemeModeOption.dark
+                        : theme == ThemeOption.dark
                             ? Brightness.dark
                             : Brightness.light,
                   ),
             useMaterial3: true,
           ),
-          home: const Navigation(),
+          home: const EagerInitialization(
+            child: BottomNavigation(),
+          ),
         );
       },
     );
