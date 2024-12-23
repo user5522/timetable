@@ -1,7 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:timetable/extensions/time_of_day.dart';
 import 'package:timetable/helpers/time_management.dart';
 import 'package:timetable/provider/settings.dart';
 
