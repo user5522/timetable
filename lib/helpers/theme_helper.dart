@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:timetable/constants/theme_options.dart';
 
+/// Theme and color scheme management
 class ThemeHelper {
   static ColorScheme getColorScheme({
     required bool monetTheming,

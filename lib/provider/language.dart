@@ -3,7 +3,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timetable/constants/languages.dart';
 
-/// Languages' [StateNotifier].
+/// Language state management
 class LanguageNotifier extends StateNotifier<Locale> {
   LanguageNotifier() : super(languages[0]) {
     loadLanguage();

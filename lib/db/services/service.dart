@@ -13,6 +13,7 @@ final String date =
     '${now.year}-${now.month}-${now.day}_${now.hour}-${now.minute}';
 final String fileName = 'timetable_backup $date.json';
 
+/// handles data export/backup
 void exportData(
   AppDatabase db,
   ScaffoldFeatureController<SnackBar, SnackBarClosedReason> snackBar,
@@ -35,6 +36,7 @@ void exportData(
   }
 }
 
+/// handles data import/restore
 Future<void> restoreData(
   AppDatabase db,
 ) async {

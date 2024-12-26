@@ -10,6 +10,8 @@ import 'package:timetable/provider/settings.dart';
 import 'package:timetable/components/subject_management/subject_screen.dart';
 
 /// Overlapping Subjects Builder for the grid view.
+// TODO: currently overlapping subjects need their own builder,
+// why can't I use the the regular subject builder and split the width?
 class OverlappingSubjBuilder extends ConsumerWidget {
   final List<SubjectData> subjects;
   final int earlierStartTimeHour;

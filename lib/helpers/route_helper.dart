@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 
+/// "Custom" route transitions and navigation
 class RouteHelper<T> extends MaterialPageRoute<T> {
   RouteHelper({
-    required WidgetBuilder builder,
-    RouteSettings? settings,
+    required super.builder,
+    super.settings,
   }) : super(
-          builder: builder,
-          settings: settings,
           maintainState: false,
           fullscreenDialog: false,
         );

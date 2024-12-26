@@ -3,7 +3,9 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:timetable/db/database.dart';
 import 'package:timetable/provider/overlapping_subjects.dart';
 
-/// Subjects' [StateNotifier]
+/// Subject state management
+/// manages CRUD operations for subjects, handles subject filtering and state updates
+/// also manages subject-timetable relationships
 class SubjectNotifier extends StateNotifier<List<SubjectData>> {
   AppDatabase db;
   OverlappingSubjects overlappingSubjectsNotifier;
@@ -23,7 +25,7 @@ class SubjectNotifier extends StateNotifier<List<SubjectData>> {
   }
 
   /// adds a subject ([SubjectCompanion]) to the database ([$SubjectTable])
-  // i use [SubjectData] in the SCS so i have to convert it everytime
+  // i use [SubjectData] in the subject creation screen so i have to convert it everytime
   Future addSubject(SubjectCompanion entry) async {
     db.subject.insertOne(
       SubjectCompanion.insert(

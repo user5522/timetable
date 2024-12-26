@@ -15,7 +15,7 @@ import 'package:timetable/provider/settings.dart';
 import 'package:timetable/provider/subjects.dart';
 import 'package:timetable/provider/timetables.dart';
 
-/// The Subject creation/modification screen.
+/// Subject creation/modification UI.
 class SubjectScreen extends HookConsumerWidget {
   final int? rowIndex;
   final int? columnIndex;
