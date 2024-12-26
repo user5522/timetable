@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:timetable/constants/timetable_views.dart';
+import 'package:timetable/extensions/color.dart';
 
 /// Settings data model.
 class Settings {
@@ -101,8 +102,7 @@ class Settings {
         'multipleTimetables': multipleTimetables,
         'twentyFourHours': twentyFourHours,
         'defaultTimetableView': defaultTimetableView.name,
-        // TODO: find an alterantive to this damn it
-        'appThemeColorValue': appThemeColor.value,
+        'appThemeColorValue': appThemeColor.toInt(),
         'defaultSubjectDuration': defaultSubjectDuration.inMinutes,
       };
 

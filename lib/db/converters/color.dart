@@ -1,5 +1,6 @@
 import 'package:drift/drift.dart';
 import 'package:flutter/material.dart';
+import 'package:timetable/extensions/color.dart';
 
 class ColorConverter extends TypeConverter<Color, int> {
   const ColorConverter();
@@ -13,6 +14,6 @@ class ColorConverter extends TypeConverter<Color, int> {
   @override
   int toSql(Color value) {
     // get Color value (int)
-    return value.value;
+    return value.toInt();
   }
 }
