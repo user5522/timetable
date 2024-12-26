@@ -5,6 +5,7 @@ import 'package:timetable/constants/custom_times.dart';
 import 'package:timetable/constants/grid_properties.dart';
 import 'package:timetable/helpers/rotation_weeks.dart';
 import 'package:timetable/db/database.dart';
+import 'package:timetable/helpers/route_helper.dart';
 import 'package:timetable/provider/settings.dart';
 import 'package:timetable/components/subject_management/subject_screen.dart';
 
@@ -67,8 +68,8 @@ class OverlappingSubjBuilder extends ConsumerWidget {
               ? Colors.black
               : Colors.white;
           Color subLabelsColor = subjects[i].color.computeLuminance() > .7
-              ? Colors.black.withOpacity(.6)
-              : Colors.white.withOpacity(.75);
+              ? Colors.black.withValues(alpha: .6)
+              : Colors.white.withValues(alpha: .75);
 
           int endTimeHour = subjects[i].endTime.hour;
           int startTimeHour = subjects[i].startTime.hour;
@@ -85,7 +86,7 @@ class OverlappingSubjBuilder extends ConsumerWidget {
                   : 0;
 
           final hideTransparentSubjects =
-              hideTransparentSubject && color.opacity == 0;
+              hideTransparentSubject && color.a == 0;
 
           return Column(
             children: [
@@ -103,7 +104,7 @@ class OverlappingSubjBuilder extends ConsumerWidget {
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(
+                      RouteHelper(
                         builder: (context) => SubjectScreen(
                           subject: subjects[i],
                         ),

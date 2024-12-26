@@ -23,14 +23,10 @@ class NotesTile extends ConsumerWidget {
         ),
         maxLines: 3,
         maxLength: 100,
-        onChanged: (value) {
-          note.value = value;
-        },
+        onChanged: (value) => note.value = value,
       ),
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(
-          Radius.circular(10),
-        ),
+        borderRadius: BorderRadius.all(Radius.circular(10)),
       ),
     );
   }

@@ -23,8 +23,9 @@ class TimeConfig extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final chosenCustomStartTime = ref.watch(settingsProvider).customStartTime;
-    final chosenCustomEndTime = ref.watch(settingsProvider).customEndTime;
+    final settings = ref.watch(settingsProvider);
+    final chosenCustomStartTime = settings.customStartTime;
+    final chosenCustomEndTime = settings.customEndTime;
 
     final customStartTime = getCustomStartTime(chosenCustomStartTime, ref);
     final customEndTime = getCustomEndTime(chosenCustomEndTime, ref);
@@ -92,20 +93,16 @@ class TimeConfig extends ConsumerWidget {
       showInvalidTimePeriodDialog();
     }
 
+    // TODO: this is extremely similar to what i have done already in the [getTime()] helper
+    // maybe add a check to remove the backspace when specified
     String getTime(TimeOfDay time) {
-      final formattedTimeHour = uses24HoursFormat
+      final hour = uses24HoursFormat
           ? time.hour
-          : time.hour > 12
-              ? time.hour - 12
-              : time.hour;
-      final amORpm = time.hour > 12 ? "PM" : "AM";
-      final formattedTimeMinute = time.minute == 0
-          ? "00"
-          : time.minute < 10
-              ? "0${time.minute}"
-              : "${time.minute}";
-
-      return "$formattedTimeHour:$formattedTimeMinute${uses24HoursFormat ? "" : " $amORpm"}";
+          : (time.hour > 12 ? time.hour - 12 : time.hour);
+      final minute = time.minute.toString().padLeft(2, '0');
+      final period =
+          uses24HoursFormat ? '' : ' ${time.hour > 12 ? "PM" : "AM"}';
+      return '$hour:$minute$period';
     }
 
     return Row(

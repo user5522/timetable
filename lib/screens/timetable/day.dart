@@ -2,7 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:timetable/components/subject_management/subject_screen.dart';
-import 'package:timetable/components/widgets/day_view/day_view_subject_builder.dart';
+import 'package:timetable/components/widgets/views/day_view/day_view_subject_builder.dart';
 import 'package:timetable/constants/custom_times.dart';
 import 'package:timetable/constants/days.dart';
 import 'package:timetable/constants/error_emoticons.dart';
@@ -10,6 +10,7 @@ import 'package:timetable/constants/grid_properties.dart';
 import 'package:timetable/constants/rotation_weeks.dart';
 import 'package:timetable/helpers/rotation_weeks.dart';
 import 'package:timetable/db/database.dart';
+import 'package:timetable/helpers/route_helper.dart';
 import 'package:timetable/helpers/subjects.dart';
 import 'package:timetable/helpers/timetables.dart';
 import 'package:timetable/provider/settings.dart';
@@ -48,7 +49,7 @@ class TimetableDayView extends HookConsumerWidget {
 
           Navigator.push(
             context,
-            MaterialPageRoute(
+            RouteHelper(
               builder: (context) => SubjectScreen(
                 rowIndex: 0,
                 columnIndex: day,

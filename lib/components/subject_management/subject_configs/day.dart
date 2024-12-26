@@ -29,18 +29,12 @@ class DayConfig extends StatelessWidget {
               context: context,
               builder: (context) {
                 return Wrap(
-                  children: [
-                    DaysModalBottomSheet(
-                      day: day,
-                    ),
-                  ],
+                  children: [DaysModalBottomSheet(day: day)],
                 );
               },
             );
           },
-          label: Text(
-            days[day.value.index],
-          ).tr(),
+          label: Text(days[day.value.index]).tr(),
         ),
       ],
     );

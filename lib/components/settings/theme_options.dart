@@ -41,9 +41,7 @@ class ThemeOptions extends StatelessWidget {
           dropdownMenuEntries: themeEntries(),
           label: const Text("theme").tr(),
           initialSelection: theme.getTheme(),
-          onSelected: (value) {
-            theme.changeTheme(value!);
-          },
+          onSelected: (value) => theme.changeTheme(value!),
         ),
       ],
     );

@@ -64,6 +64,7 @@ class SubjectsList extends HookWidget {
               spacing: 4,
               crossAxisAlignment: WrapCrossAlignment.center,
               children: [
+                // filtering system
                 const Padding(padding: EdgeInsets.only(left: 16.0)),
                 Text("${"filter_by".tr()}:",
                     style: const TextStyle(fontSize: 17)),

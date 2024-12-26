@@ -101,6 +101,7 @@ class Settings {
         'multipleTimetables': multipleTimetables,
         'twentyFourHours': twentyFourHours,
         'defaultTimetableView': defaultTimetableView.name,
+        // TODO: find an alterantive to this damn it
         'appThemeColorValue': appThemeColor.value,
         'defaultSubjectDuration': defaultSubjectDuration.inMinutes,
       };

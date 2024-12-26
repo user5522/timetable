@@ -2,11 +2,11 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:timetable/components/timetable_views/day.dart';
-import 'package:timetable/components/timetable_views/grid.dart';
-import 'package:timetable/components/widgets/day_view/days_bar.dart';
-import 'package:timetable/components/widgets/grid_view/grid_day_views_toggle.dart';
-import 'package:timetable/components/widgets/navigation_bar_toggle.dart';
+import 'package:timetable/screens/timetable/day.dart';
+import 'package:timetable/screens/timetable/grid.dart';
+import 'package:timetable/components/widgets/views/day_view/days_bar.dart';
+import 'package:timetable/components/widgets/views/view_toggle.dart';
+import 'package:timetable/components/widgets/navigation/navigation_bar_toggle.dart';
 import 'package:timetable/components/widgets/rotation_week_toggle.dart';
 import 'package:timetable/components/widgets/timetable_toggle.dart';
 import 'package:timetable/constants/rotation_weeks.dart';
@@ -26,12 +26,13 @@ class TimetableScreen extends HookConsumerWidget {
     final multipleTimetables = ref.watch(settingsProvider).multipleTimetables;
     final defaultTimetableView =
         ref.watch(settingsProvider).defaultTimetableView;
+    final subject = ref.watch(subjectProvider);
     final timetables = ref.watch(timetableProvider);
+
     final isGridView = useState(defaultTimetableView == TbViews.grid);
     final rotationWeek = useState(RotationWeeks.all);
-
-    final subject = ref.watch(subjectProvider);
     final currentTimetable = useState(timetables[0]);
+
     final PageController controller;
     controller = PageController(initialPage: DateTime.now().weekday - 1);
 
@@ -42,16 +43,9 @@ class TimetableScreen extends HookConsumerWidget {
         title: const Text('timetable').plural(1),
         actions: [
           if (multipleTimetables && (timetables.length > 1))
-            TimetableToggle(
-              timetable: currentTimetable,
-            ),
-          if (rotationWeeks)
-            RotationWeekToggle(
-              rotationWeek: rotationWeek,
-            ),
-          GridDayViewsToggle(
-            isGridView: isGridView,
-          ),
+            TimetableToggle(timetable: currentTimetable),
+          if (rotationWeeks) RotationWeekToggle(rotationWeek: rotationWeek),
+          ViewToggle(isGridView: isGridView),
         ],
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(48.0),

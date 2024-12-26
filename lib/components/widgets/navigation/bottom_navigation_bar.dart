@@ -3,10 +3,11 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:timetable/constants/navigation_items.dart';
 import 'package:timetable/provider/settings.dart';
 import 'package:timetable/provider/subjects.dart';
-import 'package:timetable/screens/settings.dart';
-import 'package:timetable/screens/timetable.dart';
+import 'package:timetable/screens/settings/settings.dart';
+import 'package:timetable/screens/timetable/timetable.dart';
 
 /// The app's bottom navigation bar.
 class BottomNavigation extends HookConsumerWidget {
@@ -33,18 +34,13 @@ class BottomNavigation extends HookConsumerWidget {
         child: NavigationBar(
           onDestinationSelected: onTabTapped,
           selectedIndex: currentPageIndex.value,
-          destinations: <Widget>[
-            NavigationDestination(
-              selectedIcon: const Icon(Icons.table_chart),
-              icon: const Icon(Icons.table_chart_outlined),
-              label: "timetable".plural(1),
-            ),
-            NavigationDestination(
-              selectedIcon: const Icon(Icons.settings),
-              icon: const Icon(Icons.settings_outlined),
-              label: 'settings'.plural(1),
-            ),
-          ],
+          destinations: navigationItems
+              .map((item) => NavigationDestination(
+                    selectedIcon: Icon(item.selectedIcon),
+                    icon: Icon(item.icon),
+                    label: item.labelKey.plural(1),
+                  ))
+              .toList(),
         ),
       ),
       body: PageTransitionSwitcher(
@@ -64,15 +60,11 @@ class BottomNavigation extends HookConsumerWidget {
   Widget _buildPage(int pageIndex, SubjectNotifier subject) {
     switch (pageIndex) {
       case 0:
-        return TimetableScreen(
-          key: Key(subject.getSubjects().toString()),
-        );
+        return const TimetableScreen();
       case 1:
         return const SettingsScreen();
       default:
-        return TimetableScreen(
-          key: Key(subject.getSubjects().toString()),
-        );
+        return const TimetableScreen();
     }
   }
 }

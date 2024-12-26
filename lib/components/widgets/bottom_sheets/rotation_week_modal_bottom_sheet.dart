@@ -29,15 +29,11 @@ class RotationWeekModalBottomSheet extends StatelessWidget {
         return ListTile(
           title: Row(
             children: [
-              Text(
-                getRotationWeekLabel(rw),
-              ),
+              Text(getRotationWeekLabel(rw)),
               const Spacer(),
               Visibility(
                 visible: isSelected,
-                child: const Icon(
-                  Icons.check,
-                ),
+                child: const Icon(Icons.check),
               ),
             ],
           ),

@@ -26,15 +26,11 @@ class SubjectDurationModalBottomSheet extends StatelessWidget {
             title: Row(
               children: [
                 // writing minutes directly here will only work for now lol
-                Text(
-                  "${durations[i].inMinutes} minutes",
-                ).tr(),
+                Text("${durations[i].inMinutes} minutes").tr(),
                 const Spacer(),
                 Visibility(
                   visible: isSelected,
-                  child: const Icon(
-                    Icons.check,
-                  ),
+                  child: const Icon(Icons.check),
                 ),
               ],
             ),

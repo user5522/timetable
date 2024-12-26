@@ -4,6 +4,7 @@ import 'package:timetable/components/subject_management/subjects_list.dart';
 import 'package:timetable/components/widgets/list_item_group.dart';
 import 'package:timetable/constants/basic_subject.dart';
 import 'package:timetable/db/database.dart';
+import 'package:timetable/helpers/route_helper.dart';
 
 /// Label & Location configuration part of the Subject creation screen.
 ///
@@ -93,7 +94,7 @@ class _LabelLocationConfigState extends State<LabelLocationConfig> {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(
+                      RouteHelper(
                         builder: (context) => SubjectsList(
                           subjects: widget.subjects,
                           label: widget.label,

@@ -9,6 +9,7 @@ import 'package:timetable/components/subject_management/subject_configs/note.dar
 import 'package:timetable/constants/days.dart';
 import 'package:timetable/constants/rotation_weeks.dart';
 import 'package:timetable/db/database.dart';
+import 'package:timetable/helpers/time_management.dart';
 import 'package:timetable/provider/overlapping_subjects.dart';
 import 'package:timetable/provider/settings.dart';
 import 'package:timetable/provider/subjects.dart';
@@ -83,6 +84,7 @@ class SubjectScreen extends HookConsumerWidget {
     final rotationWeek = useState(subject?.rotationWeek ?? RotationWeeks.none);
 
     // I DONT KNOW WHY I AM USING [SubjectData] I SHOULD BE USING [SubjectCompanion]
+    // update: using [SubjectCompanion] breaks a lot of stuff so i will not be using that
     final SubjectData newSubject = SubjectData(
       id: id,
       label: label.value,
@@ -106,61 +108,45 @@ class SubjectScreen extends HookConsumerWidget {
 // limit the amount of overlapping subjects.
 // i should really work and find a solution to that issue..
 
-    final multipleOccupied = overlappingSubjects.any((e) {
+    final inputHours = getHoursList(startTime.value, endTime.value);
+
+    // Check if subject is in overlapping subjects list
+    final isInOverlappingList = overlappingSubjects.any((e) {
       for (var subject in e) {
         return newSubject == subject;
       }
       return false;
-    })
-        ? false
-        : subjectsInSameDay
-                .where((s) {
-                  final sHours = List.generate(
-                    s.endTime.hour - s.startTime.hour,
-                    (index) => index + s.startTime.hour,
-                  );
-                  final inputHours = List.generate(
-                    endTime.value.hour - startTime.value.hour,
-                    (index) => index + startTime.value.hour,
-                  );
+    });
 
-                  return sHours.any((hour) => inputHours.contains(hour));
+    // Check for multiple subjects in same time slot
+    final multipleOccupied = !isInOverlappingList &&
+        subjectsInSameDay
+                .where((s) {
+                  final sHours = getHoursList(s.startTime, s.endTime);
+                  return hasTimeOverlap(sHours, inputHours);
                 })
                 .where((s) => s != subject)
                 .where((e) => e.timetable == newSubject.timetable)
                 .length >
             1;
 
+    // Check if time slot is occupied by overlapping subjects
     final isOccupied = subjectsInSameDay
         .where((e) => overlappingSubjects.any((elem) => elem.contains(e)))
         .where((e) => e.timetable == newSubject.timetable)
         .any((e) {
-      final eHours = List.generate(
-        e.endTime.hour - e.startTime.hour,
-        (index) => index + e.startTime.hour,
-      );
-      final inputHours = List.generate(
-        endTime.value.hour - startTime.value.hour,
-        (index) => index + startTime.value.hour,
-      );
-
-      return eHours.any((hour) => inputHours.contains(hour));
+      final eHours = getHoursList(e.startTime, e.endTime);
+      return hasTimeOverlap(eHours, inputHours);
     });
 
+    // Check if time slot is occupied by non-overlapping subjects (excluding self)
     final isOccupiedExceptSelf = subjectsInSameDay
         .where((e) => e != subject)
         .where((e) => !overlappingSubjects.any((elem) => elem.contains(e)))
         .where((e) => e.timetable == newSubject.timetable)
         .any((e) {
-      final eHours = List.generate(
-        e.endTime.hour - e.startTime.hour,
-        (index) => index + e.startTime.hour,
-      );
-      final inputHours = List.generate(
-        endTime.value.hour - startTime.value.hour,
-        (index) => index + startTime.value.hour,
-      );
-      return eHours.any((hour) => inputHours.contains(hour));
+      final eHours = getHoursList(e.startTime, e.endTime);
+      return hasTimeOverlap(eHours, inputHours);
     });
 
 // end of checks
@@ -176,9 +162,12 @@ class SubjectScreen extends HookConsumerWidget {
                 foregroundColor: Theme.of(context).colorScheme.errorContainer,
               ),
               onPressed: () async {
-                await subjectNotifier.deleteSubject(newSubject).then((r) {
-                  Navigator.pop(context);
-                  ScaffoldMessenger.of(context).showSnackBar(
+                final navigator = Navigator.of(context);
+                final messenger = ScaffoldMessenger.of(context);
+
+                await subjectNotifier.deleteSubject(newSubject).then((_) {
+                  navigator.pop();
+                  messenger.showSnackBar(
                     SnackBar(
                       content: const Text('subject_deleted_snackbar').tr(),
                     ),
@@ -212,14 +201,12 @@ class SubjectScreen extends HookConsumerWidget {
                 if (isSubjectNull) {
                   await subjectNotifier
                       .addSubject(newSubject.toCompanion(true))
-                      .then(
-                        (r) => Navigator.pop(context, label.value),
-                      );
+                      .then((_) => Navigator.pop(context, label.value));
                 }
                 if (!isSubjectNull) {
-                  await subjectNotifier.updateSubject(newSubject).then(
-                        (r) => Navigator.pop(context, label.value),
-                      );
+                  await subjectNotifier
+                      .updateSubject(newSubject)
+                      .then((_) => Navigator.pop(context, label.value));
                 }
               },
               child: Text(isSubjectNull ? "create".tr() : "save".tr()),

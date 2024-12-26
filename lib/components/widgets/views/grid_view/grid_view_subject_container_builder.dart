@@ -4,6 +4,7 @@ import 'package:non_uniform_border/non_uniform_border.dart';
 import 'package:timetable/constants/grid_properties.dart';
 import 'package:timetable/components/subject_management/subject_screen.dart';
 import 'package:timetable/db/database.dart';
+import 'package:timetable/helpers/route_helper.dart';
 
 /// Subject container tile builder.
 /// (the one you click on to create a Subject in the grid view.)
@@ -34,7 +35,7 @@ class SubjectContainerBuilder extends ConsumerWidget {
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(
+          RouteHelper(
             builder: (context) => SubjectScreen(
               rowIndex: rowIndex,
               columnIndex: columnIndex,
@@ -50,7 +51,7 @@ class SubjectContainerBuilder extends ConsumerWidget {
         child: Align(
           child: Container(
             height: 1,
-            color: const Color(0xFFB4B8AB).withOpacity(0.5),
+            color: const Color(0xFFB4B8AB).withValues(alpha: 0.5),
           ),
         ),
         // child: Column(

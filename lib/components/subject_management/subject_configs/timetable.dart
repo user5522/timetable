@@ -29,9 +29,7 @@ class TimetableConfig extends StatelessWidget {
               builder: (context) {
                 return Wrap(
                   children: [
-                    TimetablesModalBottomSheet(
-                      timetable: timetable,
-                    ),
+                    TimetablesModalBottomSheet(timetable: timetable),
                   ],
                 );
               },

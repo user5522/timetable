@@ -25,15 +25,11 @@ class DaysModalBottomSheet extends StatelessWidget {
           return ListTile(
             title: Row(
               children: [
-                Text(
-                  days[d.index],
-                ).tr(),
+                Text(days[d.index]).tr(),
                 const Spacer(),
                 Visibility(
                   visible: isSelected,
-                  child: const Icon(
-                    Icons.check,
-                  ),
+                  child: const Icon(Icons.check),
                 ),
               ],
             ),

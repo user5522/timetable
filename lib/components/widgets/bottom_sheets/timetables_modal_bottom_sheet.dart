@@ -34,9 +34,7 @@ class TimetablesModalBottomSheet extends ConsumerWidget {
                   const Spacer(),
                   Visibility(
                     visible: isSelected,
-                    child: const Icon(
-                      Icons.check,
-                    ),
+                    child: const Icon(Icons.check),
                   ),
                 ],
               ),

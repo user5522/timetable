@@ -1,55 +1,34 @@
-/// All the day's times in the 24 hour format.
-const List<String> times24h = [
-  '00',
-  '01',
-  '02',
-  '03',
-  '04',
-  '05',
-  '06',
-  '07',
-  '08',
-  '09',
-  '10',
-  '11',
-  '12',
-  '13',
-  '14',
-  '15',
-  '16',
-  '17',
-  '18',
-  '19',
-  '20',
-  '21',
-  '22',
-  '23',
-];
+import 'package:flutter/material.dart';
 
-/// All the day's times in the 12 hour format.
-const List<String> timespmam = [
-  '12\nAM',
-  '1\nAM',
-  '2\nAM',
-  '3\nAM',
-  '4\nAM',
-  '5\nAM',
-  '6\nAM',
-  '7\nAM',
-  '8\nAM',
-  '9\nAM',
-  '10\nAM',
-  '11\nAM',
-  '12\nPM',
-  '1\nPM',
-  '2\nPM',
-  '3\nPM',
-  '4\nPM',
-  '5\nPM',
-  '6\nPM',
-  '7\nPM',
-  '8\nPM',
-  '9\nPM',
-  '10\nPM',
-  '11\nPM',
-];
+/// Returns a list of formatted times based on user preferences
+List<String> getFormattedTimes(bool use24Hour) {
+  return List.generate(24, (hour) {
+    if (use24Hour) {
+      return hour.toString().padLeft(2, '0');
+    } else {
+      final period = hour < 12 ? 'AM' : 'PM';
+      final displayHour = hour == 0 ? 12 : (hour > 12 ? hour - 12 : hour);
+      return '$displayHour\n$period';
+    }
+  });
+}
+
+/// This function returns a string representation of the time based on the index,
+/// the format of the time (24 hour or 12 hour), the time period (custom or default),
+/// the custom start time, and the custom end time.
+String getTimeString(
+  int index,
+  bool is24HoursFormat,
+  bool twentyFourHours,
+  bool customTimePeriod,
+  TimeOfDay customStartTime,
+) {
+  final int customTimePeriodStartHour =
+      customTimePeriod ? customStartTime.hour : 8;
+  final int startHour = twentyFourHours ? 0 : customTimePeriodStartHour;
+  final int timeIndex = index + startHour;
+
+  final times = getFormattedTimes(is24HoursFormat);
+
+  return times[timeIndex];
+}

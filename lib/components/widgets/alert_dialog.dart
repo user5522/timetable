@@ -1,7 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
-/// Alert dialog widget to use instead of rewriting the same code every time.
+/// Alert dialog widget
 class ShowAlertDialog extends StatelessWidget {
   final String? title;
   final Widget content;

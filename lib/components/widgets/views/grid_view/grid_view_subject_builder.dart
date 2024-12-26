@@ -4,6 +4,7 @@ import 'package:non_uniform_border/non_uniform_border.dart';
 import 'package:timetable/constants/custom_times.dart';
 import 'package:timetable/helpers/rotation_weeks.dart';
 import 'package:timetable/db/database.dart';
+import 'package:timetable/helpers/route_helper.dart';
 import 'package:timetable/provider/settings.dart';
 import 'package:timetable/components/subject_management/subject_screen.dart';
 import 'package:timetable/constants/grid_properties.dart';
@@ -31,13 +32,13 @@ class SubjectBuilder extends ConsumerWidget {
     Color color = subject.color;
 
     final hideTransparentSubjects =
-        hideTransparentSubject && (color.opacity == Colors.transparent.opacity);
+        hideTransparentSubject && (color.a == Colors.transparent.a);
 
     Color labelColor =
         color.computeLuminance() > .7 ? Colors.black : Colors.white;
     Color subLabelsColor = color.computeLuminance() > .7
-        ? Colors.black.withOpacity(.6)
-        : Colors.white.withOpacity(.75);
+        ? Colors.black.withValues(alpha: .6)
+        : Colors.white.withValues(alpha: .75);
 
     final shape = NonUniformBorder(
       leftWidth: subject.day.index == 0 ? 0 : 1,
@@ -62,7 +63,7 @@ class SubjectBuilder extends ConsumerWidget {
           onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(
+              RouteHelper(
                 builder: (context) => SubjectScreen(
                   subject: subject,
                 ),
