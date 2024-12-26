@@ -66,10 +66,13 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: android-x86_64
+      - name: Decode Keystore
+        run: |
+          echo "${{ secrets.SIGNING_KEYSTORE }}" | base64 --decode > keystore.jks
       - name: Sign APKs
         run: |
           # Define the keystore and alias
-          KEYSTORE_PATH="path/to/your/keystore.jks"
+          KEYSTORE_PATH="keystore.jks"
           ALIAS="${{ secrets.SIGNING_KEY_ALIAS }}"
           KEYSTORE_PASSWORD="${{ secrets.SIGNING_KEYSTORE_PASSWORD }}"
           KEY_PASSWORD="${{ secrets.SIGNING_KEY_PASSWORD }}"
@@ -78,3 +81,5 @@ jobs:
           for apk in build/app/outputs/flutter-apk/*-release.apk; do
             jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore "$KEYSTORE_PATH" -storepass "$KEYSTORE_PASSWORD" -keypass "$KEY_PASSWORD" "$apk" "$ALIAS"
           done
+      - name: Clean up
+        run: rm keystore.jks
