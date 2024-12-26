@@ -198,15 +198,17 @@ class SubjectScreen extends HookConsumerWidget {
                   );
                   return;
                 }
+                final navigator = Navigator.of(context);
+
                 if (isSubjectNull) {
                   await subjectNotifier
                       .addSubject(newSubject.toCompanion(true))
-                      .then((_) => Navigator.pop(context, label.value));
+                      .then((_) => navigator.pop(label.value));
                 }
                 if (!isSubjectNull) {
                   await subjectNotifier
                       .updateSubject(newSubject)
-                      .then((_) => Navigator.pop(context, label.value));
+                      .then((_) => navigator.pop(label.value));
                 }
               },
               child: Text(isSubjectNull ? "create".tr() : "save".tr()),
