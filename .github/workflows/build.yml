@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - dev
+
 jobs:
   build:
     name: Android Build
@@ -29,32 +30,51 @@ jobs:
           SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
           SIGNING_STORE_PASSWORD: ${{ secrets.SIGNING_KEYSTORE_PASSWORD }}
         run: flutter build apk --release --split-per-abi
-      - name: Sign APK
-        id: sign_apk
-        uses: filippoLeporati93/android-release-signer@v1
-        with:
-          releaseDirectory: build/app/outputs/flutter-apk/
-          signingKeyBase64: ${{ secrets.SIGNING_KEYSTORE }}
-          keyStorePassword: ${{ secrets.SIGNING_KEYSTORE_PASSWORD }}
-          alias: ${{ secrets.SIGNING_KEY_ALIAS }}
-          keyPassword: ${{ secrets.SIGNING_KEY_PASSWORD }}
-        env:
-          BUILD_TOOLS_VERSION: "34.0.0"
       - name: Archive arm64-v8a
         uses: actions/upload-artifact@v4
         with:
           name: android-arm64-v8a
           path: |
-            build/app/outputs/flutter-apk/*-arm64-v8a-release-signed.apk
+            build/app/outputs/flutter-apk/*-arm64-v8a-release.apk
       - name: Archive armeabi-v7a
         uses: actions/upload-artifact@v4
         with:
           name: android-armeabi-v7a
           path: |
-            build/app/outputs/flutter-apk/*-armeabi-v7a-release-signed.apk
+            build/app/outputs/flutter-apk/*-armeabi-v7a-release.apk
       - name: Archive x86_64
         uses: actions/upload-artifact@v4
         with:
           name: android-x86_64
           path: |
-            build/app/outputs/flutter-apk/*-x86_64-release-signed.apk
+            build/app/outputs/flutter-apk/*-x86_64-release.apk
+
+  sign_apk:
+    name: Sign APK
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Download APKs
+        uses: actions/download-artifact@v4
+        with:
+          name: android-arm64-v8a
+      - name: Download APKs
+        uses: actions/download-artifact@v4
+        with:
+          name: android-armeabi-v7a
+      - name: Download APKs
+        uses: actions/download-artifact@v4
+        with:
+          name: android-x86_64
+      - name: Sign APKs
+        run: |
+          # Define the keystore and alias
+          KEYSTORE_PATH="path/to/your/keystore.jks"
+          ALIAS="${{ secrets.SIGNING_KEY_ALIAS }}"
+          KEYSTORE_PASSWORD="${{ secrets.SIGNING_KEYSTORE_PASSWORD }}"
+          KEY_PASSWORD="${{ secrets.SIGNING_KEY_PASSWORD }}"
+
+          # Sign each APK
+          for apk in build/app/outputs/flutter-apk/*-release.apk; do
+            jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore "$KEYSTORE_PATH" -storepass "$KEYSTORE_PASSWORD" -keypass "$KEY_PASSWORD" "$apk" "$ALIAS"
+          done
