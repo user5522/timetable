@@ -9,12 +9,17 @@ import 'package:timetable/components/subject_management/subject_screen.dart';
 import 'package:timetable/constants/grid_properties.dart';
 
 /// Subject builder for the grid view.
+/// also builds for the overlapping subjects with some visual tweaks
 class SubjectBuilder extends ConsumerWidget {
   final SubjectData subject;
+  final bool isOverlapping;
+  final int startTimeOffset;
 
   const SubjectBuilder({
     super.key,
     required this.subject,
+    this.isOverlapping = false,
+    this.startTimeOffset = 0,
   });
 
   @override
@@ -25,10 +30,14 @@ class SubjectBuilder extends ConsumerWidget {
     final rotationWeeks = ref.watch(settingsProvider).rotationWeeks;
     final hideTransparentSubject =
         ref.watch(settingsProvider).hideTransparentSubject;
+    final compactMode = ref.watch(settingsProvider).compactMode;
+    final bool isPortrait =
+        MediaQuery.of(context).orientation == Orientation.portrait;
 
     String label = subject.label;
     String? location = subject.location;
     Color color = subject.color;
+    int subjHeight = subject.endTime.hour - subject.startTime.hour;
 
     final hideTransparentSubjects =
         hideTransparentSubject && (color.a == Colors.transparent.a);
@@ -54,83 +63,148 @@ class SubjectBuilder extends ConsumerWidget {
       color: Colors.grey,
     );
 
-    return Container(
-      decoration: ShapeDecoration(shape: shape),
-      child: Padding(
-        padding: const EdgeInsets.all(2),
-        child: InkWell(
-          onTap: () {
-            Navigator.push(
+    int quarterTurns = compactMode && isPortrait && isOverlapping ? 1 : 0;
+
+    return !isOverlapping
+        ? Container(
+            decoration: ShapeDecoration(shape: shape),
+            padding: const EdgeInsets.all(2),
+            child: buildSubjectContent(
               context,
-              MaterialPageRoute(
-                builder: (context) => SubjectScreen(
-                  subject: subject,
-                ),
-              ),
-            );
-          },
-          borderRadius: BorderRadius.circular(5),
-          child: Ink(
-            padding: const EdgeInsets.all(3),
-            decoration: BoxDecoration(
-              color: color,
-              border: Border.all(
-                color:
-                    hideTransparentSubjects ? Colors.transparent : Colors.black,
-                width: 1,
-              ),
-              borderRadius: const BorderRadius.all(
-                Radius.circular(5),
-              ),
+              quarterTurns,
+              labelColor,
+              subLabelsColor,
+              label,
+              location,
+              color,
+              hideTransparentSubjects,
+              subjHeight,
+              compactMode,
+              isPortrait,
+              hideLocation,
+              rotationWeeks,
             ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                if (!hideTransparentSubjects)
-                  Text(
-                    label,
-                    maxLines:
-                        (subject.endTime.hour - subject.startTime.hour == 1
-                            ? 2
-                            : 5),
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      color: labelColor,
-                      fontWeight: FontWeight.bold,
-                    ),
+          )
+        : buildSubjectContent(
+            context,
+            quarterTurns,
+            labelColor,
+            subLabelsColor,
+            label,
+            location,
+            color,
+            hideTransparentSubjects,
+            subjHeight,
+            compactMode,
+            isPortrait,
+            hideLocation,
+            rotationWeeks,
+          );
+  }
+
+  Widget buildSubjectContent(
+    BuildContext context,
+    int quarterTurns,
+    Color labelColor,
+    Color subLabelsColor,
+    String label,
+    String? location,
+    Color color,
+    bool hideTransparentSubjects,
+    int subjHeight,
+    bool compactMode,
+    bool isPortrait,
+    bool hideLocation,
+    bool rotationWeeks,
+  ) {
+    return InkWell(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => SubjectScreen(
+              subject: subject,
+            ),
+          ),
+        );
+      },
+      borderRadius: BorderRadius.circular(5),
+      // odd numbers, i know, but i had to make sure both are aligned perfectly
+      child: Ink(
+        padding: EdgeInsets.fromLTRB(
+          compactMode && isPortrait && isOverlapping ? 1 : 3,
+          isOverlapping ? 8.25 : 3,
+          compactMode && isPortrait && isOverlapping ? 1 : 3,
+          3,
+        ),
+        decoration: BoxDecoration(
+          color: color,
+          border: Border.all(
+            color: hideTransparentSubjects ? Colors.transparent : Colors.black,
+            width: 1,
+          ),
+          borderRadius: BorderRadius.circular(5),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (!hideTransparentSubjects)
+              RotatedBox(
+                quarterTurns: quarterTurns,
+                child: Text(
+                  compactMode && isPortrait && isOverlapping
+                      ? label.length > (subjHeight * 5)
+                          ? '${label.substring(0, (subjHeight * 5))}..'
+                          : label
+                      : label,
+                  maxLines: compactMode && isPortrait && isOverlapping
+                      ? 1
+                      : subjHeight * 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: labelColor,
+                    fontWeight: FontWeight.bold,
                   ),
-                const SizedBox(
-                  height: 5,
                 ),
-                if (location != null &&
-                    (!hideLocation || !hideTransparentSubjects))
-                  Text(
-                    location.toString(),
-                    maxLines:
-                        (subject.endTime.hour - subject.startTime.hour == 1
-                            ? 2
-                            : 3),
-                    overflow: TextOverflow.ellipsis,
+              ),
+            SizedBox(
+              height: compactMode && isPortrait && isOverlapping ? 8 : 5,
+            ),
+            if (location != null && (!hideLocation || !hideTransparentSubjects))
+              RotatedBox(
+                quarterTurns: quarterTurns,
+                child: Text(
+                  compactMode && !isPortrait && isOverlapping
+                      ? location.length > (subjHeight * 5)
+                          ? '${location.substring(0, (subjHeight * 5))}..'
+                          : location
+                      : location,
+                  maxLines: compactMode && isPortrait && isOverlapping
+                      ? 1
+                      : subjHeight,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: subLabelsColor,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            if (rotationWeeks) const Spacer(),
+            if (rotationWeeks && !hideTransparentSubjects)
+              Align(
+                alignment: Alignment.bottomRight,
+                child: RotatedBox(
+                  quarterTurns: quarterTurns,
+                  child: Text(
+                    getSubjectRotationWeekLabel(subject),
                     style: TextStyle(
                       color: subLabelsColor,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                if (rotationWeeks) const Spacer(),
-                if (rotationWeeks && !hideTransparentSubjects)
-                  Align(
-                    alignment: Alignment.bottomRight,
-                    child: Text(
-                      getSubjectRotationWeekLabel(subject),
-                      style: TextStyle(
-                        color: subLabelsColor,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-              ],
-            ),
-          ),
+                ),
+              ),
+          ],
         ),
       ),
     );

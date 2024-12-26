@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:non_uniform_border/non_uniform_border.dart';
+import 'package:timetable/components/widgets/views/grid_view/grid_view_subject_builder.dart';
 import 'package:timetable/constants/custom_times.dart';
 import 'package:timetable/constants/grid_properties.dart';
-import 'package:timetable/helpers/rotation_weeks.dart';
 import 'package:timetable/db/database.dart';
 import 'package:timetable/provider/settings.dart';
-import 'package:timetable/components/subject_management/subject_screen.dart';
 
-/// Overlapping Subjects Builder for the grid view.
-// TODO: currently overlapping subjects need their own builder,
-// why can't I use the the regular subject builder and split the width?
+/// A widget that builds overlapping subjects in the grid view.
+///
+/// takes a list of [SubjectData] and the earlier start time hour and
+/// later end time hour of the overlapping subjects.
+///
+/// uses the [GridViewSubjectBuilder] to build each subject.
 class OverlappingSubjBuilder extends ConsumerWidget {
   final List<SubjectData> subjects;
   final int earlierStartTimeHour;
@@ -28,23 +30,9 @@ class OverlappingSubjBuilder extends ConsumerWidget {
     final customStartTime = ref.watch(settingsProvider).customStartTime;
     final customEndTime = ref.watch(settingsProvider).customEndTime;
     final compactMode = ref.watch(settingsProvider).compactMode;
-    final hideLocation = ref.watch(settingsProvider).hideLocation;
-    final rotationWeeks = ref.watch(settingsProvider).rotationWeeks;
-    final hideTransparentSubject =
-        ref.watch(settingsProvider).hideTransparentSubject;
-
-    double screenWidth = MediaQuery.of(context).size.width;
-    bool isPortrait =
-        MediaQuery.of(context).orientation == Orientation.portrait;
-
-    double tileHeight = compactMode ? 125 : 100;
-    double tileWidth = compactMode
-        ? (screenWidth / columns(ref) - ((timeColumnWidth + 10) / 10))
-        : isPortrait
-            ? 100
-            : (screenWidth / columns(ref) - ((timeColumnWidth + 10) / 10));
 
     final shape = NonUniformBorder(
+      // both subjects should theoretically be in the same day so it doesn't matter which one we choose
       leftWidth: subjects[0].day.index == 0 ? 0 : 1,
       rightWidth: subjects[0].day.index == (columns(ref) - 1) ? 0 : 1,
       topWidth:
@@ -57,151 +45,50 @@ class OverlappingSubjBuilder extends ConsumerWidget {
       color: Colors.grey,
     );
 
-    double outerPadding = subjects.length > 2 ? 1 : 2;
+    final totalTimeSpan = laterEndTimeHour - earlierStartTimeHour;
+    final baseHeight = compactMode ? 125.0 : 100.0;
+    final totalHeight = baseHeight * totalTimeSpan;
 
     return Container(
-      decoration: ShapeDecoration(
-        shape: shape,
-      ),
+      decoration: ShapeDecoration(shape: shape),
+      height: totalHeight,
       child: Row(
-        children: List.generate(subjects.length, (i) {
-          Color labelColor = subjects[i].color.computeLuminance() > .7
-              ? Colors.black
-              : Colors.white;
-          Color subLabelsColor = subjects[i].color.computeLuminance() > .7
-              ? Colors.black.withValues(alpha: .6)
-              : Colors.white.withValues(alpha: .75);
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: subjects.map((subject) {
+          final offset = subject.startTime.hour - earlierStartTimeHour;
+          final duration = subject.endTime.hour - subject.startTime.hour;
 
-          int endTimeHour = subjects[i].endTime.hour;
-          int startTimeHour = subjects[i].startTime.hour;
-          String label = subjects[i].label;
-          String? location = subjects[i].location;
-          Color color = subjects[i].color;
-
-          int subjHeight = endTimeHour - startTimeHour;
-
-          int quarterTurns = compactMode && isPortrait
-              ? 1
-              : subjects.length > 2 && !compactMode
-                  ? 1
-                  : 0;
-
-          final hideTransparentSubjects =
-              hideTransparentSubject && color.a == 0;
-
-          return Column(
-            children: [
-              Container(
-                height: (startTimeHour - earlierStartTimeHour) * (tileHeight),
-              ),
-              Padding(
-                padding: EdgeInsets.fromLTRB(
-                  outerPadding,
-                  outerPadding,
-                  outerPadding,
-                  outerPadding - 1,
-                ),
-                child: InkWell(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => SubjectScreen(
-                          subject: subjects[i],
-                        ),
-                      ),
-                    );
-                  },
-                  borderRadius: BorderRadius.circular(5),
-                  child: Ink(
-                    padding: EdgeInsets.fromLTRB(
-                      compactMode && isPortrait ? 1 : 2,
-                      5,
-                      compactMode && isPortrait ? 1 : 2,
-                      5,
-                    ),
-                    decoration: BoxDecoration(
-                      color: color,
-                      borderRadius: BorderRadius.circular(5),
-                      border: Border.all(
-                        color: hideTransparentSubjects
-                            ? Colors.transparent
-                            : Colors.black,
-                        width: 0,
-                      ),
-                    ),
-                    width: ((tileWidth / subjects.length) - .75) -
-                        (outerPadding * 2.25),
-                    height:
-                        (((endTimeHour - startTimeHour) * (tileHeight)) - 1) -
-                            (outerPadding * 2),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        if (!hideTransparentSubjects)
-                          RotatedBox(
-                            quarterTurns: quarterTurns,
-                            child: Text(
-                              compactMode && isPortrait
-                                  ? label.length > (subjHeight * 5)
-                                      ? '${label.substring(0, (subjHeight * 5))}..'
-                                      : label
-                                  : label,
-                              maxLines: compactMode && isPortrait
-                                  ? 1
-                                  : subjHeight * 2,
-                              style: TextStyle(
-                                color: labelColor,
-                                fontWeight: FontWeight.bold,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          ),
-                        SizedBox(
-                          height: compactMode && isPortrait ? 8 : 5,
-                        ),
-                        if (location != null &&
-                            (!hideLocation || !hideTransparentSubjects))
-                          RotatedBox(
-                            quarterTurns: quarterTurns,
-                            child: Text(
-                              compactMode && !isPortrait
-                                  ? location.length > (subjHeight * 5)
-                                      ? '${location.substring(0, (subjHeight * 5))}..'
-                                      : location
-                                  : location,
-                              maxLines:
-                                  compactMode && isPortrait ? 1 : subjHeight,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                color: subLabelsColor,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        if (rotationWeeks) const Spacer(),
-                        if (rotationWeeks && !hideTransparentSubjects)
-                          Align(
-                            alignment: Alignment.bottomRight,
-                            child: RotatedBox(
-                              quarterTurns: quarterTurns,
-                              child: Text(
-                                getSubjectRotationWeekLabel(subjects[i]),
-                                style: TextStyle(
-                                  color: subLabelsColor,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                          ),
-                      ],
+          return Expanded(
+            child: Column(
+              children: [
+                if (offset > 0) SizedBox(height: offset * baseHeight),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(1, 2, 1, 2),
+                  child: SizedBox(
+                    // we subtract 4 because it's the the top + bot padding
+                    // shape decoration is 1 pixel on top if the later end time hour is equal to the custom timetable end time hour
+                    // and is 1 pixel on the bottom if the earlier start time hour is equal to the custom timetable start time hour
+                    // so we subtract all of that if the conditions are met and everything should be perfectly aligned!
+                    height: duration * baseHeight -
+                        4 -
+                        (laterEndTimeHour ==
+                                getCustomEndTime(customEndTime, ref).hour
+                            ? 0
+                            : 1) -
+                        (earlierStartTimeHour ==
+                                getCustomStartTime(customStartTime, ref).hour
+                            ? 0
+                            : 1),
+                    child: SubjectBuilder(
+                      subject: subject,
+                      isOverlapping: true,
                     ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           );
-        }),
+        }).toList(),
       ),
     );
   }
