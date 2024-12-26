@@ -180,7 +180,7 @@ class OverlappingSubjBuilder extends ConsumerWidget {
                             ),
                           ),
                         if (rotationWeeks) const Spacer(),
-                        if (rotationWeeks || !hideTransparentSubjects)
+                        if (rotationWeeks && !hideTransparentSubjects)
                           Align(
                             alignment: Alignment.bottomRight,
                             child: RotatedBox(
