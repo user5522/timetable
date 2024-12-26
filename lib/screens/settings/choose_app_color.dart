@@ -6,6 +6,7 @@ import 'package:timetable/components/widgets/list_item_group.dart';
 import 'package:timetable/constants/colors.dart';
 import 'package:timetable/provider/settings.dart';
 
+/// allows the user to choose the app color found in the settings screen of the app.
 class ChooseAppColor extends ConsumerWidget {
   const ChooseAppColor({super.key});
 

@@ -3,6 +3,8 @@ import 'package:flutter/services.dart';
 
 const platform = MethodChannel('tk.user5522.timetable/androidVersion');
 
+/// used to get the Android version of the device.
+/// The code for getting the Android version is implemented in the MainActivity.kt file.
 Future<int> getAndroidVersion() async {
   int version;
 
