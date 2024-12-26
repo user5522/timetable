@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:timetable/helpers/rotation_weeks.dart';
 import 'package:timetable/db/database.dart';
-import 'package:timetable/helpers/route_helper.dart';
 import 'package:timetable/provider/settings.dart';
 import 'package:timetable/components/subject_management/subject_screen.dart';
 
@@ -41,7 +40,7 @@ class DayViewSubjectBuilder extends ConsumerWidget {
           onTap: () {
             Navigator.push(
               context,
-              RouteHelper(
+              MaterialPageRoute(
                 builder: (context) => SubjectScreen(
                   subject: subject,
                 ),

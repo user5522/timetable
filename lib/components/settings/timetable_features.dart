@@ -2,7 +2,6 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:timetable/helpers/route_helper.dart';
 import 'package:timetable/screens/settings/timetable_management.dart';
 import 'package:timetable/components/widgets/bottom_sheets/subject_duration_modal_bottom_sheet.dart';
 import 'package:timetable/provider/settings.dart';
@@ -33,7 +32,7 @@ class TimetableFeaturesOptions extends HookConsumerWidget {
           onTap: () {
             Navigator.push(
               context,
-              RouteHelper(
+              MaterialPageRoute(
                 builder: (context) => const TimetablePeriodScreen(),
               ),
             );
@@ -48,7 +47,7 @@ class TimetableFeaturesOptions extends HookConsumerWidget {
           onTap: () {
             Navigator.push(
               context,
-              RouteHelper(
+              MaterialPageRoute(
                 builder: (context) => const TimetableManagementScreen(),
               ),
             );

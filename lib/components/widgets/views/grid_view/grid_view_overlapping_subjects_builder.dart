@@ -5,7 +5,6 @@ import 'package:timetable/constants/custom_times.dart';
 import 'package:timetable/constants/grid_properties.dart';
 import 'package:timetable/helpers/rotation_weeks.dart';
 import 'package:timetable/db/database.dart';
-import 'package:timetable/helpers/route_helper.dart';
 import 'package:timetable/provider/settings.dart';
 import 'package:timetable/components/subject_management/subject_screen.dart';
 
@@ -106,7 +105,7 @@ class OverlappingSubjBuilder extends ConsumerWidget {
                   onTap: () {
                     Navigator.push(
                       context,
-                      RouteHelper(
+                      MaterialPageRoute(
                         builder: (context) => SubjectScreen(
                           subject: subjects[i],
                         ),

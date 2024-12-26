@@ -2,7 +2,6 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:timetable/components/settings/language_options.dart';
-import 'package:timetable/helpers/route_helper.dart';
 import 'package:timetable/screens/settings/choose_app_color.dart';
 import 'package:timetable/components/settings/theme_options.dart';
 import 'package:timetable/components/widgets/color_indicator.dart';
@@ -85,7 +84,7 @@ class GeneralOptions extends ConsumerWidget {
           onTap: () {
             Navigator.push(
               context,
-              RouteHelper(
+              MaterialPageRoute(
                 builder: (context) => const ChooseAppColor(),
               ),
             );

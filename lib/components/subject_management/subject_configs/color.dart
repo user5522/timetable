@@ -2,7 +2,6 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:timetable/components/subject_management/subject_configs/colors_screens/colors.dart';
 import 'package:timetable/components/widgets/list_item_group.dart';
-import 'package:timetable/helpers/route_helper.dart';
 
 /// Color configuration part of the Subject creation screen.
 class ColorsConfig extends StatelessWidget {
@@ -38,7 +37,7 @@ class ColorsConfig extends StatelessWidget {
           ),
           onTap: () => Navigator.push(
             context,
-            RouteHelper(builder: (context) => ColorsScreen(color: color)),
+            MaterialPageRoute(builder: (context) => ColorsScreen(color: color)),
           ),
         ),
       ],
