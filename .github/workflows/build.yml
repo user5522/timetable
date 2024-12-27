@@ -37,7 +37,7 @@ jobs:
 
           for apk in build/app/outputs/flutter-apk/*-release.apk; do
             if [ -f "$apk" ]; then
-              jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 \
+              jarsigner -verbose -sigalg SHA256withRSA -digestalg SHA-256 \
                 -keystore keystore.jks \
                 -storepass "${{ secrets.SIGNING_KEYSTORE_PASSWORD }}" \
                 -keypass "${{ secrets.SIGNING_KEY_PASSWORD }}" \
