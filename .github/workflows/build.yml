@@ -1,3 +1,4 @@
+.github/workflows/build.yml
 name: Android Build and Artifact
 
 on:
@@ -30,24 +31,6 @@ jobs:
           SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
           SIGNING_STORE_PASSWORD: ${{ secrets.SIGNING_KEYSTORE_PASSWORD }}
         run: flutter build apk --release --split-per-abi
-      - name: Archive arm64-v8a
-        uses: actions/upload-artifact@v4
-        with:
-          name: android-arm64-v8a
-          path: |
-            build/app/outputs/flutter-apk/*-arm64-v8a-release.apk
-      - name: Archive armeabi-v7a
-        uses: actions/upload-artifact@v4
-        with:
-          name: android-armeabi-v7a
-          path: |
-            build/app/outputs/flutter-apk/*-armeabi-v7a-release.apk
-      - name: Archive x86_64
-        uses: actions/upload-artifact@v4
-        with:
-          name: android-x86_64
-          path: |
-            build/app/outputs/flutter-apk/*-x86_64-release.apk
 
   sign_apk:
     name: Sign APK
@@ -79,7 +62,16 @@ jobs:
 
           # Sign each APK
           for apk in build/app/outputs/flutter-apk/*-release.apk; do
-            jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore "$KEYSTORE_PATH" -storepass "$KEYSTORE_PASSWORD" -keypass "$KEY_PASSWORD" "$apk" "$ALIAS"
+            if [ -f "$apk" ]; then  # Check if the APK file exists
+              jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore "$KEYSTORE_PATH" -storepass "$KEYSTORE_PASSWORD" -keypass "$KEY_PASSWORD" "$apk" "$ALIAS"
+            else
+              echo "No APK found for $apk"
+            fi
           done
+      - name: Upload Signed APKs
+        uses: actions/upload-artifact@v4
+        with:
+          name: signed-apks
+          path: build/app/outputs/flutter-apk/*-release.apk
       - name: Clean up
         run: rm keystore.jks
