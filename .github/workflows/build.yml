@@ -29,45 +29,37 @@ jobs:
         run: flutter pub get
 
       - name: Build APKs
-        env:
-          SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
-          SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
-          SIGNING_STORE_PASSWORD: ${{ secrets.SIGNING_KEYSTORE_PASSWORD }}
         run: flutter build apk --release --split-per-abi
 
-      - name: Decode Keystore
-        run: |
-          echo "${{ secrets.SIGNING_KEYSTORE }}" | base64 --decode > keystore.jks
+      - name: Sign APK
+        id: sign_apk
+        uses: filippoLeporati93/android-release-signer@v1
+        with:
+          releaseDirectory: build/app/outputs/flutter-apk/
+          signingKeyBase64: ${{ secrets.SIGNING_KEYSTORE }}
+          keyStorePassword: ${{ secrets.SIGNING_KEYSTORE_PASSWORD }}
+          alias: ${{ secrets.SIGNING_KEY_ALIAS }}
+          keyPassword: ${{ secrets.SIGNING_KEY_PASSWORD }}
+        env:
+          BUILD_TOOLS_VERSION: "34.0.0"
 
-      - name: Sign APKs
-        run: |
-          # Define the keystore and alias
-          KEYSTORE_PATH="keystore.jks"
-          ALIAS="${{ secrets.SIGNING_KEY_ALIAS }}"
-          KEYSTORE_PASSWORD="${{ secrets.SIGNING_KEYSTORE_PASSWORD }}"
-          KEY_PASSWORD="${{ secrets.SIGNING_KEY_PASSWORD }}"
-
-          # Create a directory for signed APKs
-          mkdir -p signed_apks
-
-          # Sign each APK
-          for apk in build/app/outputs/flutter-apk/*-release.apk; do
-            if [ -f "$apk" ]; then  # Check if the APK file exists
-              jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore "$KEYSTORE_PATH" -storepass "$KEYSTORE_PASSWORD" -keypass "$KEY_PASSWORD" "$apk" "$ALIAS"
-              # Copy the signed APK to the signed_apks directory
-              cp "$apk" "signed_apks/"
-            else
-              echo "No APK found for $apk"
-            fi
-          done
-
-      - name: Upload Signed APKs
+      - name: Archive arm64-v8a
         uses: actions/upload-artifact@v4
         with:
-          name: signed-apks
-          path: signed_apks/*.apk
+          name: android-arm64-v8a
+          path: |
+            build/app/outputs/flutter-apk/*-arm64-v8a-release-signed.apk
 
-      - name: Clean up
-        run: |
-          rm keystore.jks
-          rm -r signed_apks
+      - name: Archive armeabi-v7a
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-armeabi-v7a
+          path: |
+            build/app/outputs/flutter-apk/*-armeabi-v7a-release-signed.apk
+
+      - name: Archive x86_64
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-x86_64
+          path: |
+            build/app/outputs/flutter-apk/*-x86_64-release-signed.apk
