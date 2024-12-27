@@ -12,50 +12,33 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
           java-version: "17"
           distribution: "zulu"
           cache: "gradle"
+
       - uses: subosito/flutter-action@v2
         with:
           channel: "stable"
           cache: true
+
       - name: Set up Flutter
         run: flutter pub get
-      - name: Build with Flutter
+
+      - name: Build APKs
         env:
           SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
           SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
           SIGNING_STORE_PASSWORD: ${{ secrets.SIGNING_KEYSTORE_PASSWORD }}
         run: flutter build apk --release --split-per-abi
-      - name: Zip APKs
-        run: |
-          mkdir -p zipped_apks
-          for apk in build/app/outputs/flutter-apk/*-release.apk; do
-            if [ -f "$apk" ]; then
-              zip "zipped_apks/$(basename "$apk" .apk).zip" "$apk"
-            fi
-          done
-      - name: Upload APKs
-        uses: actions/upload-artifact@v4
-        with:
-          name: android-apks
-          path: zipped_apks/*.zip
 
-  sign_apk:
-    name: Sign APK
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      - name: Download APKs
-        uses: actions/download-artifact@v4
-        with:
-          name: android-apks
       - name: Decode Keystore
         run: |
-          echo "${{ secrets.ANDROID_KEYSTORE }}" | base64 --decode > keystore.jks
+          echo "${{ secrets.SIGNING_KEYSTORE }}" | base64 --decode > keystore.jks
+
       - name: Sign APKs
         run: |
           # Define the keystore and alias
@@ -64,26 +47,27 @@ jobs:
           KEYSTORE_PASSWORD="${{ secrets.SIGNING_KEYSTORE_PASSWORD }}"
           KEY_PASSWORD="${{ secrets.SIGNING_KEY_PASSWORD }}"
 
-          # Unzip the APKs
-          mkdir -p unzipped_apks
-          for zip in zipped_apks/*.zip; do
-            unzip "$zip" -d unzipped_apks
-          done
+          # Create a directory for signed APKs
+          mkdir -p signed_apks
 
           # Sign each APK
-          for apk in unzipped_apks/*.apk; do
+          for apk in build/app/outputs/flutter-apk/*-release.apk; do
             if [ -f "$apk" ]; then  # Check if the APK file exists
               jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore "$KEYSTORE_PATH" -storepass "$KEYSTORE_PASSWORD" -keypass "$KEY_PASSWORD" "$apk" "$ALIAS"
+              # Copy the signed APK to the signed_apks directory
+              cp "$apk" "signed_apks/"
             else
               echo "No APK found for $apk"
             fi
           done
+
       - name: Upload Signed APKs
         uses: actions/upload-artifact@v4
         with:
           name: signed-apks
-          path: unzipped_apks/*.apk
+          path: signed_apks/*.apk
+
       - name: Clean up
         run: |
           rm keystore.jks
-          rm -r unzipped_apks
+          rm -r signed_apks
