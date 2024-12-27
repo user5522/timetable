@@ -30,11 +30,19 @@ jobs:
           SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
           SIGNING_STORE_PASSWORD: ${{ secrets.SIGNING_KEYSTORE_PASSWORD }}
         run: flutter build apk --release --split-per-abi
+      - name: Zip APKs
+        run: |
+          mkdir -p zipped_apks
+          for apk in build/app/outputs/flutter-apk/*-release.apk; do
+            if [ -f "$apk" ]; then
+              zip "zipped_apks/$(basename "$apk" .apk).zip" "$apk"
+            fi
+          done
       - name: Upload APKs
         uses: actions/upload-artifact@v4
         with:
           name: android-apks
-          path: build/app/outputs/flutter-apk/*-release.apk
+          path: zipped_apks/*.zip
 
   sign_apk:
     name: Sign APK
@@ -44,7 +52,7 @@ jobs:
       - name: Download APKs
         uses: actions/download-artifact@v4
         with:
-          name: android-apks # Match the name used in the upload step
+          name: android-apks
       - name: Decode Keystore
         run: |
           echo "${{ secrets.ANDROID_KEYSTORE }}" | base64 --decode > keystore.jks
@@ -56,8 +64,14 @@ jobs:
           KEYSTORE_PASSWORD="${{ secrets.SIGNING_KEYSTORE_PASSWORD }}"
           KEY_PASSWORD="${{ secrets.SIGNING_KEY_PASSWORD }}"
 
+          # Unzip the APKs
+          mkdir -p unzipped_apks
+          for zip in zipped_apks/*.zip; do
+            unzip "$zip" -d unzipped_apks
+          done
+
           # Sign each APK
-          for apk in build/app/outputs/flutter-apk/*-release.apk; do
+          for apk in unzipped_apks/*.apk; do
             if [ -f "$apk" ]; then  # Check if the APK file exists
               jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore "$KEYSTORE_PATH" -storepass "$KEYSTORE_PASSWORD" -keypass "$KEY_PASSWORD" "$apk" "$ALIAS"
             else
@@ -68,6 +82,8 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: signed-apks
-          path: build/app/outputs/flutter-apk/*-release.apk
+          path: unzipped_apks/*.apk
       - name: Clean up
-        run: rm keystore.jks
+        run: |
+          rm keystore.jks
+          rm -r unzipped_apks
