@@ -17,6 +17,12 @@ class SubjectNotifier extends StateNotifier<List<SubjectData>> {
     getSubjects();
   }
 
+  /// load subjects from database
+  Future loadSubjects() async {
+    final subjects = await db.subject.select().get();
+    state = subjects;
+  }
+
   /// returns the list of [SubjectData] from the database ([$SubjectTable])
   Future<List<SubjectData>> getSubjects() async {
     final subjects = await db.subject.select().get();

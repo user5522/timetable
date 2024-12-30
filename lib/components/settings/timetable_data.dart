@@ -5,6 +5,7 @@ import 'package:timetable/components/widgets/alert_dialog.dart';
 import 'package:timetable/db/database.dart';
 import 'package:timetable/db/services/service.dart';
 import 'package:timetable/provider/subjects.dart';
+import 'package:timetable/provider/timetables.dart';
 
 /// All the settings that allow for manipulating the timetable's data.
 class TimetableDataOptions extends ConsumerWidget {
@@ -13,6 +14,7 @@ class TimetableDataOptions extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final subjNotifier = ref.watch(subjectProvider.notifier);
+    final tbNotifier = ref.watch(timetableProvider.notifier);
     final db = ref.watch(AppDatabase.databaseProvider);
 
     void pop() {
@@ -27,14 +29,13 @@ class TimetableDataOptions extends ConsumerWidget {
             size: 20,
           ),
           horizontalTitleGap: 8,
-          onTap: () {
-            final ScaffoldFeatureController<SnackBar, SnackBarClosedReason>
-                snackBar = ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: const Text("create_backup_snackbar").tr(),
-              ),
+          onTap: () async {
+            final snackBar = ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: const Text("create_backup_snackbar").tr()),
             );
-            exportData(db, snackBar);
+            // TODO: snackbar appears too early
+            // TODO: display error
+            await exportData(db).then((_) => snackBar);
           },
           title: const Text("create_backup").tr(),
         ),
@@ -61,7 +62,10 @@ class TimetableDataOptions extends ConsumerWidget {
                   ),
                   approveButtonText: "proceed".tr(),
                   onApprove: () async {
-                    await restoreData(db);
+                    await restoreData(db).then((_) {
+                      tbNotifier.loadTimetables();
+                      subjNotifier.loadSubjects();
+                    });
                     pop();
                   },
                 );

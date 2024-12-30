@@ -1,4 +1,8 @@
-// GENERATED CODE - DO NOT MODIFY BY HAND
+/// current modifications:
+/// in [SubjectData], specifically in the [toJson()] and [fromJson()] functions,
+/// I changed the way it handles the elments with types Color and TimeOfDay
+/// since there is no regular way to deal with them i seperate hours and minutes for TimeOfDay
+/// then regroup them again and convert Color to int and int to Color again
 
 part of 'database.dart';
 
@@ -427,16 +431,27 @@ class SubjectData extends DataClass implements Insertable<SubjectData> {
       label: serializer.fromJson<String>(json['label']),
       location: serializer.fromJson<String?>(json['location']),
       note: serializer.fromJson<String?>(json['note']),
-      color: serializer.fromJson<material.Color>(json['color']),
+      color: serializer.fromJson<material.Color>(material.Color(json['color'])),
       rotationWeek: $SubjectTable.$converterrotationWeek
           .fromJson(serializer.fromJson<int>(json['rotationWeek'])),
       day: $SubjectTable.$converterday
           .fromJson(serializer.fromJson<int>(json['day'])),
-      startTime: serializer.fromJson<material.TimeOfDay>(json['startTime']),
-      endTime: serializer.fromJson<material.TimeOfDay>(json['endTime']),
+      startTime: serializer.fromJson<material.TimeOfDay>(
+        material.TimeOfDay(
+          hour: json['startTimeHour'],
+          minute: json['startTimeMinute'],
+        ),
+      ),
+      endTime: serializer.fromJson<material.TimeOfDay>(
+        material.TimeOfDay(
+          hour: json['endTimeHour'],
+          minute: json['endTimeMinute'],
+        ),
+      ),
       timetable: serializer.fromJson<String>(json['timetable']),
     );
   }
+
   @override
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
@@ -445,12 +460,14 @@ class SubjectData extends DataClass implements Insertable<SubjectData> {
       'label': serializer.toJson<String>(label),
       'location': serializer.toJson<String?>(location),
       'note': serializer.toJson<String?>(note),
-      'color': serializer.toJson<material.Color>(color),
+      'color': serializer.toJson<int>(color.toInt()),
       'rotationWeek': serializer.toJson<int>(
           $SubjectTable.$converterrotationWeek.toJson(rotationWeek)),
       'day': serializer.toJson<int>($SubjectTable.$converterday.toJson(day)),
-      'startTime': serializer.toJson<material.TimeOfDay>(startTime),
-      'endTime': serializer.toJson<material.TimeOfDay>(endTime),
+      'startTimeHour': serializer.toJson<int>(startTime.hour),
+      'startTimeMinute': serializer.toJson<int>(startTime.minute),
+      'endTimeHour': serializer.toJson<int>(endTime.hour),
+      'endTimeMinute': serializer.toJson<int>(endTime.minute),
       'timetable': serializer.toJson<String>(timetable),
     };
   }

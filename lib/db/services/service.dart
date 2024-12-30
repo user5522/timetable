@@ -10,30 +10,26 @@ import 'package:timetable/db/database.dart';
 
 final DateTime now = DateTime.now();
 final String date =
-    '${now.year}-${now.month}-${now.day}_${now.hour}-${now.minute}';
+    '${now.hour}:${now.minute}_${now.day}-${now.month}-${now.year}';
 final String fileName = 'timetable_backup $date.json';
 
 /// handles data export/backup
-void exportData(
+Future<void> exportData(
   AppDatabase db,
-  ScaffoldFeatureController<SnackBar, SnackBarClosedReason> snackBar,
 ) async {
   try {
-    final allData = {
-      'subject': await $SubjectTable(db).select().get(),
-      'timetable': await $TimetableTable(db).select().get(),
+    String? selectedDirectory = await FilePicker.platform.getDirectoryPath();
+    if (selectedDirectory == null) return;
+
+    final Map<String, List<dynamic>> allData = {
+      'subject': await db.subject.select().get(),
+      'timetable': await db.timetable.select().get(),
     };
 
     final jsonData = jsonEncode(allData);
 
-    final a = await File('storage/emulated/0/Documents/$fileName')
-        .writeAsString(jsonData);
-
-    a;
-    snackBar;
-  } catch (error) {
-    // print('Error exporting data: $error');
-  }
+    await File('$selectedDirectory/$fileName').writeAsString(jsonData);
+  } catch (_) {}
 }
 
 /// handles data import/restore
@@ -91,7 +87,5 @@ Future<void> restoreData(
         }
       }
     }
-  } catch (_) {
-    // print('Error restoring data: $error');
-  }
+  } catch (_) {}
 }

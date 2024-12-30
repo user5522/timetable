@@ -8,6 +8,7 @@ import 'package:timetable/db/converters/color.dart';
 import 'package:timetable/db/converters/time_of_day.dart';
 import 'package:timetable/db/models/timetable.dart';
 import 'package:timetable/db/models/subject.dart';
+import 'package:timetable/extensions/color.dart';
 
 part 'database.g.dart';
 
