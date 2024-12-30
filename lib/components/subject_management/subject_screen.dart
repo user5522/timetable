@@ -155,49 +155,55 @@ class SubjectScreen extends HookConsumerWidget {
       appBar: AppBar(
         actions: [
           if (!isSubjectNull)
-            ElevatedButton(
+            ElevatedButton.icon(
               style: ElevatedButton.styleFrom(
                 shadowColor: Colors.transparent,
                 backgroundColor: Theme.of(context).colorScheme.error,
                 foregroundColor: Theme.of(context).colorScheme.errorContainer,
+                iconColor: Theme.of(context).colorScheme.errorContainer,
               ),
               onPressed: () async {
                 final navigator = Navigator.of(context);
                 final messenger = ScaffoldMessenger.of(context);
 
-                await subjectNotifier.deleteSubject(newSubject).then((_) {
-                  navigator.pop();
-                  messenger.showSnackBar(
-                    SnackBar(
-                      content: const Text('subject_deleted_snackbar').tr(),
-                    ),
-                  );
-                });
+                await subjectNotifier.deleteSubject(newSubject).then(
+                  (_) {
+                    navigator.pop();
+                    messenger.showSnackBar(
+                      SnackBar(
+                        content: const Text('subject_deleted_snackbar').tr(),
+                      ),
+                    );
+                  },
+                );
               },
-              child: const Text("delete").tr(),
+              icon: const Icon(Icons.delete_outline),
+              label: const Text("delete").tr(),
             ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10),
-            child: ElevatedButton(
+            child: ElevatedButton.icon(
               style: ElevatedButton.styleFrom(
                 shadowColor: Colors.transparent,
                 backgroundColor:
                     Theme.of(context).colorScheme.onPrimaryContainer,
                 foregroundColor:
                     Theme.of(context).colorScheme.secondaryContainer,
+                iconColor: Theme.of(context).colorScheme.secondaryContainer,
               ),
               onPressed: () async {
-                if (!formKey.currentState!.validate()) {
-                  return;
-                }
+                if (!formKey.currentState!.validate()) return;
+
                 if (isOccupied && multipleOccupied) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: const Text('time_slots_occupied_error').tr(),
                     ),
                   );
+
                   return;
                 }
+
                 final navigator = Navigator.of(context);
 
                 if (isSubjectNull) {
@@ -211,7 +217,9 @@ class SubjectScreen extends HookConsumerWidget {
                       .then((_) => navigator.pop(label.value));
                 }
               },
-              child: Text(isSubjectNull ? "create".tr() : "save".tr()),
+              icon: Icon(
+                  isSubjectNull ? Icons.add_outlined : Icons.save_outlined),
+              label: Text(isSubjectNull ? "create".tr() : "save".tr()),
             ),
           ),
         ],
