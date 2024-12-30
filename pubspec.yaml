@@ -38,7 +38,8 @@ dependencies:
   flutter_hooks: ^0.20.5
   hooks_riverpod: ^2.5.1
   non_uniform_border: ^1.0.0
-  drift: ^2.16.0
+  drift: ^2.23.0
+  drift_flutter: ^0.1.0
   sqlite3_flutter_libs: ^0.5.20
   path_provider: ^2.1.2
   path: ^1.9.0
@@ -49,7 +50,8 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  build_runner: ^2.4.8
+  drift_dev: ^2.23.0
+  build_runner: ^2.4.14
   analyzer:
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
@@ -57,7 +59,6 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^3.0.1
-  drift_dev: ^2.16.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
