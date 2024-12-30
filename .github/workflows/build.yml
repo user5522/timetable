@@ -42,29 +42,23 @@ jobs:
           keyPassword: ${{ secrets.SIGNING_KEY_PASSWORD }}
           buildToolsVersion: 33.0.0
 
-      - uses: jungwinter/split@v2
-        id: signed_files
-        with:
-          msg: ${{ steps.sign_app.outputs.signedFiles }}
-          separator: ":"
-
       - name: Archive arm64-v8a
         uses: actions/upload-artifact@v4
         with:
           name: android-arm64-v8a
           path: |
-            ${{ steps.signed_files.outputs._0 }}
+            build/app/outputs/flutter-apk/app-arm64-v8a-release-signed.apk
 
       - name: Archive armeabi-v7a
         uses: actions/upload-artifact@v4
         with:
           name: android-armeabi-v7a
           path: |
-            ${{ steps.signed_files.outputs._1 }}
+            build/app/outputs/flutter-apk/*-armeabi-v7a-release-signed.apk
 
       - name: Archive x86_64
         uses: actions/upload-artifact@v4
         with:
           name: android-x86_64
           path: |
-            ${{ steps.signed_files.outputs._2 }}
+            build/app/outputs/flutter-apk/*-x86_64-release-signed.apk
