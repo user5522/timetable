@@ -46,19 +46,19 @@ class SubjectScreen extends HookConsumerWidget {
         ref.watch(settingsProvider).defaultSubjectDuration;
 
     final bool isSubjectNull = (subject == null);
-    final bool isCTimetableNull = (currentTimetable == null);
-    final int id = isSubjectNull ? subjects.length : subject!.id;
+    final bool isCurrentTimetableNull = (currentTimetable == null);
+    final int id = (isSubjectNull ? subjects.length : subject!.id);
 
-    final timetable = useState(
+    final ValueNotifier<TimetableData?> timetable = useState(
       isSubjectNull
-          ? isCTimetableNull
+          ? isCurrentTimetableNull
               ? timetables
                   .where((t) => t.name == subject!.timetable)
                   .firstOrNull
               : currentTimetable!.value
           : timetables.where((t) => t.name == subject!.timetable).firstOrNull,
     );
-    final startTime = useState(
+    final ValueNotifier<TimeOfDay> startTime = useState(
       TimeOfDay(
         hour: subject?.startTime.hour ??
             (rowIndex! + (tfHours ? 0 : customStartTimeHour)),
@@ -75,13 +75,14 @@ class SubjectScreen extends HookConsumerWidget {
       ),
     );
 
-    final label = useState(subject?.label ?? "");
-    final location = useState(subject?.location ?? "");
-    final note = useState(subject?.note ?? "");
+    final ValueNotifier<String> label = useState(subject?.label ?? "");
+    final ValueNotifier<String?> location = useState(subject?.location ?? "");
+    final ValueNotifier<String?> note = useState(subject?.note ?? "");
     final ValueNotifier<Days> day =
         useState(Days.values[subject?.day.index ?? columnIndex!]);
-    final color = useState(subject?.color ?? Colors.black);
-    final rotationWeek = useState(subject?.rotationWeek ?? RotationWeeks.none);
+    final ValueNotifier<Color> color = useState(subject?.color ?? Colors.black);
+    final ValueNotifier<RotationWeeks> rotationWeek =
+        useState(subject?.rotationWeek ?? RotationWeeks.none);
 
     // I DONT KNOW WHY I AM USING [SubjectData] I SHOULD BE USING [SubjectCompanion]
     // update: using [SubjectCompanion] breaks a lot of stuff so i will not be using that
@@ -98,11 +99,8 @@ class SubjectScreen extends HookConsumerWidget {
       timetable: timetable.value!.name,
     );
 
-    final subjectsInSameDay = subjects
-        .where(
-          (e) => e.day == day.value,
-        )
-        .toList();
+    final subjectsInSameDay =
+        subjects.where((e) => e.day == day.value).toList();
 
 // all the upcomming variables are checks to
 // limit the amount of overlapping subjects.
@@ -115,12 +113,13 @@ class SubjectScreen extends HookConsumerWidget {
       for (var subject in e) {
         return newSubject == subject;
       }
+
       return false;
     });
 
     // Check for multiple subjects in same time slot
     final multipleOccupied = !isInOverlappingList &&
-        subjectsInSameDay
+        (subjectsInSameDay
                 .where((s) {
                   final sHours = getHoursList(s.startTime, s.endTime);
                   return hasTimeOverlap(sHours, inputHours);
@@ -128,7 +127,7 @@ class SubjectScreen extends HookConsumerWidget {
                 .where((s) => s != subject)
                 .where((e) => e.timetable == newSubject.timetable)
                 .length >
-            1;
+            1);
 
     // Check if time slot is occupied by overlapping subjects
     final isOccupied = subjectsInSameDay
@@ -255,9 +254,7 @@ class SubjectScreen extends HookConsumerWidget {
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 10),
-                  child: NotesTile(
-                    note: note,
-                  ),
+                  child: NotesTile(note: note),
                 ),
               ],
             ),
