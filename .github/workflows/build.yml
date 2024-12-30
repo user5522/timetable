@@ -31,39 +31,40 @@ jobs:
       - name: Build APKs
         run: flutter build apk --release --split-per-abi
 
-      - name: Sign APK
-        run: |
-          echo "${{ secrets.SIGNING_KEYSTORE }}" | base64 --decode > keystore.jks
+      - uses: ilharp/sign-android-release@v1
+        name: Sign app APK
+        id: sign_app
+        with:
+          releaseDir: build/app/outputs/flutter-apk/
+          signingKey: ${{ secrets.SIGNING_KEYSTORE }}
+          keyAlias: ${{ secrets.SIGNING_KEY_ALIAS }}
+          keyStorePassword: ${{ secrets.SIGNING_KEYSTORE_PASSWORD }}
+          keyPassword: ${{ secrets.SIGNING_KEY_PASSWORD }}
+          buildToolsVersion: 33.0.0
 
-          for apk in build/app/outputs/flutter-apk/*-release.apk; do
-            if [ -f "$apk" ]; then
-              jarsigner -verbose -sigalg SHA256withRSA -digestalg SHA-256 \
-                -keystore keystore.jks \
-                -storepass "${{ secrets.SIGNING_KEYSTORE_PASSWORD }}" \
-                -keypass "${{ secrets.SIGNING_KEY_PASSWORD }}" \
-                "$apk" "${{ secrets.SIGNING_KEY_ALIAS }}"
-            fi
-          done
-
-          rm keystore.jks
+      - uses: jungwinter/split@v2
+        id: signed_files
+        with:
+          msg: ${{ steps.sign_app.outputs.signedFiles }}
+          separator: ":"
 
       - name: Archive arm64-v8a
         uses: actions/upload-artifact@v4
         with:
           name: android-arm64-v8a
           path: |
-            build/app/outputs/flutter-apk/*-arm64-v8a-release.apk
+            ${{ steps.signed_files.outputs._0 }}
 
       - name: Archive armeabi-v7a
         uses: actions/upload-artifact@v4
         with:
           name: android-armeabi-v7a
           path: |
-            build/app/outputs/flutter-apk/*-armeabi-v7a-release.apk
+            ${{ steps.signed_files.outputs._1 }}
 
       - name: Archive x86_64
         uses: actions/upload-artifact@v4
         with:
           name: android-x86_64
           path: |
-            build/app/outputs/flutter-apk/*-x86_64-release.apk
+            ${{ steps.signed_files.outputs._2 }}
