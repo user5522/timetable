@@ -124,6 +124,7 @@ class SubjectBuilder extends ConsumerWidget {
           enableDrag: true,
           isDismissible: true,
           context: context,
+          isScrollControlled: true,
           builder: (context) {
             return Wrap(
               children: [
