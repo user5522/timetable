@@ -26,16 +26,14 @@ class SubjectManagementBottomSheet extends ConsumerWidget {
     final overlappingSubjects = ref.watch(overlappingSubjectsProvider);
     final timetables = ref.watch(timetableProvider);
     final rotationWeeks = ref.watch(settingsProvider).rotationWeeks;
+    final multipleTimetables = ref.watch(settingsProvider).multipleTimetables;
     final customStartTime = ref.watch(settingsProvider).customStartTime;
     final subjects = ref.watch(subjectProvider);
     final currentSubject = subjects.firstWhere((s) => s.id == subject.id);
 
-    Color labelColor = currentSubject.color.computeLuminance() > .7
-        ? Colors.black
-        : Colors.white;
-    Color subLabelsColor = currentSubject.color.computeLuminance() > .7
-        ? Colors.black.withValues(alpha: .6)
-        : Colors.white.withValues(alpha: .75);
+    Color labelColor = Theme.of(context).textTheme.titleMedium!.color!;
+    Color subLabelsColor =
+        Theme.of(context).textTheme.titleMedium!.color!.withAlpha(720);
 
     String label = currentSubject.label;
     String? location = currentSubject.location;
@@ -122,8 +120,7 @@ class SubjectManagementBottomSheet extends ConsumerWidget {
                 ],
               ),
               const Padding(padding: EdgeInsets.symmetric(vertical: 2.5)),
-              if (locationCheck || noteCheck || rotationWeeks)
-                const Divider(indent: 40),
+              if (locationCheck || noteCheck) const Divider(indent: 40),
               if (locationCheck)
                 Row(
                   children: [
@@ -149,32 +146,7 @@ class SubjectManagementBottomSheet extends ConsumerWidget {
                     ),
                   ],
                 ),
-              if (rotationWeeks && locationCheck) const Divider(indent: 40),
-              if (rotationWeeks)
-                Row(
-                  children: [
-                    Padding(
-                      padding:
-                          const EdgeInsets.only(right: 18, top: 10, bottom: 10),
-                      child: Icon(
-                        Icons.screen_rotation_alt_rounded,
-                        size: 22,
-                        color: subLabelsColor,
-                      ),
-                    ),
-                    Expanded(
-                      child: Text(
-                        getRotationWeekLabel(currentSubject.rotationWeek),
-                        style: TextStyle(
-                          color: subLabelsColor,
-                          fontSize: 17,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              if ((locationCheck || rotationWeeks) && noteCheck)
-                const Divider(indent: 40),
+              if (locationCheck && noteCheck) const Divider(indent: 40),
               if (noteCheck)
                 Row(
                   children: [
@@ -200,6 +172,65 @@ class SubjectManagementBottomSheet extends ConsumerWidget {
                     ),
                   ],
                 ),
+              if (rotationWeeks || multipleTimetables) const Divider(),
+              if (rotationWeeks || multipleTimetables)
+                IntrinsicHeight(
+                  child: Row(
+                    children: [
+                      if (rotationWeeks)
+                        Padding(
+                          padding: const EdgeInsets.only(
+                            right: 18,
+                            top: 10,
+                            bottom: 10,
+                          ),
+                          child: Icon(
+                            Icons.screen_rotation_alt_outlined,
+                            size: 22,
+                            color: subLabelsColor,
+                          ),
+                        ),
+                      if (rotationWeeks)
+                        Expanded(
+                          child: Text(
+                            getRotationWeekLabel(currentSubject.rotationWeek),
+                            style: TextStyle(
+                              color: subLabelsColor,
+                              fontSize: 17,
+                            ),
+                          ),
+                        ),
+                      if (rotationWeeks && multipleTimetables)
+                        const Padding(
+                          padding: EdgeInsets.only(right: 10),
+                          child: VerticalDivider(),
+                        ),
+                      if (multipleTimetables)
+                        Padding(
+                          padding: const EdgeInsets.only(
+                            right: 18,
+                            top: 10,
+                            bottom: 10,
+                          ),
+                          child: Icon(
+                            Icons.table_view_outlined,
+                            size: 22,
+                            color: subLabelsColor,
+                          ),
+                        ),
+                      if (multipleTimetables)
+                        Expanded(
+                          child: Text(
+                            "${"timetable".plural(1)} ${currentSubject.timetable}",
+                            style: TextStyle(
+                              color: subLabelsColor,
+                              fontSize: 17,
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
             ],
           ),
         ),
@@ -217,7 +248,8 @@ class SubjectManagementBottomSheet extends ConsumerWidget {
                     columnIndex: currentSubject.day.index,
                     currentTimetable: ValueNotifier(
                       timetables.firstWhere(
-                          (e) => e.name == currentSubject.timetable),
+                        (e) => e.name == currentSubject.timetable,
+                      ),
                     ),
                   ),
                 ),
