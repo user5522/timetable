@@ -44,9 +44,7 @@ class SubjectContainerBuilder extends ConsumerWidget {
         );
       },
       child: Container(
-        decoration: ShapeDecoration(
-          shape: shape,
-        ),
+        decoration: ShapeDecoration(shape: shape),
         child: Align(
           child: Container(
             height: 1,

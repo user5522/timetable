@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:non_uniform_border/non_uniform_border.dart';
+import 'package:timetable/components/widgets/bottom_sheets/subject_management_bottom_sheet.dart';
 import 'package:timetable/constants/custom_times.dart';
 import 'package:timetable/helpers/rotation_weeks.dart';
 import 'package:timetable/db/database.dart';
 import 'package:timetable/provider/settings.dart';
-import 'package:timetable/components/subject_management/subject_screen.dart';
 import 'package:timetable/constants/grid_properties.dart';
 
 /// Subject builder for the grid view.
@@ -119,13 +119,20 @@ class SubjectBuilder extends ConsumerWidget {
   ) {
     return InkWell(
       onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => SubjectScreen(
-              subject: subject,
-            ),
-          ),
+        showModalBottomSheet(
+          showDragHandle: true,
+          enableDrag: true,
+          isDismissible: true,
+          context: context,
+          builder: (context) {
+            return Wrap(
+              children: [
+                SubjectManagementBottomSheet(
+                  subject: subject,
+                ),
+              ],
+            );
+          },
         );
       },
       borderRadius: BorderRadius.circular(5),

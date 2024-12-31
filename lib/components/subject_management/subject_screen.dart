@@ -153,34 +153,8 @@ class SubjectScreen extends HookConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         actions: [
-          if (!isSubjectNull)
-            ElevatedButton.icon(
-              style: ElevatedButton.styleFrom(
-                shadowColor: Colors.transparent,
-                backgroundColor: Theme.of(context).colorScheme.error,
-                foregroundColor: Theme.of(context).colorScheme.errorContainer,
-                iconColor: Theme.of(context).colorScheme.errorContainer,
-              ),
-              onPressed: () async {
-                final navigator = Navigator.of(context);
-                final messenger = ScaffoldMessenger.of(context);
-
-                await subjectNotifier.deleteSubject(newSubject).then(
-                  (_) {
-                    navigator.pop();
-                    messenger.showSnackBar(
-                      SnackBar(
-                        content: const Text('subject_deleted_snackbar').tr(),
-                      ),
-                    );
-                  },
-                );
-              },
-              icon: const Icon(Icons.delete_outline),
-              label: const Text("delete").tr(),
-            ),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
+            padding: const EdgeInsets.symmetric(horizontal: 16),
             child: ElevatedButton.icon(
               style: ElevatedButton.styleFrom(
                 shadowColor: Colors.transparent,
@@ -208,12 +182,12 @@ class SubjectScreen extends HookConsumerWidget {
                 if (isSubjectNull) {
                   await subjectNotifier
                       .addSubject(newSubject.toCompanion(true))
-                      .then((_) => navigator.pop(label.value));
+                      .then((_) => navigator.pop(newSubject));
                 }
                 if (!isSubjectNull) {
                   await subjectNotifier
                       .updateSubject(newSubject)
-                      .then((_) => navigator.pop(label.value));
+                      .then((_) => navigator.pop(newSubject));
                 }
               },
               icon: Icon(
