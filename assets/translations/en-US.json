@@ -45,6 +45,7 @@
 
   "delete_timetable_dialog": "Deleting a timetable will delete its corresponding subjects.",
   "reset_timetables_dialog": "Resetting timetables will also delete all subjects.",
+  "delete_subject_dialog": "Delete subject?",
   "create_backup": "Create a Backup",
   "restore_backup": "Restore a Backup",
   "restore_backup_dialog": {

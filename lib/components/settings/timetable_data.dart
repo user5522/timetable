@@ -24,10 +24,7 @@ class TimetableDataOptions extends ConsumerWidget {
     return Column(
       children: [
         ListTile(
-          leading: const Icon(
-            Icons.file_download_outlined,
-            size: 20,
-          ),
+          leading: const Icon(Icons.file_download_outlined, size: 20),
           horizontalTitleGap: 8,
           onTap: () async {
             final snackBar = ScaffoldMessenger.of(context).showSnackBar(
@@ -51,14 +48,8 @@ class TimetableDataOptions extends ConsumerWidget {
               barrierDismissible: true,
               builder: (BuildContext context) {
                 return ShowAlertDialog(
-                  content: FittedBox(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text("restore_backup_dialog.dialog_1").tr(),
-                        const Text("restore_backup_dialog.dialog_2").tr(),
-                      ],
-                    ),
+                  content: Text(
+                    "${"restore_backup_dialog.dialog_1".tr()}\n${"restore_backup_dialog.dialog_2".tr()}",
                   ),
                   approveButtonText: "proceed".tr(),
                   onApprove: () async {

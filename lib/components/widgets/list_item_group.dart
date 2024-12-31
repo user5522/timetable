@@ -14,10 +14,12 @@ import 'package:flutter/material.dart';
 /// ```
 class ListItemGroup extends StatelessWidget {
   final List<ListItem> children;
+  final Color? tileColor;
 
   const ListItemGroup({
     super.key,
     required this.children,
+    this.tileColor,
   });
 
   @override
@@ -26,10 +28,7 @@ class ListItemGroup extends StatelessWidget {
       children: children.asMap().entries.map((e) {
         final index = e.key;
 
-        ShapeBorder getShape(
-          int index,
-          int length,
-        ) {
+        ShapeBorder getShape(int index, int length) {
           bool isFirst = index == 0;
           bool isLast = index == length - 1;
 
@@ -55,13 +54,10 @@ class ListItemGroup extends StatelessWidget {
           );
         }
 
-        return ListItem(
-          title: e.value.title,
-          subtitle: e.value.subtitle,
-          leading: e.value.leading,
-          trailing: e.value.trailing,
+        return ListItem.from(
+          e.value,
           shape: getShape(index, children.length),
-          onTap: e.value.onTap,
+          tileColor: tileColor,
         );
       }).toList(),
     );
@@ -82,6 +78,7 @@ class ListItem extends StatelessWidget {
   final Widget? trailing;
   final VoidCallback? onTap;
   final ShapeBorder? shape;
+  final Color? tileColor;
 
   const ListItem({
     super.key,
@@ -91,11 +88,25 @@ class ListItem extends StatelessWidget {
     this.trailing,
     this.onTap,
     this.shape,
+    this.tileColor,
   });
+
+  factory ListItem.from(ListItem item, {ShapeBorder? shape, Color? tileColor}) {
+    return ListItem(
+      title: item.title,
+      subtitle: item.subtitle,
+      leading: item.leading,
+      trailing: item.trailing,
+      onTap: item.onTap,
+      shape: shape ?? item.shape,
+      tileColor: tileColor ?? item.tileColor,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    final customTileColor = Theme.of(context).colorScheme.onInverseSurface;
+    final customTileColor =
+        tileColor ?? Theme.of(context).colorScheme.onInverseSurface;
     const customPadding = EdgeInsets.only(bottom: 2);
 
     return Column(

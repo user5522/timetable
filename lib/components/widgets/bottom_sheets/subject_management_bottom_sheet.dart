@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:timetable/components/subject_management/subject_screen.dart';
+import 'package:timetable/components/widgets/alert_dialog.dart';
 import 'package:timetable/components/widgets/color_indicator.dart';
 import 'package:timetable/db/database.dart';
 import 'package:timetable/helpers/rotation_weeks.dart';
@@ -225,7 +226,11 @@ class SubjectManagementBottomSheet extends ConsumerWidget {
             leading: const Icon(Icons.add_outlined),
             title: const Text("add").tr(),
           ),
-        const Divider(indent: 16, endIndent: 16, height: 0),
+        Divider(
+          indent: !inOverlappingSubjectsCheck ? 56 : 16,
+          endIndent: 16,
+          height: 0,
+        ),
         ListTile(
           onTap: () async {
             final updatedSubject = await Navigator.push(
@@ -252,20 +257,33 @@ class SubjectManagementBottomSheet extends ConsumerWidget {
             try {
               if (subjects.any((s) => s.id == currentSubject.id)) {
                 navigator.pop();
-                // TODO: figure something else out for this (Bad state no element)
-                await Future.delayed(Duration.zero);
-                await subjectNotifier.deleteSubject(currentSubject).then((_) {
-                  messenger.showSnackBar(
-                    SnackBar(
-                      content: const Text('subject_deleted_snackbar').tr(),
-                    ),
-                  );
-                });
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return ShowAlertDialog(
+                      content: const Text('delete_subject_dialog').tr(),
+                      approveButtonText: "delete".tr(),
+                      onApprove: () async {
+                        await subjectNotifier
+                            .deleteSubject(currentSubject)
+                            .then((_) {
+                          messenger.showSnackBar(
+                            SnackBar(
+                              content:
+                                  const Text('subject_deleted_snackbar').tr(),
+                            ),
+                          );
+                        });
+                        navigator.pop();
+                      },
+                    );
+                  },
+                );
               }
             } catch (e) {
               messenger.showSnackBar(
                 SnackBar(
-                  content: Text('An error occurred: $e'),
+                  content: Text('error: $e'),
                 ),
               );
             }
