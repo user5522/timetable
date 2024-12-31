@@ -31,7 +31,7 @@ class SubjectDataBottomSheet extends StatelessWidget {
           primary: false,
           children: children,
         ),
-        const SizedBox(height: 10),
+        const SizedBox(height: 30),
       ],
     );
   }

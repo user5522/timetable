@@ -25,6 +25,7 @@ class TimetableConfig extends StatelessWidget {
               showDragHandle: true,
               enableDrag: true,
               isDismissible: true,
+              isScrollControlled: true,
               context: context,
               builder: (context) {
                 return Wrap(

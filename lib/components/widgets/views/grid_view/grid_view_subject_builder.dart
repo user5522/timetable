@@ -123,8 +123,8 @@ class SubjectBuilder extends ConsumerWidget {
           showDragHandle: true,
           enableDrag: true,
           isDismissible: true,
-          context: context,
           isScrollControlled: true,
+          context: context,
           builder: (context) {
             return Wrap(
               children: [
