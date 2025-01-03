@@ -9,6 +9,7 @@ import 'package:share_plus/share_plus.dart';
 import 'package:timetable/constants/days.dart';
 import 'package:timetable/constants/rotation_weeks.dart';
 import 'package:timetable/db/database.dart';
+import 'package:timetable/helpers/request_permission.dart';
 
 Future<void> shareFile(File file) async {
   Share.shareXFiles([XFile(file.path)]);
@@ -29,6 +30,9 @@ Future<void> exportData(AppDatabase db) async {
   final String fileName = 'timetable_backup_$date.json';
 
   try {
+    final isGranted = await requestStoragePermission();
+    if (!isGranted) return;
+
     final Map<String, List<dynamic>> allData = {
       'subject': await db.subject.select().get(),
       'timetable': await db.timetable.select().get(),
