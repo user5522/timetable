@@ -26,7 +26,7 @@ Future<File> createJSONFile(String fileName, String content) async {
 Future<void> exportData(AppDatabase db) async {
   final DateTime now = DateTime.now();
   final String date =
-      '${now.hour}:${now.minute}_${now.day}-${now.month}-${now.year}';
+      '${now.hour}-${now.minute}_${now.day}-${now.month}-${now.year}';
   final String fileName = 'timetable_backup_$date.json';
 
   try {
