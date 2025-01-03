@@ -4,23 +4,31 @@ import 'dart:io';
 import 'package:drift/drift.dart' as drift;
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:timetable/constants/days.dart';
 import 'package:timetable/constants/rotation_weeks.dart';
 import 'package:timetable/db/database.dart';
 
-final DateTime now = DateTime.now();
-final String date =
-    '${now.hour}:${now.minute}_${now.day}-${now.month}-${now.year}';
-final String fileName = 'timetable_backup $date.json';
+Future<void> shareFile(File file) async {
+  Share.shareXFiles([XFile(file.path)]);
+}
+
+Future<File> createJSONFile(String fileName, String content) async {
+  final directory = await getApplicationDocumentsDirectory();
+  final file = File('${directory.path}/$fileName');
+  await file.writeAsString(content);
+  return file;
+}
 
 /// handles data export/backup
-Future<void> exportData(
-  AppDatabase db,
-) async {
-  try {
-    String? selectedDirectory = await FilePicker.platform.getDirectoryPath();
-    if (selectedDirectory == null) return;
+Future<void> exportData(AppDatabase db) async {
+  final DateTime now = DateTime.now();
+  final String date =
+      '${now.hour}:${now.minute}_${now.day}-${now.month}-${now.year}';
+  final String fileName = 'timetable_backup_$date.json';
 
+  try {
     final Map<String, List<dynamic>> allData = {
       'subject': await db.subject.select().get(),
       'timetable': await db.timetable.select().get(),
@@ -28,7 +36,9 @@ Future<void> exportData(
 
     final jsonData = jsonEncode(allData);
 
-    await File('$selectedDirectory/$fileName').writeAsString(jsonData);
+    File createdFile = await createJSONFile(fileName, jsonData);
+
+    shareFile(createdFile);
   } catch (_) {}
 }
 

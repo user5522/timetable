@@ -26,14 +26,7 @@ class TimetableDataOptions extends ConsumerWidget {
         ListTile(
           leading: const Icon(Icons.file_download_outlined, size: 20),
           horizontalTitleGap: 8,
-          onTap: () async {
-            final snackBar = ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: const Text("create_backup_snackbar").tr()),
-            );
-            // TODO: snackbar appears too early
-            // TODO: display error
-            await exportData(db).then((_) => snackBar);
-          },
+          onTap: () async => await exportData(db),
           title: const Text("create_backup").tr(),
         ),
         ListTile(
