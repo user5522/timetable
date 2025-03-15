@@ -1,4 +1,4 @@
-/// Basic Rotation Weeks.
+/// Basic Rotation Weeks definition.
 enum RotationWeeks {
   all,
   none,

@@ -21,25 +21,19 @@ class TimeColumn extends ConsumerWidget {
       child: Column(
         children: List.generate(
           rows(ref),
-          (i) {
+          (index) {
             return Transform.translate(
               offset: const Offset(0, -10),
               child: SizedBox(
                 height: compactMode ? 125 : 100,
                 child: Text(
-                  is24HoursFormat
-                      ? times24h[i +
-                          (twentyFourHours
-                              ? 0
-                              : customTimePeriod
-                                  ? customStartTime.hour
-                                  : 8)]
-                      : timespmam[i +
-                          (twentyFourHours
-                              ? 0
-                              : customTimePeriod
-                                  ? customStartTime.hour
-                                  : 8)],
+                  getTimeString(
+                    index,
+                    is24HoursFormat,
+                    twentyFourHours,
+                    customTimePeriod,
+                    customStartTime,
+                  ),
                   style: const TextStyle(fontSize: 13),
                   textAlign: TextAlign.center,
                 ),

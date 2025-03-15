@@ -2,10 +2,10 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:timetable/components/settings/screens/timetable_management.dart';
+import 'package:timetable/screens/settings/timetable_management.dart';
 import 'package:timetable/components/widgets/bottom_sheets/subject_duration_modal_bottom_sheet.dart';
 import 'package:timetable/provider/settings.dart';
-import 'package:timetable/components/settings/screens/timetable_period.dart';
+import 'package:timetable/screens/settings/timetable_period.dart';
 
 /// All the settings for changing some timetable features.
 class TimetableFeaturesOptions extends HookConsumerWidget {
@@ -67,6 +67,7 @@ class TimetableFeaturesOptions extends HookConsumerWidget {
               showDragHandle: true,
               enableDrag: true,
               isDismissible: true,
+              isScrollControlled: true,
               context: context,
               builder: (context) {
                 return Wrap(

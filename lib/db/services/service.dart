@@ -4,37 +4,49 @@ import 'dart:io';
 import 'package:drift/drift.dart' as drift;
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:timetable/constants/days.dart';
 import 'package:timetable/constants/rotation_weeks.dart';
 import 'package:timetable/db/database.dart';
+import 'package:timetable/helpers/request_permission.dart';
 
-final DateTime now = DateTime.now();
-final String date =
-    '${now.year}-${now.month}-${now.day}_${now.hour}-${now.minute}';
-final String fileName = 'timetable_backup $date.json';
+Future<void> shareFile(File file) async {
+  Share.shareXFiles([XFile(file.path)]);
+}
 
-void exportData(
-  AppDatabase db,
-  ScaffoldFeatureController<SnackBar, SnackBarClosedReason> snackBar,
-) async {
+Future<File> createJSONFile(String fileName, String content) async {
+  final directory = await getApplicationDocumentsDirectory();
+  final file = File('${directory.path}/$fileName');
+  await file.writeAsString(content);
+  return file;
+}
+
+/// handles data export/backup
+Future<void> exportData(AppDatabase db) async {
+  final DateTime now = DateTime.now();
+  final String date =
+      '${now.hour}-${now.minute}_${now.day}-${now.month}-${now.year}';
+  final String fileName = 'timetable_backup_$date.json';
+
   try {
-    final allData = {
-      'subject': await $SubjectTable(db).select().get(),
-      'timetable': await $TimetableTable(db).select().get(),
+    final isGranted = await requestStoragePermission();
+    if (!isGranted) return;
+
+    final Map<String, List<dynamic>> allData = {
+      'subject': await db.subject.select().get(),
+      'timetable': await db.timetable.select().get(),
     };
 
     final jsonData = jsonEncode(allData);
 
-    final a = await File('storage/emulated/0/Documents/$fileName')
-        .writeAsString(jsonData);
+    File createdFile = await createJSONFile(fileName, jsonData);
 
-    a;
-    snackBar;
-  } catch (error) {
-    // print('Error exporting data: $error');
-  }
+    shareFile(createdFile);
+  } catch (_) {}
 }
 
+/// handles data import/restore
 Future<void> restoreData(
   AppDatabase db,
 ) async {
@@ -89,7 +101,5 @@ Future<void> restoreData(
         }
       }
     }
-  } catch (_) {
-    // print('Error restoring data: $error');
-  }
+  } catch (_) {}
 }

@@ -40,28 +40,29 @@ class PresetColorsScreen extends HookWidget {
                       final index = (rowIndex * colorsPerRow + colIndex);
                       final isCurrentColor = colors[index].color == color.value;
 
-                      const topleft = BorderRadius.only(
-                        topLeft: Radius.circular(10),
-                      );
-                      const topRight = BorderRadius.only(
-                        topRight: Radius.circular(10),
-                      );
-                      const bottomRight = BorderRadius.only(
-                        bottomRight: Radius.circular(10),
-                      );
-                      const bottomLeft = BorderRadius.only(
-                        bottomLeft: Radius.circular(10),
-                      );
+                      const topleft =
+                          BorderRadius.only(topLeft: Radius.circular(10));
+                      const topRight =
+                          BorderRadius.only(topRight: Radius.circular(10));
+                      const bottomRight =
+                          BorderRadius.only(bottomRight: Radius.circular(10));
+                      const bottomLeft =
+                          BorderRadius.only(bottomLeft: Radius.circular(10));
 
-                      final borderRadius = (index == 0)
+                      final isTopLeft = index == 0;
+                      final isTopRight = index == (colorsPerRow - 1);
+                      final isBottomRight =
+                          index == ((rowCount * colorsPerRow) - 1);
+                      final isBottomLeft =
+                          index == ((rowCount * colorsPerRow) - (colorsPerRow));
+
+                      final borderRadius = isTopLeft
                           ? topleft
-                          : (index == (colorsPerRow - 1))
+                          : isTopRight
                               ? topRight
-                              : (index == ((rowCount * colorsPerRow) - 1))
+                              : isBottomRight
                                   ? bottomRight
-                                  : (index ==
-                                          ((rowCount * colorsPerRow) -
-                                              (colorsPerRow)))
+                                  : isBottomLeft
                                       ? bottomLeft
                                       : null;
 

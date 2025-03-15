@@ -5,6 +5,7 @@ import 'package:timetable/db/converters/color.dart';
 import 'package:timetable/db/converters/time_of_day.dart';
 import 'package:timetable/db/database.dart';
 
+/// Subject table definition and data model
 class Subject extends Table {
   IntColumn get id => integer().autoIncrement()();
   TextColumn get label => text()();

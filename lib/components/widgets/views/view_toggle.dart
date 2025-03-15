@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
 /// Toggle between day and grid/week views.
-class GridDayViewsToggle extends HookWidget {
+class ViewToggle extends HookWidget {
   final ValueNotifier<bool> isGridView;
-  const GridDayViewsToggle({
+  const ViewToggle({
     super.key,
     required this.isGridView,
   });

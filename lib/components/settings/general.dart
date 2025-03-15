@@ -2,7 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:timetable/components/settings/language_options.dart';
-import 'package:timetable/components/settings/screens/choose_app_color.dart';
+import 'package:timetable/screens/settings/choose_app_color.dart';
 import 'package:timetable/components/settings/theme_options.dart';
 import 'package:timetable/components/widgets/color_indicator.dart';
 import 'package:timetable/helpers/get_os_version.dart';
@@ -41,9 +41,7 @@ class GeneralOptions extends ConsumerWidget {
             size: 20,
           ),
           horizontalTitleGap: 8,
-          title: ThemeOptions(
-            theme: theme,
-          ),
+          title: ThemeOptions(theme: theme),
           onTap: () {},
         ),
         FutureBuilder<int>(
@@ -82,7 +80,7 @@ class GeneralOptions extends ConsumerWidget {
           horizontalTitleGap: 8,
           title: const Text("app_color").tr(),
           trailing:
-              ColorIndicator(color: appThemeColor, monetTheming: monetTheming),
+              ColorIndicator(color: appThemeColor, inactive: monetTheming),
           onTap: () {
             Navigator.push(
               context,

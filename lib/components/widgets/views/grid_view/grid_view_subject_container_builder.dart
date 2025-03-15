@@ -44,13 +44,11 @@ class SubjectContainerBuilder extends ConsumerWidget {
         );
       },
       child: Container(
-        decoration: ShapeDecoration(
-          shape: shape,
-        ),
+        decoration: ShapeDecoration(shape: shape),
         child: Align(
           child: Container(
             height: 1,
-            color: const Color(0xFFB4B8AB).withOpacity(0.5),
+            color: const Color(0xFFB4B8AB).withValues(alpha: 0.5),
           ),
         ),
         // child: Column(

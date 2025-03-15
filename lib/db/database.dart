@@ -8,9 +8,22 @@ import 'package:timetable/db/converters/color.dart';
 import 'package:timetable/db/converters/time_of_day.dart';
 import 'package:timetable/db/models/timetable.dart';
 import 'package:timetable/db/models/subject.dart';
+import 'package:timetable/extensions/color.dart';
 
 part 'database.g.dart';
 
+/// manages the application's database connection and schema.
+///
+/// tables: Timetable, Subject
+/// this handles:
+/// - database initialization
+/// - schema migrations
+/// - table definitions
+/// - database provider setup
+///
+/// migration strategy:
+/// - v1 -> v2: Color storage format change
+/// - v2 -> v3: Added timetable name and subject timetable columns
 @DriftDatabase(tables: [Timetable, Subject])
 class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(openConnection());

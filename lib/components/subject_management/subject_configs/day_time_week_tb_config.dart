@@ -69,6 +69,7 @@ class TimeDayRotationWeekTimetableConfig extends ConsumerWidget {
             title: TimetableConfig(
               timetable: timetable,
             ),
+            // these are empty to preserve the tapping effect
             onTap: () {},
           ),
       ],

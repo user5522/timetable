@@ -19,8 +19,8 @@ class DayViewSubjectBuilder extends ConsumerWidget {
     Color labelColor =
         subject.color.computeLuminance() > .7 ? Colors.black : Colors.white;
     Color subLabelsColor = subject.color.computeLuminance() > .7
-        ? Colors.black.withOpacity(.6)
-        : Colors.white.withOpacity(.75);
+        ? Colors.black.withValues(alpha: .6)
+        : Colors.white.withValues(alpha: .75);
 
     String label = subject.label;
     String? location = subject.location;
@@ -31,7 +31,7 @@ class DayViewSubjectBuilder extends ConsumerWidget {
     final bool noteCheck = note != null && note.isNotEmpty;
 
     final hideTransparentSubjects =
-        hideTransparentSubject && color.opacity == Colors.transparent.opacity;
+        hideTransparentSubject && color.a == Colors.transparent.a;
 
     if (!hideTransparentSubjects) {
       return Padding(

@@ -3,7 +3,9 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:timetable/db/database.dart';
 import 'package:timetable/provider/subjects.dart';
 
-/// Timetables' [StateNotifier]
+/// Timetable state management
+/// multiple timetable support, manages timetable CRUD operations
+/// and default timetable handling
 class TimetableNotifier extends StateNotifier<List<TimetableData>> {
   AppDatabase db;
   SubjectNotifier subjectsNotifier;

@@ -1,7 +1,7 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:timetable/db/database.dart';
 
-/// A [StateNotifier] that holds the list of overlapping subjects.
+/// Overlapping Subjects state management
 // idea: maybe i should save the list of overlapping subjects
 // instead of trying to find them everytime the app is opened
 // should help with performance, probably

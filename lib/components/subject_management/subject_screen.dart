@@ -9,12 +9,13 @@ import 'package:timetable/components/subject_management/subject_configs/note.dar
 import 'package:timetable/constants/days.dart';
 import 'package:timetable/constants/rotation_weeks.dart';
 import 'package:timetable/db/database.dart';
+import 'package:timetable/helpers/time_management.dart';
 import 'package:timetable/provider/overlapping_subjects.dart';
 import 'package:timetable/provider/settings.dart';
 import 'package:timetable/provider/subjects.dart';
 import 'package:timetable/provider/timetables.dart';
 
-/// The Subject creation/modification screen.
+/// Subject creation/modification UI.
 class SubjectScreen extends HookConsumerWidget {
   final int? rowIndex;
   final int? columnIndex;
@@ -45,19 +46,19 @@ class SubjectScreen extends HookConsumerWidget {
         ref.watch(settingsProvider).defaultSubjectDuration;
 
     final bool isSubjectNull = (subject == null);
-    final bool isCTimetableNull = (currentTimetable == null);
-    final int id = isSubjectNull ? subjects.length : subject!.id;
+    final bool isCurrentTimetableNull = (currentTimetable == null);
+    final int id = (isSubjectNull ? subjects.length : subject!.id);
 
-    final timetable = useState(
+    final ValueNotifier<TimetableData?> timetable = useState(
       isSubjectNull
-          ? isCTimetableNull
+          ? isCurrentTimetableNull
               ? timetables
                   .where((t) => t.name == subject!.timetable)
                   .firstOrNull
               : currentTimetable!.value
           : timetables.where((t) => t.name == subject!.timetable).firstOrNull,
     );
-    final startTime = useState(
+    final ValueNotifier<TimeOfDay> startTime = useState(
       TimeOfDay(
         hour: subject?.startTime.hour ??
             (rowIndex! + (tfHours ? 0 : customStartTimeHour)),
@@ -74,15 +75,17 @@ class SubjectScreen extends HookConsumerWidget {
       ),
     );
 
-    final label = useState(subject?.label ?? "");
-    final location = useState(subject?.location ?? "");
-    final note = useState(subject?.note ?? "");
+    final ValueNotifier<String> label = useState(subject?.label ?? "");
+    final ValueNotifier<String?> location = useState(subject?.location ?? "");
+    final ValueNotifier<String?> note = useState(subject?.note ?? "");
     final ValueNotifier<Days> day =
         useState(Days.values[subject?.day.index ?? columnIndex!]);
-    final color = useState(subject?.color ?? Colors.black);
-    final rotationWeek = useState(subject?.rotationWeek ?? RotationWeeks.none);
+    final ValueNotifier<Color> color = useState(subject?.color ?? Colors.black);
+    final ValueNotifier<RotationWeeks> rotationWeek =
+        useState(subject?.rotationWeek ?? RotationWeeks.none);
 
     // I DONT KNOW WHY I AM USING [SubjectData] I SHOULD BE USING [SubjectCompanion]
+    // update: using [SubjectCompanion] breaks a lot of stuff so i will not be using that
     final SubjectData newSubject = SubjectData(
       id: id,
       label: label.value,
@@ -96,71 +99,53 @@ class SubjectScreen extends HookConsumerWidget {
       timetable: timetable.value!.name,
     );
 
-    final subjectsInSameDay = subjects
-        .where(
-          (e) => e.day == day.value,
-        )
-        .toList();
+    final subjectsInSameDay =
+        subjects.where((e) => e.day == day.value).toList();
 
 // all the upcomming variables are checks to
 // limit the amount of overlapping subjects.
 // i should really work and find a solution to that issue..
 
-    final multipleOccupied = overlappingSubjects.any((e) {
+    final inputHours = getHoursList(startTime.value, endTime.value);
+
+    // Check if subject is in overlapping subjects list
+    final isInOverlappingList = overlappingSubjects.any((e) {
       for (var subject in e) {
         return newSubject == subject;
       }
-      return false;
-    })
-        ? false
-        : subjectsInSameDay
-                .where((s) {
-                  final sHours = List.generate(
-                    s.endTime.hour - s.startTime.hour,
-                    (index) => index + s.startTime.hour,
-                  );
-                  final inputHours = List.generate(
-                    endTime.value.hour - startTime.value.hour,
-                    (index) => index + startTime.value.hour,
-                  );
 
-                  return sHours.any((hour) => inputHours.contains(hour));
+      return false;
+    });
+
+    // Check for multiple subjects in same time slot
+    final multipleOccupied = !isInOverlappingList &&
+        (subjectsInSameDay
+                .where((s) {
+                  final sHours = getHoursList(s.startTime, s.endTime);
+                  return hasTimeOverlap(sHours, inputHours);
                 })
                 .where((s) => s != subject)
                 .where((e) => e.timetable == newSubject.timetable)
                 .length >
-            1;
+            1);
 
+    // Check if time slot is occupied by overlapping subjects
     final isOccupied = subjectsInSameDay
         .where((e) => overlappingSubjects.any((elem) => elem.contains(e)))
         .where((e) => e.timetable == newSubject.timetable)
         .any((e) {
-      final eHours = List.generate(
-        e.endTime.hour - e.startTime.hour,
-        (index) => index + e.startTime.hour,
-      );
-      final inputHours = List.generate(
-        endTime.value.hour - startTime.value.hour,
-        (index) => index + startTime.value.hour,
-      );
-
-      return eHours.any((hour) => inputHours.contains(hour));
+      final eHours = getHoursList(e.startTime, e.endTime);
+      return hasTimeOverlap(eHours, inputHours);
     });
 
+    // Check if time slot is occupied by non-overlapping subjects (excluding self)
     final isOccupiedExceptSelf = subjectsInSameDay
         .where((e) => e != subject)
         .where((e) => !overlappingSubjects.any((elem) => elem.contains(e)))
         .where((e) => e.timetable == newSubject.timetable)
         .any((e) {
-      final eHours = List.generate(
-        e.endTime.hour - e.startTime.hour,
-        (index) => index + e.startTime.hour,
-      );
-      final inputHours = List.generate(
-        endTime.value.hour - startTime.value.hour,
-        (index) => index + startTime.value.hour,
-      );
-      return eHours.any((hour) => inputHours.contains(hour));
+      final eHours = getHoursList(e.startTime, e.endTime);
+      return hasTimeOverlap(eHours, inputHours);
     });
 
 // end of checks
@@ -168,61 +153,46 @@ class SubjectScreen extends HookConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         actions: [
-          if (!isSubjectNull)
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                shadowColor: Colors.transparent,
-                backgroundColor: Theme.of(context).colorScheme.error,
-                foregroundColor: Theme.of(context).colorScheme.errorContainer,
-              ),
-              onPressed: () async {
-                await subjectNotifier.deleteSubject(newSubject).then((r) {
-                  Navigator.pop(context);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: const Text('subject_deleted_snackbar').tr(),
-                    ),
-                  );
-                });
-              },
-              child: const Text("delete").tr(),
-            ),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
-            child: ElevatedButton(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: ElevatedButton.icon(
               style: ElevatedButton.styleFrom(
                 shadowColor: Colors.transparent,
                 backgroundColor:
                     Theme.of(context).colorScheme.onPrimaryContainer,
                 foregroundColor:
                     Theme.of(context).colorScheme.secondaryContainer,
+                iconColor: Theme.of(context).colorScheme.secondaryContainer,
               ),
               onPressed: () async {
-                if (!formKey.currentState!.validate()) {
-                  return;
-                }
+                if (!formKey.currentState!.validate()) return;
+
                 if (isOccupied && multipleOccupied) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: const Text('time_slots_occupied_error').tr(),
                     ),
                   );
+
                   return;
                 }
+
+                final navigator = Navigator.of(context);
+
                 if (isSubjectNull) {
                   await subjectNotifier
                       .addSubject(newSubject.toCompanion(true))
-                      .then(
-                        (r) => Navigator.pop(context, label.value),
-                      );
+                      .then((_) => navigator.pop(newSubject));
                 }
                 if (!isSubjectNull) {
-                  await subjectNotifier.updateSubject(newSubject).then(
-                        (r) => Navigator.pop(context, label.value),
-                      );
+                  await subjectNotifier
+                      .updateSubject(newSubject)
+                      .then((_) => navigator.pop(newSubject));
                 }
               },
-              child: Text(isSubjectNull ? "create".tr() : "save".tr()),
+              icon: Icon(
+                  isSubjectNull ? Icons.add_outlined : Icons.save_outlined),
+              label: Text(isSubjectNull ? "create".tr() : "save".tr()),
             ),
           ),
         ],
@@ -258,9 +228,7 @@ class SubjectScreen extends HookConsumerWidget {
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 10),
-                  child: NotesTile(
-                    note: note,
-                  ),
+                  child: NotesTile(note: note),
                 ),
               ],
             ),

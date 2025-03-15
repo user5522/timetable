@@ -5,12 +5,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timetable/constants/timetable_views.dart';
 import 'package:timetable/db/models/settings.dart';
 
-/// Settings' [StateNotifier].
+/// App settings state management
 class SettingsNotifier extends StateNotifier<Settings> {
   SettingsNotifier() : super(Settings()) {
     loadSettings();
   }
 
+  // should be self-explanatory
   void updateDefaultSubjectDuration(Duration defaultSubjectDuration) {
     final newState = state.copyWith(
       defaultSubjectDuration: defaultSubjectDuration,

@@ -5,6 +5,7 @@ import 'package:timetable/components/widgets/alert_dialog.dart';
 import 'package:timetable/db/database.dart';
 import 'package:timetable/db/services/service.dart';
 import 'package:timetable/provider/subjects.dart';
+import 'package:timetable/provider/timetables.dart';
 
 /// All the settings that allow for manipulating the timetable's data.
 class TimetableDataOptions extends ConsumerWidget {
@@ -13,6 +14,7 @@ class TimetableDataOptions extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final subjNotifier = ref.watch(subjectProvider.notifier);
+    final tbNotifier = ref.watch(timetableProvider.notifier);
     final db = ref.watch(AppDatabase.databaseProvider);
 
     void pop() {
@@ -22,20 +24,9 @@ class TimetableDataOptions extends ConsumerWidget {
     return Column(
       children: [
         ListTile(
-          leading: const Icon(
-            Icons.file_download_outlined,
-            size: 20,
-          ),
+          leading: const Icon(Icons.file_download_outlined, size: 20),
           horizontalTitleGap: 8,
-          onTap: () {
-            final ScaffoldFeatureController<SnackBar, SnackBarClosedReason>
-                snackBar = ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: const Text("create_backup_snackbar").tr(),
-              ),
-            );
-            exportData(db, snackBar);
-          },
+          onTap: () async => await exportData(db),
           title: const Text("create_backup").tr(),
         ),
         ListTile(
@@ -50,18 +41,15 @@ class TimetableDataOptions extends ConsumerWidget {
               barrierDismissible: true,
               builder: (BuildContext context) {
                 return ShowAlertDialog(
-                  content: FittedBox(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text("restore_backup_dialog.dialog_1").tr(),
-                        const Text("restore_backup_dialog.dialog_2").tr(),
-                      ],
-                    ),
+                  content: Text(
+                    "${"restore_backup_dialog.dialog_1".tr()}\n${"restore_backup_dialog.dialog_2".tr()}",
                   ),
                   approveButtonText: "proceed".tr(),
                   onApprove: () async {
-                    await restoreData(db);
+                    await restoreData(db).then((_) {
+                      tbNotifier.loadTimetables();
+                      subjNotifier.loadSubjects();
+                    });
                     pop();
                   },
                 );
@@ -85,9 +73,8 @@ class TimetableDataOptions extends ConsumerWidget {
                   content: const Text("remove_all_subjects_dialog").tr(),
                   approveButtonText: "delete".tr(),
                   onApprove: () async {
-                    await subjNotifier
-                        .resetData()
-                        .then((r) => Navigator.of(context).pop());
+                    final navigator = Navigator.of(context);
+                    await subjNotifier.resetData().then((_) => navigator.pop());
                   },
                 );
               },

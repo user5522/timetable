@@ -1,7 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:timetable/components/widgets/act_chip.dart';
+import 'package:timetable/components/widgets/color_indicator.dart';
 import 'package:timetable/components/widgets/list_item_group.dart';
 import 'package:timetable/constants/error_emoticons.dart';
 import 'package:timetable/db/database.dart';
@@ -56,45 +56,46 @@ class SubjectsList extends HookWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('choose_subject').tr(),
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(48.0),
-          child: Align(
-            alignment: Alignment.centerLeft,
-            child: Wrap(
-              spacing: 4,
-              crossAxisAlignment: WrapCrossAlignment.center,
-              children: [
-                const Padding(padding: EdgeInsets.only(left: 16.0)),
-                Text("${"filter_by".tr()}:",
-                    style: const TextStyle(fontSize: 17)),
-                if (location.value != null && location.value!.trim().isNotEmpty)
-                  ActChip(
-                    label: const Text('location').tr(),
-                    enabled: locationFilterEnabled.value,
-                    onPressed: () {
-                      locationFilterEnabled.value =
-                          !locationFilterEnabled.value;
-                    },
-                  ),
-                if (label.value.trim().isNotEmpty)
-                  ActChip(
-                    label: const Text('label').tr(),
-                    onPressed: () {
-                      labelFilterEnabled.value = !labelFilterEnabled.value;
-                    },
-                    enabled: labelFilterEnabled.value,
-                  ),
-                ActChip(
-                  label: const Text('color').tr(),
-                  enabled: colorFilterEnabled.value,
-                  onPressed: () {
-                    colorFilterEnabled.value = !colorFilterEnabled.value;
-                  },
-                ),
-              ],
-            ),
+        actions: [
+          // filtering system
+          MenuAnchor(
+            menuChildren: <Widget>[
+              CheckboxMenuButton(
+                value: labelFilterEnabled.value,
+                onChanged: (value) => labelFilterEnabled.value = value ?? false,
+                child: const Text('Label').tr(),
+              ),
+              CheckboxMenuButton(
+                value: locationFilterEnabled.value,
+                onChanged: (value) =>
+                    locationFilterEnabled.value = value ?? false,
+                child: const Text('Location').tr(),
+              ),
+              CheckboxMenuButton(
+                value: colorFilterEnabled.value,
+                onChanged: (value) => colorFilterEnabled.value = value ?? false,
+                child: const Text('Color').tr(),
+              ),
+            ],
+            builder: (
+              BuildContext context,
+              MenuController controller,
+              Widget? child,
+            ) {
+              return IconButton(
+                icon: const Icon(Icons.filter_list_outlined),
+                tooltip: "filter_by".tr(),
+                onPressed: () {
+                  if (controller.isOpen) {
+                    controller.close();
+                  } else {
+                    controller.open();
+                  }
+                },
+              );
+            },
           ),
-        ),
+        ],
       ),
       body: LayoutBuilder(
         builder: (context, constraints) => ListView(
@@ -127,14 +128,7 @@ class SubjectsList extends HookWidget {
                 children: List.generate(filteredSubjects.length, (i) {
                   final subj = filteredSubjects[i];
                   return ListItem(
-                    leading: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(50),
-                        color: subj.color,
-                      ),
-                      width: 15,
-                      height: 15,
-                    ),
+                    leading: ColorIndicator(color: subj.color),
                     title: Text(subj.label),
                     subtitle: (subj.location != null &&
                                 subj.location!.isNotEmpty) ||

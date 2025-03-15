@@ -28,22 +28,16 @@ class ColorsConfig extends StatelessWidget {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
                   color: color.value,
-                  border: Border.all(
-                    color: Colors.black,
-                  ),
+                  border: Border.all(color: Colors.black),
                 ),
               ),
-              const SizedBox(
-                width: 10,
-              ),
+              const SizedBox(width: 10),
               const Icon(Icons.keyboard_arrow_right)
             ],
           ),
           onTap: () => Navigator.push(
             context,
-            MaterialPageRoute(
-              builder: (context) => ColorsScreen(color: color),
-            ),
+            MaterialPageRoute(builder: (context) => ColorsScreen(color: color)),
           ),
         ),
       ],

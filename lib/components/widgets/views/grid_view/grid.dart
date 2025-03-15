@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:timetable/components/widgets/grid_view/tile.dart';
+import 'package:timetable/components/widgets/views/grid_view/tile.dart';
 
 /// Grid for the grid view of the Timetable screen.
 class Grid extends StatelessWidget {

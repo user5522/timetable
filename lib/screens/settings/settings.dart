@@ -6,7 +6,7 @@ import 'package:timetable/components/settings/general.dart';
 import 'package:timetable/components/settings/theme_options.dart';
 import 'package:timetable/components/settings/timetable_data.dart';
 import 'package:timetable/components/settings/timetable_features.dart';
-import 'package:timetable/components/widgets/navigation_bar_toggle.dart';
+import 'package:timetable/components/widgets/navigation/navigation_bar_toggle.dart';
 import 'package:timetable/provider/settings.dart';
 
 /// Settings Screen, groups all settings ([CustomizeTimetableOptions], [TimetableDataOptions],
