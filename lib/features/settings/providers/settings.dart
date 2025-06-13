@@ -11,7 +11,6 @@ class SettingsNotifier extends StateNotifier<Settings> {
     loadSettings();
   }
 
-  // should be self-explanatory
   void updateDefaultSubjectDuration(Duration defaultSubjectDuration) {
     final newState = state.copyWith(
       defaultSubjectDuration: defaultSubjectDuration,

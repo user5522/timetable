@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:timetable/core/constants/days.dart';
 import 'package:timetable/core/constants/grid_properties.dart';
@@ -53,46 +54,31 @@ class DaysBar extends ConsumerWidget {
               itemCount: daysLength,
               shrinkWrap: true,
               itemBuilder: (context, index) {
-                return SizedBox(
-                  width: isGridView!
-                      ? ((screenWidth - (timeColumnWidth - 1)) / daysLength)
-                      : (screenWidth / daysLength),
-                  child: TextButton(
-                    onPressed: () {
-                      if (isGridView!) return;
+                return buildDayButton(
+                  index: index,
+                  currentDay: currentDay,
+                  currentDayColor: theme == ThemeOption.auto
+                      ? systemBrightness == Brightness.dark
+                          ? darkCurrentDayColorScheme
+                          : lightCurrentDayColorScheme
+                      : theme == ThemeOption.dark
+                          ? darkCurrentDayColorScheme
+                          : lightCurrentDayColorScheme,
+                  singleLetterDays: singleLetterDays,
+                  isPortrait: isPortrait,
+                  isGridView: isGridView!,
+                  daysLength: daysLength,
+                  screenWidth: screenWidth,
+                  colorScheme: Theme.of(context).colorScheme,
+                  onTap: () {
+                    if (isGridView!) return;
 
-                      controller.animateToPage(
-                        index,
-                        duration: const Duration(milliseconds: 300),
-                        curve: Curves.easeInOut,
-                      );
-                    },
-                    style: ButtonStyle(
-                      foregroundColor: WidgetStateProperty.all<Color>(
-                        Theme.of(context).colorScheme.onSurface,
-                      ),
-                      backgroundColor: isGridView! && (currentDay == index)
-                          ? WidgetStateProperty.all<Color>(
-                              theme == ThemeOption.auto
-                                  ? systemBrightness == Brightness.dark
-                                      ? darkCurrentDayColorScheme
-                                      : lightCurrentDayColorScheme
-                                  : theme == ThemeOption.dark
-                                      ? darkCurrentDayColorScheme
-                                      : lightCurrentDayColorScheme,
-                            )
-                          : null,
-                    ),
-                    child: Text(
-                      overflow: TextOverflow.clip,
-                      softWrap: false,
-                      singleLetterDays
-                          ? days[index].tr()[0]
-                          : isPortrait
-                              ? days[index].tr().substring(0, 3)
-                              : days[index].tr(),
-                    ),
-                  ),
+                    controller.animateToPage(
+                      index,
+                      duration: const Duration(milliseconds: 300),
+                      curve: Curves.easeInOut,
+                    );
+                  },
                 );
               },
             ),
@@ -101,9 +87,44 @@ class DaysBar extends ConsumerWidget {
       ),
     );
   }
+
+  Widget buildDayButton({
+    required int index,
+    required bool isGridView,
+    required int currentDay,
+    required double screenWidth,
+    required int daysLength,
+    required bool singleLetterDays,
+    required bool isPortrait,
+    required Color currentDayColor,
+    required VoidCallback? onTap,
+    required ColorScheme colorScheme,
+  }) {
+    final isCurrentDay = isGridView && (currentDay == index);
+
+    final dayText = singleLetterDays
+        ? days[index].tr()[0]
+        : isPortrait
+            ? days[index].tr().substring(0, 3)
+            : days[index].tr();
+
+    return SizedBox(
+      width: isGridView
+          ? ((screenWidth - (timeColumnWidth - 1)) / daysLength)
+          : (screenWidth / daysLength),
+      child: TextButton(
+        onPressed: onTap,
+        style: TextButton.styleFrom(
+          foregroundColor: colorScheme.onSurface,
+          backgroundColor: isCurrentDay ? currentDayColor : null,
+        ),
+        child: Text(dayText, overflow: TextOverflow.clip, softWrap: false),
+      ),
+    );
+  }
 }
 
-class DayBarUpdater extends StatefulWidget {
+class DayBarUpdater extends HookConsumerWidget {
   final PageController controller;
   final bool isGridView;
 
@@ -114,48 +135,31 @@ class DayBarUpdater extends StatefulWidget {
   });
 
   @override
-  State<DayBarUpdater> createState() => _DayBarUpdaterState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final currentDay = useState(DateTime.now().weekday - 1);
 
-class _DayBarUpdaterState extends State<DayBarUpdater> {
-  late Timer timer;
-  int currentDay = DateTime.now().weekday - 1;
+    useEffect(() {
+      Timer? timer;
 
-  @override
-  void initState() {
-    super.initState();
-    updateTimer();
-  }
+      void updateTimer() {
+        final now = DateTime.now();
+        final nextMidnight = DateTime(now.year, now.month, now.day + 1);
 
-  @override
-  void dispose() {
-    timer.cancel();
-    super.dispose();
-  }
+        timer = Timer(nextMidnight.difference(now), () {
+          currentDay.value = DateTime.now().weekday - 1;
+          updateTimer();
+        });
+      }
 
-  void updateTimer() {
-    final nextMidnight = DateTime(
-      DateTime.now().add(const Duration(days: 1)).day,
-      0,
-      0,
-      0,
-    );
-    timer = Timer(nextMidnight.difference(DateTime.now()), updateDay);
-  }
+      updateTimer();
 
-  void updateDay() {
-    setState(() {
-      currentDay = DateTime.now().weekday - 1;
-    });
-    updateTimer();
-  }
+      return () => timer?.cancel();
+    }, []);
 
-  @override
-  Widget build(BuildContext context) {
     return DaysBar(
-      controller: widget.controller,
-      isGridView: widget.isGridView,
-      currentDay: currentDay,
+      controller: controller,
+      isGridView: isGridView,
+      currentDay: currentDay.value,
     );
   }
 }
