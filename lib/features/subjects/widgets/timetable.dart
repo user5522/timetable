@@ -6,7 +6,7 @@ import 'package:timetable/core/db/database.dart';
 
 /// Timetable configuration part of the Subject creation screen.
 class TimetableConfig extends StatelessWidget {
-  final ValueNotifier<TimetableData?> timetable;
+  final ValueNotifier<Timetable?> timetable;
 
   const TimetableConfig({
     super.key,

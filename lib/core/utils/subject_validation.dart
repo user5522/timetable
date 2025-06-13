@@ -1,25 +1,59 @@
+import 'package:flutter/material.dart';
+import 'package:timetable/core/constants/days.dart';
+import 'package:timetable/core/constants/rotation_weeks.dart';
 import 'package:timetable/core/db/database.dart';
 import 'package:timetable/core/utils/time_management.dart';
 
 /// Handles validation logic for subject scheduling conflicts
 /// basically manages overlap detection between subjects
 class SubjectValidation {
-  final List<SubjectData> subjectsInSameDay;
+  final List<Subject> subjectsInSameDay;
   final List<int> inputHours;
-  final SubjectData newSubject;
-  final SubjectData? currentSubject;
-  final List<List<SubjectData>> overlappingSubjects;
+  final int subjectId;
+  final String label;
+  final String? location;
+  final Color color;
+  final TimeOfDay startTime;
+  final TimeOfDay endTime;
+  final Days day;
+  final RotationWeeks rotationWeek;
+  final String? note;
+  final String timetable;
+  final Subject? currentSubject;
+  final List<List<Subject>> overlappingSubjects;
 
   SubjectValidation({
     required this.subjectsInSameDay,
     required this.inputHours,
-    required this.newSubject,
+    required this.subjectId,
+    required this.label,
+    required this.location,
+    required this.color,
+    required this.startTime,
+    required this.endTime,
+    required this.day,
+    required this.rotationWeek,
+    required this.note,
+    required this.timetable,
     required this.currentSubject,
     required this.overlappingSubjects,
   });
 
+  Subject get _tempSubject => Subject(
+        id: subjectId,
+        label: label,
+        location: location,
+        color: color,
+        startTime: startTime,
+        endTime: endTime,
+        day: day,
+        rotationWeek: rotationWeek,
+        note: note,
+        timetable: timetable,
+      );
+
   bool get isInOverlappingList => overlappingSubjects.any(
-        (group) => group.any((subject) => newSubject == subject),
+        (group) => group.any((subject) => _tempSubject == subject),
       );
 
   bool get hasMultipleOccupants =>
@@ -29,32 +63,32 @@ class SubjectValidation {
 
   bool get isOccupiedByRegular => getRegularConflicts().isNotEmpty;
 
-  List<SubjectData> getConflictingSubjects() {
+  List<Subject> getConflictingSubjects() {
     return subjectsInSameDay
         .where((s) => s != currentSubject)
-        .where((s) => s.timetable == newSubject.timetable)
+        .where((s) => s.timetable == _tempSubject.timetable)
         .where((s) => hasTimeConflict(s))
         .toList();
   }
 
-  List<SubjectData> getOverlappingConflicts() {
+  List<Subject> getOverlappingConflicts() {
     return subjectsInSameDay
         .where((s) => overlappingSubjects.any((group) => group.contains(s)))
-        .where((s) => s.timetable == newSubject.timetable)
+        .where((s) => s.timetable == _tempSubject.timetable)
         .where((s) => hasTimeConflict(s))
         .toList();
   }
 
-  List<SubjectData> getRegularConflicts() {
+  List<Subject> getRegularConflicts() {
     return subjectsInSameDay
         .where((s) => s != currentSubject)
         .where((s) => !overlappingSubjects.any((group) => group.contains(s)))
-        .where((s) => s.timetable == newSubject.timetable)
+        .where((s) => s.timetable == _tempSubject.timetable)
         .where((s) => hasTimeConflict(s))
         .toList();
   }
 
-  bool hasTimeConflict(SubjectData subject) {
+  bool hasTimeConflict(Subject subject) {
     final subjectHours = getHoursList(subject.startTime, subject.endTime);
     return hasTimeOverlap(subjectHours, inputHours);
   }

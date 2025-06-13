@@ -19,7 +19,7 @@ class TimeDayRotationWeekTimetableConfig extends ConsumerWidget {
   final ValueNotifier<TimeOfDay> endTime;
   final ValueNotifier<Days> day;
   final ValueNotifier<RotationWeeks> rotationWeek;
-  final ValueNotifier<TimetableData?> timetable;
+  final ValueNotifier<Timetable?> timetable;
 
   /// whether or not the current time slot ((endTime - startTime) - tbCustomStartTime) is occupied
   /// used to show the error icon when the time is not valid/unavailable

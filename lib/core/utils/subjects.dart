@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:timetable/core/db/database.dart';
 
 /// sorts subjects by time
-List<SubjectData> sortSubjects(List<SubjectData> subjects) {
+List<Subject> sortSubjects(List<Subject> subjects) {
   subjects.sort((a, b) => a.startTime.hour.compareTo(b.startTime.hour));
 
   return subjects;

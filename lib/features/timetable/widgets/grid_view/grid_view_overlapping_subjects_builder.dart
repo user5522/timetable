@@ -14,7 +14,7 @@ import 'package:timetable/features/settings/providers/settings.dart';
 ///
 /// uses the [GridViewSubjectBuilder] to build each subject.
 class OverlappingSubjBuilder extends ConsumerWidget {
-  final List<SubjectData> subjects;
+  final List<Subject> subjects;
   final int earlierStartTimeHour;
   final int laterEndTimeHour;
 

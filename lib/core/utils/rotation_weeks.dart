@@ -32,9 +32,9 @@ String getRotationWeekButtonLabel(RotationWeeks rotationWeek) {
 }
 
 /// Filters the list of subjects based on the selected rotation week.
-List<SubjectData> getFilteredByRotationWeeksSubjects(
+List<Subject> getFilteredByRotationWeeksSubjects(
   ValueNotifier<RotationWeeks> rotationWeek,
-  List<SubjectData> allSubjects,
+  List<Subject> allSubjects,
 ) {
   switch (rotationWeek.value) {
     case RotationWeeks.all:
@@ -75,7 +75,7 @@ List<SubjectData> getFilteredByRotationWeeksSubjects(
 }
 
 /// Returns rotation week label of a Subject.
-String getSubjectRotationWeekLabel(SubjectData subject) {
+String getSubjectRotationWeekLabel(Subject subject) {
   switch (subject.rotationWeek) {
     case RotationWeeks.a:
       return "A";

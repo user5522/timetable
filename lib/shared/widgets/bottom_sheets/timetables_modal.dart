@@ -7,7 +7,7 @@ import 'package:timetable/features/timetable/providers/timetables.dart';
 
 /// Bottom Sheet Modal Widget used to select a subject's timetable.
 class TimetablesModalBottomSheet extends ConsumerWidget {
-  final ValueNotifier<TimetableData?> timetable;
+  final ValueNotifier<Timetable?> timetable;
 
   const TimetablesModalBottomSheet({
     super.key,

@@ -20,8 +20,8 @@ import 'package:timetable/features/timetable/providers/timetables.dart';
 /// Timetable view that shows All the days' subjects in a grid form.
 class TimetableGridView extends HookConsumerWidget {
   final ValueNotifier<RotationWeeks> rotationWeek;
-  final List<SubjectData> subject;
-  final ValueNotifier<TimetableData> currentTimetable;
+  final List<Subject> subject;
+  final ValueNotifier<Timetable> currentTimetable;
 
   const TimetableGridView({
     super.key,
@@ -37,7 +37,7 @@ class TimetableGridView extends HookConsumerWidget {
         ref.watch(settingsProvider).multipleTimetables;
     final bool twentyFourHoursMode =
         ref.watch(settingsProvider).twentyFourHours;
-    final List<TimetableData> timetables = ref.watch(timetableProvider);
+    final List<Timetable> timetables = ref.watch(timetableProvider);
 
     final TimeOfDay chosenCustomStartTime =
         ref.watch(settingsProvider).customStartTime;
@@ -48,7 +48,7 @@ class TimetableGridView extends HookConsumerWidget {
         getCustomStartTime(chosenCustomStartTime, ref);
     final TimeOfDay customEndTime = getCustomEndTime(chosenCustomEndTime, ref);
 
-    final List<SubjectData> subjects = getFilteredByTimetablesSubjects(
+    final List<Subject> subjects = getFilteredByTimetablesSubjects(
       currentTimetable,
       timetables,
       multipleTimetables,
@@ -113,7 +113,7 @@ class TimetableGridView extends HookConsumerWidget {
 
   /// generates the grid
   List<List<Tile?>> generate(
-    List<SubjectData> subjects,
+    List<Subject> subjects,
     int totalDays,
     int totalHours,
     WidgetRef ref,

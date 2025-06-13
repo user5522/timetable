@@ -111,8 +111,8 @@ class TimetableManagementScreen extends ConsumerWidget {
   }
 
   ListItem buildTimetableItem({
-    required TimetableData timetableItem,
-    required TimetableData firstTimetable,
+    required Timetable timetableItem,
+    required Timetable firstTimetable,
     required bool multipleTimetables,
     required TimetableNotifier timetableNotifier,
     required BuildContext context,
@@ -140,7 +140,7 @@ class TimetableManagementScreen extends ConsumerWidget {
   Widget buildDeleteButton(
     BuildContext context,
     TimetableNotifier timetable,
-    TimetableData timetableItem,
+    Timetable timetableItem,
   ) {
     return IconButton(
       onPressed: () => showDeleteDialog(context, timetable, timetableItem),
@@ -185,7 +185,7 @@ class TimetableManagementScreen extends ConsumerWidget {
   void showDeleteDialog(
     BuildContext context,
     TimetableNotifier timetableNotifier,
-    TimetableData timetableItem,
+    Timetable timetableItem,
   ) {
     showDialog<void>(
       context: context,
@@ -203,6 +203,6 @@ class TimetableManagementScreen extends ConsumerWidget {
 
   void addTimetable(List timetables, TimetableNotifier timetable) {
     final nextName = (int.parse(timetables.last.name) + 1).toString();
-    timetable.addTimetable(TimetableCompanion(name: drift.Value(nextName)));
+    timetable.addTimetable(TimetablesCompanion(name: drift.Value(nextName)));
   }
 }

@@ -13,7 +13,7 @@ import 'package:timetable/features/timetable/providers/timetables.dart';
 
 /// Bottom sheet widget to quickly see the full subject properties
 class SubjectManagementBottomSheet extends ConsumerWidget {
-  final SubjectData subject;
+  final Subject subject;
 
   const SubjectManagementBottomSheet({
     super.key,

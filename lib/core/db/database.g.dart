@@ -1,18 +1,14 @@
-/// current modifications:
-/// in [SubjectData], specifically in the [toJson()] and [fromJson()] functions,
-/// I changed the way it handles the elments with types Color and TimeOfDay
-/// since there is no regular way to deal with them i seperate hours and minutes for TimeOfDay
-/// then regroup them again and convert Color to int and int to Color again
+// GENERATED CODE - DO NOT MODIFY BY HAND
 
 part of 'database.dart';
 
 // ignore_for_file: type=lint
-class $TimetableTable extends Timetable
-    with TableInfo<$TimetableTable, TimetableData> {
+class $TimetablesTable extends Timetables
+    with TableInfo<$TimetablesTable, Timetable> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $TimetableTable(this.attachedDatabase, [this._alias]);
+  $TimetablesTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
@@ -33,9 +29,9 @@ class $TimetableTable extends Timetable
   String get aliasedName => _alias ?? actualTableName;
   @override
   String get actualTableName => $name;
-  static const String $name = 'timetable';
+  static const String $name = 'timetables';
   @override
-  VerificationContext validateIntegrity(Insertable<TimetableData> instance,
+  VerificationContext validateIntegrity(Insertable<Timetable> instance,
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
@@ -54,9 +50,9 @@ class $TimetableTable extends Timetable
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  TimetableData map(Map<String, dynamic> data, {String? tablePrefix}) {
+  Timetable map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return TimetableData(
+    return Timetable(
       id: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
       name: attachedDatabase.typeMapping
@@ -65,15 +61,15 @@ class $TimetableTable extends Timetable
   }
 
   @override
-  $TimetableTable createAlias(String alias) {
-    return $TimetableTable(attachedDatabase, alias);
+  $TimetablesTable createAlias(String alias) {
+    return $TimetablesTable(attachedDatabase, alias);
   }
 }
 
-class TimetableData extends DataClass implements Insertable<TimetableData> {
+class Timetable extends DataClass implements Insertable<Timetable> {
   final int id;
   final String name;
-  const TimetableData({required this.id, required this.name});
+  const Timetable({required this.id, required this.name});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -82,17 +78,17 @@ class TimetableData extends DataClass implements Insertable<TimetableData> {
     return map;
   }
 
-  TimetableCompanion toCompanion(bool nullToAbsent) {
-    return TimetableCompanion(
+  TimetablesCompanion toCompanion(bool nullToAbsent) {
+    return TimetablesCompanion(
       id: Value(id),
       name: Value(name),
     );
   }
 
-  factory TimetableData.fromJson(Map<String, dynamic> json,
+  factory Timetable.fromJson(Map<String, dynamic> json,
       {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return TimetableData(
+    return Timetable(
       id: serializer.fromJson<int>(json['id']),
       name: serializer.fromJson<String>(json['name']),
     );
@@ -106,13 +102,20 @@ class TimetableData extends DataClass implements Insertable<TimetableData> {
     };
   }
 
-  TimetableData copyWith({int? id, String? name}) => TimetableData(
+  Timetable copyWith({int? id, String? name}) => Timetable(
         id: id ?? this.id,
         name: name ?? this.name,
       );
+  Timetable copyWithCompanion(TimetablesCompanion data) {
+    return Timetable(
+      id: data.id.present ? data.id.value : this.id,
+      name: data.name.present ? data.name.value : this.name,
+    );
+  }
+
   @override
   String toString() {
-    return (StringBuffer('TimetableData(')
+    return (StringBuffer('Timetable(')
           ..write('id: $id, ')
           ..write('name: $name')
           ..write(')'))
@@ -124,23 +127,21 @@ class TimetableData extends DataClass implements Insertable<TimetableData> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is TimetableData &&
-          other.id == this.id &&
-          other.name == this.name);
+      (other is Timetable && other.id == this.id && other.name == this.name);
 }
 
-class TimetableCompanion extends UpdateCompanion<TimetableData> {
+class TimetablesCompanion extends UpdateCompanion<Timetable> {
   final Value<int> id;
   final Value<String> name;
-  const TimetableCompanion({
+  const TimetablesCompanion({
     this.id = const Value.absent(),
     this.name = const Value.absent(),
   });
-  TimetableCompanion.insert({
+  TimetablesCompanion.insert({
     this.id = const Value.absent(),
     required String name,
   }) : name = Value(name);
-  static Insertable<TimetableData> custom({
+  static Insertable<Timetable> custom({
     Expression<int>? id,
     Expression<String>? name,
   }) {
@@ -150,8 +151,8 @@ class TimetableCompanion extends UpdateCompanion<TimetableData> {
     });
   }
 
-  TimetableCompanion copyWith({Value<int>? id, Value<String>? name}) {
-    return TimetableCompanion(
+  TimetablesCompanion copyWith({Value<int>? id, Value<String>? name}) {
+    return TimetablesCompanion(
       id: id ?? this.id,
       name: name ?? this.name,
     );
@@ -171,7 +172,7 @@ class TimetableCompanion extends UpdateCompanion<TimetableData> {
 
   @override
   String toString() {
-    return (StringBuffer('TimetableCompanion(')
+    return (StringBuffer('TimetablesCompanion(')
           ..write('id: $id, ')
           ..write('name: $name')
           ..write(')'))
@@ -179,11 +180,11 @@ class TimetableCompanion extends UpdateCompanion<TimetableData> {
   }
 }
 
-class $SubjectTable extends Subject with TableInfo<$SubjectTable, SubjectData> {
+class $SubjectsTable extends Subjects with TableInfo<$SubjectsTable, Subject> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $SubjectTable(this.attachedDatabase, [this._alias]);
+  $SubjectsTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
@@ -214,34 +215,35 @@ class $SubjectTable extends Subject with TableInfo<$SubjectTable, SubjectData> {
   late final GeneratedColumnWithTypeConverter<material.Color, int> color =
       GeneratedColumn<int>('color', aliasedName, false,
               type: DriftSqlType.int, requiredDuringInsert: true)
-          .withConverter<material.Color>($SubjectTable.$convertercolor);
+          .withConverter<material.Color>($SubjectsTable.$convertercolor);
   static const VerificationMeta _rotationWeekMeta =
       const VerificationMeta('rotationWeek');
   @override
   late final GeneratedColumnWithTypeConverter<RotationWeeks, int> rotationWeek =
       GeneratedColumn<int>('rotation_week', aliasedName, false,
               type: DriftSqlType.int, requiredDuringInsert: true)
-          .withConverter<RotationWeeks>($SubjectTable.$converterrotationWeek);
+          .withConverter<RotationWeeks>($SubjectsTable.$converterrotationWeek);
   static const VerificationMeta _dayMeta = const VerificationMeta('day');
   @override
   late final GeneratedColumnWithTypeConverter<Days, int> day =
       GeneratedColumn<int>('day', aliasedName, false,
               type: DriftSqlType.int, requiredDuringInsert: true)
-          .withConverter<Days>($SubjectTable.$converterday);
+          .withConverter<Days>($SubjectsTable.$converterday);
   static const VerificationMeta _startTimeMeta =
       const VerificationMeta('startTime');
   @override
   late final GeneratedColumnWithTypeConverter<material.TimeOfDay, String>
       startTime = GeneratedColumn<String>('start_time', aliasedName, false,
               type: DriftSqlType.string, requiredDuringInsert: true)
-          .withConverter<material.TimeOfDay>($SubjectTable.$converterstartTime);
+          .withConverter<material.TimeOfDay>(
+              $SubjectsTable.$converterstartTime);
   static const VerificationMeta _endTimeMeta =
       const VerificationMeta('endTime');
   @override
   late final GeneratedColumnWithTypeConverter<material.TimeOfDay, String>
       endTime = GeneratedColumn<String>('end_time', aliasedName, false,
               type: DriftSqlType.string, requiredDuringInsert: true)
-          .withConverter<material.TimeOfDay>($SubjectTable.$converterendTime);
+          .withConverter<material.TimeOfDay>($SubjectsTable.$converterendTime);
   static const VerificationMeta _timetableMeta =
       const VerificationMeta('timetable');
   @override
@@ -265,9 +267,9 @@ class $SubjectTable extends Subject with TableInfo<$SubjectTable, SubjectData> {
   String get aliasedName => _alias ?? actualTableName;
   @override
   String get actualTableName => $name;
-  static const String $name = 'subject';
+  static const String $name = 'subjects';
   @override
-  VerificationContext validateIntegrity(Insertable<SubjectData> instance,
+  VerificationContext validateIntegrity(Insertable<Subject> instance,
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
@@ -305,9 +307,9 @@ class $SubjectTable extends Subject with TableInfo<$SubjectTable, SubjectData> {
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  SubjectData map(Map<String, dynamic> data, {String? tablePrefix}) {
+  Subject map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return SubjectData(
+    return Subject(
       id: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
       label: attachedDatabase.typeMapping
@@ -316,17 +318,17 @@ class $SubjectTable extends Subject with TableInfo<$SubjectTable, SubjectData> {
           .read(DriftSqlType.string, data['${effectivePrefix}location']),
       note: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}note']),
-      color: $SubjectTable.$convertercolor.fromSql(attachedDatabase.typeMapping
+      color: $SubjectsTable.$convertercolor.fromSql(attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}color'])!),
-      rotationWeek: $SubjectTable.$converterrotationWeek.fromSql(
+      rotationWeek: $SubjectsTable.$converterrotationWeek.fromSql(
           attachedDatabase.typeMapping.read(
               DriftSqlType.int, data['${effectivePrefix}rotation_week'])!),
-      day: $SubjectTable.$converterday.fromSql(attachedDatabase.typeMapping
+      day: $SubjectsTable.$converterday.fromSql(attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}day'])!),
-      startTime: $SubjectTable.$converterstartTime.fromSql(attachedDatabase
+      startTime: $SubjectsTable.$converterstartTime.fromSql(attachedDatabase
           .typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}start_time'])!),
-      endTime: $SubjectTable.$converterendTime.fromSql(attachedDatabase
+      endTime: $SubjectsTable.$converterendTime.fromSql(attachedDatabase
           .typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}end_time'])!),
       timetable: attachedDatabase.typeMapping
@@ -335,8 +337,8 @@ class $SubjectTable extends Subject with TableInfo<$SubjectTable, SubjectData> {
   }
 
   @override
-  $SubjectTable createAlias(String alias) {
-    return $SubjectTable(attachedDatabase, alias);
+  $SubjectsTable createAlias(String alias) {
+    return $SubjectsTable(attachedDatabase, alias);
   }
 
   static TypeConverter<material.Color, int> $convertercolor =
@@ -351,7 +353,7 @@ class $SubjectTable extends Subject with TableInfo<$SubjectTable, SubjectData> {
       const TimeOfDayConverter();
 }
 
-class SubjectData extends DataClass implements Insertable<SubjectData> {
+class Subject extends DataClass implements Insertable<Subject> {
   final int id;
   final String label;
   final String? location;
@@ -362,7 +364,7 @@ class SubjectData extends DataClass implements Insertable<SubjectData> {
   final material.TimeOfDay startTime;
   final material.TimeOfDay endTime;
   final String timetable;
-  const SubjectData(
+  const Subject(
       {required this.id,
       required this.label,
       this.location,
@@ -385,29 +387,29 @@ class SubjectData extends DataClass implements Insertable<SubjectData> {
       map['note'] = Variable<String>(note);
     }
     {
-      map['color'] = Variable<int>($SubjectTable.$convertercolor.toSql(color));
+      map['color'] = Variable<int>($SubjectsTable.$convertercolor.toSql(color));
     }
     {
       map['rotation_week'] = Variable<int>(
-          $SubjectTable.$converterrotationWeek.toSql(rotationWeek));
+          $SubjectsTable.$converterrotationWeek.toSql(rotationWeek));
     }
     {
-      map['day'] = Variable<int>($SubjectTable.$converterday.toSql(day));
+      map['day'] = Variable<int>($SubjectsTable.$converterday.toSql(day));
     }
     {
       map['start_time'] =
-          Variable<String>($SubjectTable.$converterstartTime.toSql(startTime));
+          Variable<String>($SubjectsTable.$converterstartTime.toSql(startTime));
     }
     {
       map['end_time'] =
-          Variable<String>($SubjectTable.$converterendTime.toSql(endTime));
+          Variable<String>($SubjectsTable.$converterendTime.toSql(endTime));
     }
     map['timetable'] = Variable<String>(timetable);
     return map;
   }
 
-  SubjectCompanion toCompanion(bool nullToAbsent) {
-    return SubjectCompanion(
+  SubjectsCompanion toCompanion(bool nullToAbsent) {
+    return SubjectsCompanion(
       id: Value(id),
       label: Value(label),
       location: location == null && nullToAbsent
@@ -423,18 +425,18 @@ class SubjectData extends DataClass implements Insertable<SubjectData> {
     );
   }
 
-  factory SubjectData.fromJson(Map<String, dynamic> json,
+  factory Subject.fromJson(Map<String, dynamic> json,
       {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return SubjectData(
+    return Subject(
       id: serializer.fromJson<int>(json['id']),
       label: serializer.fromJson<String>(json['label']),
       location: serializer.fromJson<String?>(json['location']),
       note: serializer.fromJson<String?>(json['note']),
       color: serializer.fromJson<material.Color>(material.Color(json['color'])),
-      rotationWeek: $SubjectTable.$converterrotationWeek
+      rotationWeek: $SubjectsTable.$converterrotationWeek
           .fromJson(serializer.fromJson<int>(json['rotationWeek'])),
-      day: $SubjectTable.$converterday
+      day: $SubjectsTable.$converterday
           .fromJson(serializer.fromJson<int>(json['day'])),
       startTime: serializer.fromJson<material.TimeOfDay>(
         material.TimeOfDay(
@@ -451,7 +453,6 @@ class SubjectData extends DataClass implements Insertable<SubjectData> {
       timetable: serializer.fromJson<String>(json['timetable']),
     );
   }
-
   @override
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
@@ -462,8 +463,8 @@ class SubjectData extends DataClass implements Insertable<SubjectData> {
       'note': serializer.toJson<String?>(note),
       'color': serializer.toJson<int>(color.toInt()),
       'rotationWeek': serializer.toJson<int>(
-          $SubjectTable.$converterrotationWeek.toJson(rotationWeek)),
-      'day': serializer.toJson<int>($SubjectTable.$converterday.toJson(day)),
+          $SubjectsTable.$converterrotationWeek.toJson(rotationWeek)),
+      'day': serializer.toJson<int>($SubjectsTable.$converterday.toJson(day)),
       'startTimeHour': serializer.toJson<int>(startTime.hour),
       'startTimeMinute': serializer.toJson<int>(startTime.minute),
       'endTimeHour': serializer.toJson<int>(endTime.hour),
@@ -472,7 +473,7 @@ class SubjectData extends DataClass implements Insertable<SubjectData> {
     };
   }
 
-  SubjectData copyWith(
+  Subject copyWith(
           {int? id,
           String? label,
           Value<String?> location = const Value.absent(),
@@ -483,7 +484,7 @@ class SubjectData extends DataClass implements Insertable<SubjectData> {
           material.TimeOfDay? startTime,
           material.TimeOfDay? endTime,
           String? timetable}) =>
-      SubjectData(
+      Subject(
         id: id ?? this.id,
         label: label ?? this.label,
         location: location.present ? location.value : this.location,
@@ -495,9 +496,26 @@ class SubjectData extends DataClass implements Insertable<SubjectData> {
         endTime: endTime ?? this.endTime,
         timetable: timetable ?? this.timetable,
       );
+  Subject copyWithCompanion(SubjectsCompanion data) {
+    return Subject(
+      id: data.id.present ? data.id.value : this.id,
+      label: data.label.present ? data.label.value : this.label,
+      location: data.location.present ? data.location.value : this.location,
+      note: data.note.present ? data.note.value : this.note,
+      color: data.color.present ? data.color.value : this.color,
+      rotationWeek: data.rotationWeek.present
+          ? data.rotationWeek.value
+          : this.rotationWeek,
+      day: data.day.present ? data.day.value : this.day,
+      startTime: data.startTime.present ? data.startTime.value : this.startTime,
+      endTime: data.endTime.present ? data.endTime.value : this.endTime,
+      timetable: data.timetable.present ? data.timetable.value : this.timetable,
+    );
+  }
+
   @override
   String toString() {
-    return (StringBuffer('SubjectData(')
+    return (StringBuffer('Subject(')
           ..write('id: $id, ')
           ..write('label: $label, ')
           ..write('location: $location, ')
@@ -518,7 +536,7 @@ class SubjectData extends DataClass implements Insertable<SubjectData> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is SubjectData &&
+      (other is Subject &&
           other.id == this.id &&
           other.label == this.label &&
           other.location == this.location &&
@@ -531,7 +549,7 @@ class SubjectData extends DataClass implements Insertable<SubjectData> {
           other.timetable == this.timetable);
 }
 
-class SubjectCompanion extends UpdateCompanion<SubjectData> {
+class SubjectsCompanion extends UpdateCompanion<Subject> {
   final Value<int> id;
   final Value<String> label;
   final Value<String?> location;
@@ -542,7 +560,7 @@ class SubjectCompanion extends UpdateCompanion<SubjectData> {
   final Value<material.TimeOfDay> startTime;
   final Value<material.TimeOfDay> endTime;
   final Value<String> timetable;
-  const SubjectCompanion({
+  const SubjectsCompanion({
     this.id = const Value.absent(),
     this.label = const Value.absent(),
     this.location = const Value.absent(),
@@ -554,7 +572,7 @@ class SubjectCompanion extends UpdateCompanion<SubjectData> {
     this.endTime = const Value.absent(),
     this.timetable = const Value.absent(),
   });
-  SubjectCompanion.insert({
+  SubjectsCompanion.insert({
     this.id = const Value.absent(),
     required String label,
     this.location = const Value.absent(),
@@ -572,7 +590,7 @@ class SubjectCompanion extends UpdateCompanion<SubjectData> {
         startTime = Value(startTime),
         endTime = Value(endTime),
         timetable = Value(timetable);
-  static Insertable<SubjectData> custom({
+  static Insertable<Subject> custom({
     Expression<int>? id,
     Expression<String>? label,
     Expression<String>? location,
@@ -598,7 +616,7 @@ class SubjectCompanion extends UpdateCompanion<SubjectData> {
     });
   }
 
-  SubjectCompanion copyWith(
+  SubjectsCompanion copyWith(
       {Value<int>? id,
       Value<String>? label,
       Value<String?>? location,
@@ -609,7 +627,7 @@ class SubjectCompanion extends UpdateCompanion<SubjectData> {
       Value<material.TimeOfDay>? startTime,
       Value<material.TimeOfDay>? endTime,
       Value<String>? timetable}) {
-    return SubjectCompanion(
+    return SubjectsCompanion(
       id: id ?? this.id,
       label: label ?? this.label,
       location: location ?? this.location,
@@ -640,22 +658,22 @@ class SubjectCompanion extends UpdateCompanion<SubjectData> {
     }
     if (color.present) {
       map['color'] =
-          Variable<int>($SubjectTable.$convertercolor.toSql(color.value));
+          Variable<int>($SubjectsTable.$convertercolor.toSql(color.value));
     }
     if (rotationWeek.present) {
       map['rotation_week'] = Variable<int>(
-          $SubjectTable.$converterrotationWeek.toSql(rotationWeek.value));
+          $SubjectsTable.$converterrotationWeek.toSql(rotationWeek.value));
     }
     if (day.present) {
-      map['day'] = Variable<int>($SubjectTable.$converterday.toSql(day.value));
+      map['day'] = Variable<int>($SubjectsTable.$converterday.toSql(day.value));
     }
     if (startTime.present) {
       map['start_time'] = Variable<String>(
-          $SubjectTable.$converterstartTime.toSql(startTime.value));
+          $SubjectsTable.$converterstartTime.toSql(startTime.value));
     }
     if (endTime.present) {
       map['end_time'] = Variable<String>(
-          $SubjectTable.$converterendTime.toSql(endTime.value));
+          $SubjectsTable.$converterendTime.toSql(endTime.value));
     }
     if (timetable.present) {
       map['timetable'] = Variable<String>(timetable.value);
@@ -665,7 +683,7 @@ class SubjectCompanion extends UpdateCompanion<SubjectData> {
 
   @override
   String toString() {
-    return (StringBuffer('SubjectCompanion(')
+    return (StringBuffer('SubjectsCompanion(')
           ..write('id: $id, ')
           ..write('label: $label, ')
           ..write('location: $location, ')
@@ -683,11 +701,381 @@ class SubjectCompanion extends UpdateCompanion<SubjectData> {
 
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
-  late final $TimetableTable timetable = $TimetableTable(this);
-  late final $SubjectTable subject = $SubjectTable(this);
+  $AppDatabaseManager get managers => $AppDatabaseManager(this);
+  late final $TimetablesTable timetables = $TimetablesTable(this);
+  late final $SubjectsTable subjects = $SubjectsTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
-  List<DatabaseSchemaEntity> get allSchemaEntities => [timetable, subject];
+  List<DatabaseSchemaEntity> get allSchemaEntities => [timetables, subjects];
+}
+
+typedef $$TimetablesTableCreateCompanionBuilder = TimetablesCompanion Function({
+  Value<int> id,
+  required String name,
+});
+typedef $$TimetablesTableUpdateCompanionBuilder = TimetablesCompanion Function({
+  Value<int> id,
+  Value<String> name,
+});
+
+class $$TimetablesTableFilterComposer
+    extends Composer<_$AppDatabase, $TimetablesTable> {
+  $$TimetablesTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get name => $composableBuilder(
+      column: $table.name, builder: (column) => ColumnFilters(column));
+}
+
+class $$TimetablesTableOrderingComposer
+    extends Composer<_$AppDatabase, $TimetablesTable> {
+  $$TimetablesTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get name => $composableBuilder(
+      column: $table.name, builder: (column) => ColumnOrderings(column));
+}
+
+class $$TimetablesTableAnnotationComposer
+    extends Composer<_$AppDatabase, $TimetablesTable> {
+  $$TimetablesTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get name =>
+      $composableBuilder(column: $table.name, builder: (column) => column);
+}
+
+class $$TimetablesTableTableManager extends RootTableManager<
+    _$AppDatabase,
+    $TimetablesTable,
+    Timetable,
+    $$TimetablesTableFilterComposer,
+    $$TimetablesTableOrderingComposer,
+    $$TimetablesTableAnnotationComposer,
+    $$TimetablesTableCreateCompanionBuilder,
+    $$TimetablesTableUpdateCompanionBuilder,
+    (Timetable, BaseReferences<_$AppDatabase, $TimetablesTable, Timetable>),
+    Timetable,
+    PrefetchHooks Function()> {
+  $$TimetablesTableTableManager(_$AppDatabase db, $TimetablesTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$TimetablesTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$TimetablesTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$TimetablesTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback: ({
+            Value<int> id = const Value.absent(),
+            Value<String> name = const Value.absent(),
+          }) =>
+              TimetablesCompanion(
+            id: id,
+            name: name,
+          ),
+          createCompanionCallback: ({
+            Value<int> id = const Value.absent(),
+            required String name,
+          }) =>
+              TimetablesCompanion.insert(
+            id: id,
+            name: name,
+          ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ));
+}
+
+typedef $$TimetablesTableProcessedTableManager = ProcessedTableManager<
+    _$AppDatabase,
+    $TimetablesTable,
+    Timetable,
+    $$TimetablesTableFilterComposer,
+    $$TimetablesTableOrderingComposer,
+    $$TimetablesTableAnnotationComposer,
+    $$TimetablesTableCreateCompanionBuilder,
+    $$TimetablesTableUpdateCompanionBuilder,
+    (Timetable, BaseReferences<_$AppDatabase, $TimetablesTable, Timetable>),
+    Timetable,
+    PrefetchHooks Function()>;
+typedef $$SubjectsTableCreateCompanionBuilder = SubjectsCompanion Function({
+  Value<int> id,
+  required String label,
+  Value<String?> location,
+  Value<String?> note,
+  required material.Color color,
+  required RotationWeeks rotationWeek,
+  required Days day,
+  required material.TimeOfDay startTime,
+  required material.TimeOfDay endTime,
+  required String timetable,
+});
+typedef $$SubjectsTableUpdateCompanionBuilder = SubjectsCompanion Function({
+  Value<int> id,
+  Value<String> label,
+  Value<String?> location,
+  Value<String?> note,
+  Value<material.Color> color,
+  Value<RotationWeeks> rotationWeek,
+  Value<Days> day,
+  Value<material.TimeOfDay> startTime,
+  Value<material.TimeOfDay> endTime,
+  Value<String> timetable,
+});
+
+class $$SubjectsTableFilterComposer
+    extends Composer<_$AppDatabase, $SubjectsTable> {
+  $$SubjectsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get label => $composableBuilder(
+      column: $table.label, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get location => $composableBuilder(
+      column: $table.location, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get note => $composableBuilder(
+      column: $table.note, builder: (column) => ColumnFilters(column));
+
+  ColumnWithTypeConverterFilters<material.Color, material.Color, int>
+      get color => $composableBuilder(
+          column: $table.color,
+          builder: (column) => ColumnWithTypeConverterFilters(column));
+
+  ColumnWithTypeConverterFilters<RotationWeeks, RotationWeeks, int>
+      get rotationWeek => $composableBuilder(
+          column: $table.rotationWeek,
+          builder: (column) => ColumnWithTypeConverterFilters(column));
+
+  ColumnWithTypeConverterFilters<Days, Days, int> get day => $composableBuilder(
+      column: $table.day,
+      builder: (column) => ColumnWithTypeConverterFilters(column));
+
+  ColumnWithTypeConverterFilters<material.TimeOfDay, material.TimeOfDay, String>
+      get startTime => $composableBuilder(
+          column: $table.startTime,
+          builder: (column) => ColumnWithTypeConverterFilters(column));
+
+  ColumnWithTypeConverterFilters<material.TimeOfDay, material.TimeOfDay, String>
+      get endTime => $composableBuilder(
+          column: $table.endTime,
+          builder: (column) => ColumnWithTypeConverterFilters(column));
+
+  ColumnFilters<String> get timetable => $composableBuilder(
+      column: $table.timetable, builder: (column) => ColumnFilters(column));
+}
+
+class $$SubjectsTableOrderingComposer
+    extends Composer<_$AppDatabase, $SubjectsTable> {
+  $$SubjectsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get label => $composableBuilder(
+      column: $table.label, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get location => $composableBuilder(
+      column: $table.location, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get note => $composableBuilder(
+      column: $table.note, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<int> get color => $composableBuilder(
+      column: $table.color, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<int> get rotationWeek => $composableBuilder(
+      column: $table.rotationWeek,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<int> get day => $composableBuilder(
+      column: $table.day, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get startTime => $composableBuilder(
+      column: $table.startTime, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get endTime => $composableBuilder(
+      column: $table.endTime, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get timetable => $composableBuilder(
+      column: $table.timetable, builder: (column) => ColumnOrderings(column));
+}
+
+class $$SubjectsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $SubjectsTable> {
+  $$SubjectsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get label =>
+      $composableBuilder(column: $table.label, builder: (column) => column);
+
+  GeneratedColumn<String> get location =>
+      $composableBuilder(column: $table.location, builder: (column) => column);
+
+  GeneratedColumn<String> get note =>
+      $composableBuilder(column: $table.note, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<material.Color, int> get color =>
+      $composableBuilder(column: $table.color, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<RotationWeeks, int> get rotationWeek =>
+      $composableBuilder(
+          column: $table.rotationWeek, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<Days, int> get day =>
+      $composableBuilder(column: $table.day, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<material.TimeOfDay, String> get startTime =>
+      $composableBuilder(column: $table.startTime, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<material.TimeOfDay, String> get endTime =>
+      $composableBuilder(column: $table.endTime, builder: (column) => column);
+
+  GeneratedColumn<String> get timetable =>
+      $composableBuilder(column: $table.timetable, builder: (column) => column);
+}
+
+class $$SubjectsTableTableManager extends RootTableManager<
+    _$AppDatabase,
+    $SubjectsTable,
+    Subject,
+    $$SubjectsTableFilterComposer,
+    $$SubjectsTableOrderingComposer,
+    $$SubjectsTableAnnotationComposer,
+    $$SubjectsTableCreateCompanionBuilder,
+    $$SubjectsTableUpdateCompanionBuilder,
+    (Subject, BaseReferences<_$AppDatabase, $SubjectsTable, Subject>),
+    Subject,
+    PrefetchHooks Function()> {
+  $$SubjectsTableTableManager(_$AppDatabase db, $SubjectsTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$SubjectsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$SubjectsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$SubjectsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback: ({
+            Value<int> id = const Value.absent(),
+            Value<String> label = const Value.absent(),
+            Value<String?> location = const Value.absent(),
+            Value<String?> note = const Value.absent(),
+            Value<material.Color> color = const Value.absent(),
+            Value<RotationWeeks> rotationWeek = const Value.absent(),
+            Value<Days> day = const Value.absent(),
+            Value<material.TimeOfDay> startTime = const Value.absent(),
+            Value<material.TimeOfDay> endTime = const Value.absent(),
+            Value<String> timetable = const Value.absent(),
+          }) =>
+              SubjectsCompanion(
+            id: id,
+            label: label,
+            location: location,
+            note: note,
+            color: color,
+            rotationWeek: rotationWeek,
+            day: day,
+            startTime: startTime,
+            endTime: endTime,
+            timetable: timetable,
+          ),
+          createCompanionCallback: ({
+            Value<int> id = const Value.absent(),
+            required String label,
+            Value<String?> location = const Value.absent(),
+            Value<String?> note = const Value.absent(),
+            required material.Color color,
+            required RotationWeeks rotationWeek,
+            required Days day,
+            required material.TimeOfDay startTime,
+            required material.TimeOfDay endTime,
+            required String timetable,
+          }) =>
+              SubjectsCompanion.insert(
+            id: id,
+            label: label,
+            location: location,
+            note: note,
+            color: color,
+            rotationWeek: rotationWeek,
+            day: day,
+            startTime: startTime,
+            endTime: endTime,
+            timetable: timetable,
+          ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ));
+}
+
+typedef $$SubjectsTableProcessedTableManager = ProcessedTableManager<
+    _$AppDatabase,
+    $SubjectsTable,
+    Subject,
+    $$SubjectsTableFilterComposer,
+    $$SubjectsTableOrderingComposer,
+    $$SubjectsTableAnnotationComposer,
+    $$SubjectsTableCreateCompanionBuilder,
+    $$SubjectsTableUpdateCompanionBuilder,
+    (Subject, BaseReferences<_$AppDatabase, $SubjectsTable, Subject>),
+    Subject,
+    PrefetchHooks Function()>;
+
+class $AppDatabaseManager {
+  final _$AppDatabase _db;
+  $AppDatabaseManager(this._db);
+  $$TimetablesTableTableManager get timetables =>
+      $$TimetablesTableTableManager(_db, _db.timetables);
+  $$SubjectsTableTableManager get subjects =>
+      $$SubjectsTableTableManager(_db, _db.subjects);
 }

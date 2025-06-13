@@ -10,7 +10,7 @@ import 'package:timetable/core/db/database.dart';
 class SubjectContainerBuilder extends ConsumerWidget {
   final int rowIndex;
   final int columnIndex;
-  final ValueNotifier<TimetableData> currentTimetable;
+  final ValueNotifier<Timetable> currentTimetable;
 
   const SubjectContainerBuilder({
     super.key,

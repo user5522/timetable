@@ -5,7 +5,7 @@ import 'package:timetable/core/db/database.dart';
 
 /// A basic subject with no extra information.
 /// Used for the color autocomplete feature.
-const basicSubject = SubjectData(
+const basicSubject = Subject(
   id: 0,
   label: " ",
   location: "",

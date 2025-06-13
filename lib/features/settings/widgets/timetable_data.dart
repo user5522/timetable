@@ -42,8 +42,8 @@ class TimetableDataOptions extends ConsumerWidget {
                     final nav = Navigator.of(context);
 
                     await restoreData(db).then((_) {
-                      tbNotifier.checkAndLoadInitialData();
-                      subjNotifier.loadSubjects();
+                      tbNotifier.fetchTimetablesFromDatabase();
+                      subjNotifier.fetchSubjectsFromDatabase();
                     });
 
                     nav.pop();

@@ -7,7 +7,7 @@ import 'package:timetable/features/subjects/screens/subject_screen.dart';
 
 /// Subject builder for the day view.
 class DayViewSubjectBuilder extends ConsumerWidget {
-  final SubjectData subject;
+  final Subject subject;
 
   const DayViewSubjectBuilder({super.key, required this.subject});
 

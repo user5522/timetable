@@ -23,12 +23,12 @@ part 'database.g.dart';
 /// migration strategy:
 /// - v1 -> v2: Color storage format change
 /// - v2 -> v3: Added timetable name and subject timetable columns
-@DriftDatabase(tables: [Timetable, Subject])
+@DriftDatabase(tables: [Timetables, Subjects])
 class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(openConnection());
 
   @override
-  int get schemaVersion => 3;
+  int get schemaVersion => 4;
 
   @override
   MigrationStrategy get migration {
@@ -45,16 +45,20 @@ class AppDatabase extends _$AppDatabase {
           // to maintain the Color type instead of using int in v1.
           await m.alterTable(
             TableMigration(
-              subject,
+              subjects,
               columnTransformer: {
-                subject.color: subject.color,
+                subjects.color: subjects.color,
               },
             ),
           );
         }
         if (from < 3) {
-          await m.addColumn(timetable, timetable.name);
-          await m.addColumn(subject, subject.timetable);
+          await m.addColumn(timetables, timetables.name);
+          await m.addColumn(subjects, subjects.timetable);
+        }
+        if (from < 4) {
+          await m.renameTable(timetables, "timetable");
+          await m.renameTable(subjects, "subject");
         }
       },
     );

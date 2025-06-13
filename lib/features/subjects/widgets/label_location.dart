@@ -10,7 +10,7 @@ import 'package:timetable/core/db/database.dart';
 /// Groups the label (+ the [SubjectsList] button) & the
 /// location [TextFormField]s in a [ListItemGroup].
 class LabelLocationConfig extends StatefulWidget {
-  final List<SubjectData> subjects;
+  final List<Subject> subjects;
   final ValueNotifier<String> label;
   final ValueNotifier<String?> location;
 

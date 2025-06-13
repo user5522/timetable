@@ -3,9 +3,9 @@ import 'package:timetable/core/constants/rotation_weeks.dart';
 import 'package:timetable/core/db/database.dart';
 
 /// filters overlapping subjects from the list of all subjects.
-List<SubjectData> filterOverlappingSubjects(
-  List<SubjectData> subjects,
-  List<List<SubjectData>> overlappingSubjects,
+List<Subject> filterOverlappingSubjects(
+  List<Subject> subjects,
+  List<List<Subject>> overlappingSubjects,
 ) {
   return subjects
       .where(
@@ -15,8 +15,8 @@ List<SubjectData> filterOverlappingSubjects(
 }
 
 /// Returns the subject with the earlier starting time.
-SubjectData getEarliestSubject(List<SubjectData> subjects) {
-  SubjectData earliestSubject = subjects[0];
+Subject getEarliestSubject(List<Subject> subjects) {
+  Subject earliestSubject = subjects[0];
   for (final subject in subjects) {
     if (subject.startTime.hour < earliestSubject.startTime.hour) {
       earliestSubject = subject;
@@ -26,8 +26,8 @@ SubjectData getEarliestSubject(List<SubjectData> subjects) {
 }
 
 /// Returns the subject with the later ending time.
-SubjectData getLatestSubject(List<SubjectData> subjects) {
-  SubjectData latestSubject = subjects.first;
+Subject getLatestSubject(List<Subject> subjects) {
+  Subject latestSubject = subjects.first;
   for (final subject in subjects) {
     if (subject.endTime.hour > latestSubject.endTime.hour) {
       latestSubject = subject;
@@ -38,7 +38,7 @@ SubjectData getLatestSubject(List<SubjectData> subjects) {
 
 /// filters overlapping subjects by the current rotation week.
 void filterOverlappingSubjectsByRotationWeeks(
-  List<List<SubjectData>> overlappingSubjects,
+  List<List<Subject>> overlappingSubjects,
   ValueNotifier<RotationWeeks> rotationWeek,
 ) {
   return overlappingSubjects.removeWhere(
@@ -61,9 +61,9 @@ void filterOverlappingSubjectsByRotationWeeks(
 
 /// filters overlapping subjects by the current timetable.
 void filterOverlappingSubjectsByTimetable(
-  List<List<SubjectData>> overlappingSubjects,
-  ValueNotifier<TimetableData> currentTimetable,
-  List<TimetableData> timetables,
+  List<List<Subject>> overlappingSubjects,
+  ValueNotifier<Timetable> currentTimetable,
+  List<Timetable> timetables,
 ) {
   return overlappingSubjects.removeWhere(
     (elem) => elem.any(
@@ -73,7 +73,7 @@ void filterOverlappingSubjectsByTimetable(
 }
 
 /// checks if 2 subjects overlap in time
-bool doSubjectsOverlap(SubjectData a, SubjectData b, List<SubjectData> group) {
+bool doSubjectsOverlap(Subject a, Subject b, List<Subject> group) {
   return a.day == b.day &&
       (a.startTime.hour < b.endTime.hour ||
           (a.startTime.hour == b.endTime.hour &&
@@ -85,8 +85,8 @@ bool doSubjectsOverlap(SubjectData a, SubjectData b, List<SubjectData> group) {
 }
 
 void findOverlappingSubjectsWithinGroup(
-  List<SubjectData> subjects,
-  List<SubjectData> group,
+  List<Subject> subjects,
+  List<Subject> group,
   int startIndex,
 ) {
   for (int i = startIndex; i < subjects.length; i++) {
@@ -108,8 +108,8 @@ void findOverlappingSubjectsWithinGroup(
   }
 }
 
-List<List<SubjectData>> findOverlappingSubjects(List<SubjectData> subjects) {
-  final overlappingSubjects = <List<SubjectData>>[];
+List<List<Subject>> findOverlappingSubjects(List<Subject> subjects) {
+  final overlappingSubjects = <List<Subject>>[];
 
   for (int i = 0; i < subjects.length; i++) {
     if (overlappingSubjects.any(
@@ -118,7 +118,7 @@ List<List<SubjectData>> findOverlappingSubjects(List<SubjectData> subjects) {
       continue;
     }
 
-    final overlappingGroup = <SubjectData>[subjects[i]];
+    final overlappingGroup = <Subject>[subjects[i]];
 
     for (int j = i + 1; j < subjects.length; j++) {
       if (doSubjectsOverlap(

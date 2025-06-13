@@ -18,8 +18,8 @@ import 'package:timetable/features/timetable/providers/timetables.dart';
 /// Timetable view that shows each day's subjects in a single screen each.
 class TimetableDayView extends HookConsumerWidget {
   final ValueNotifier<RotationWeeks> rotationWeek;
-  final List<SubjectData> subject;
-  final ValueNotifier<TimetableData> currentTimetable;
+  final List<Subject> subject;
+  final ValueNotifier<Timetable> currentTimetable;
   final PageController controller;
 
   const TimetableDayView({

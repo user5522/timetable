@@ -9,7 +9,7 @@ import 'package:timetable/features/timetable/providers/timetables.dart';
 ///
 /// used for filtering
 class TimetableToggle extends HookConsumerWidget {
-  final ValueNotifier<TimetableData> timetable;
+  final ValueNotifier<Timetable> timetable;
   const TimetableToggle({
     super.key,
     required this.timetable,

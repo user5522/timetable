@@ -1,3 +1,4 @@
+import 'package:drift/drift.dart' as drift;
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -20,8 +21,8 @@ import 'package:timetable/features/timetable/providers/timetables.dart';
 class SubjectScreen extends HookConsumerWidget {
   final int? rowIndex;
   final int? columnIndex;
-  final SubjectData? subject;
-  final ValueNotifier<TimetableData>? currentTimetable;
+  final Subject? subject;
+  final ValueNotifier<Timetable>? currentTimetable;
 
   const SubjectScreen({
     super.key,
@@ -48,9 +49,11 @@ class SubjectScreen extends HookConsumerWidget {
     final bool isSubjectNull = (subject == null);
     final bool isCurrentTimetableNull = (currentTimetable == null);
     final int id = (isSubjectNull ? subjects.length : subject!.id);
-    final int baseHour = rowIndex! + (tfHours ? 0 : customStartTimeHour);
+    final int baseHour = isSubjectNull
+        ? rowIndex! + (tfHours ? 0 : customStartTimeHour)
+        : (tfHours ? 0 : customStartTimeHour);
 
-    final ValueNotifier<TimetableData?> timetable = useState(
+    final ValueNotifier<Timetable?> timetable = useState(
       isSubjectNull
           ? isCurrentTimetableNull
               ? timetables
@@ -79,10 +82,23 @@ class SubjectScreen extends HookConsumerWidget {
     final ValueNotifier<RotationWeeks> rotationWeek =
         useState(subject?.rotationWeek ?? RotationWeeks.none);
 
-    // I DONT KNOW WHY I AM USING [SubjectData] I SHOULD BE USING [SubjectCompanion]
-    // update: using [SubjectCompanion] breaks a lot of stuff so i will not be using that
-    final SubjectData newSubject = SubjectData(
-      id: id,
+    final SubjectsCompanion newSubject = SubjectsCompanion(
+      id: isSubjectNull ? const drift.Value.absent() : drift.Value(subject!.id),
+      label: drift.Value(label.value),
+      location: drift.Value(location.value),
+      color: drift.Value(color.value),
+      startTime: drift.Value(startTime.value),
+      endTime: drift.Value(endTime.value),
+      day: drift.Value(day.value),
+      rotationWeek: drift.Value(rotationWeek.value),
+      note: drift.Value(note.value),
+      timetable: drift.Value(timetable.value!.name),
+    );
+
+    final validation = SubjectValidation(
+      subjectsInSameDay: subjects.where((e) => e.day == day.value).toList(),
+      inputHours: getHoursList(startTime.value, endTime.value),
+      subjectId: id,
       label: label.value,
       location: location.value,
       color: color.value,
@@ -92,12 +108,6 @@ class SubjectScreen extends HookConsumerWidget {
       rotationWeek: rotationWeek.value,
       note: note.value,
       timetable: timetable.value!.name,
-    );
-
-    final validation = SubjectValidation(
-      subjectsInSameDay: subjects.where((e) => e.day == day.value).toList(),
-      inputHours: getHoursList(startTime.value, endTime.value),
-      newSubject: newSubject,
       currentSubject: subject,
       overlappingSubjects: overlappingSubjects,
     );
@@ -137,7 +147,7 @@ class SubjectScreen extends HookConsumerWidget {
 
                 if (isSubjectNull) {
                   await subjectNotifier
-                      .addSubject(newSubject.toCompanion(true))
+                      .addSubject(newSubject)
                       .then((_) => navigator.pop(newSubject));
                 }
                 if (!isSubjectNull) {

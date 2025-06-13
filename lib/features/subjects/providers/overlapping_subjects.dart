@@ -5,11 +5,11 @@ import 'package:timetable/core/db/database.dart';
 // idea: maybe i should save the list of overlapping subjects
 // instead of trying to find them everytime the app is opened
 // should help with performance, probably
-class OverlappingSubjects extends StateNotifier<List<List<SubjectData>>> {
+class OverlappingSubjects extends StateNotifier<List<List<Subject>>> {
   OverlappingSubjects() : super([]);
 
   /// adds a whole list of subjects to the state
-  void addInBulk(List<List<SubjectData>> value) {
+  void addInBulk(List<List<Subject>> value) {
     state = value;
   }
 
@@ -18,6 +18,6 @@ class OverlappingSubjects extends StateNotifier<List<List<SubjectData>>> {
 }
 
 final overlappingSubjectsProvider =
-    StateNotifierProvider<OverlappingSubjects, List<List<SubjectData>>>(
+    StateNotifierProvider<OverlappingSubjects, List<List<Subject>>>(
   (ref) => OverlappingSubjects(),
 );

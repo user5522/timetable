@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:drift/drift.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:timetable/core/db/database.dart';
@@ -6,66 +8,47 @@ import 'package:timetable/features/subjects/providers/overlapping_subjects.dart'
 /// Subject state management
 /// manages CRUD operations for subjects, handles subject filtering and state updates
 /// also manages subject-timetable relationships
-class SubjectNotifier extends StateNotifier<List<SubjectData>> {
+class SubjectNotifier extends StateNotifier<List<Subject>> {
   final AppDatabase db;
   final OverlappingSubjects overlappingSubjectsNotifier;
 
-  SubjectNotifier(
-    this.db,
-    this.overlappingSubjectsNotifier,
-  ) : super([]) {
-    getSubjects();
+  late StreamSubscription _subscription;
+
+  SubjectNotifier(this.db, this.overlappingSubjectsNotifier) : super([]) {
+    _subscription = db.subjects.select().watch().listen((subjects) {
+      state = subjects;
+    });
   }
 
-  /// load subjects from database
-  Future loadSubjects() async {
-    final subjects = await db.subject.select().get();
-    state = subjects;
+  @override
+  void dispose() {
+    _subscription.cancel();
+    super.dispose();
   }
 
-  /// returns the list of [SubjectData] from the database ([$SubjectTable])
-  Future<List<SubjectData>> getSubjects() async {
-    final subjects = await db.subject.select().get();
-    state = subjects;
-    return subjects;
+  Future fetchSubjectsFromDatabase() async {
+    await db.subjects.select().get();
   }
 
-  /// adds a subject ([SubjectCompanion]) to the database ([$SubjectTable])
-  // i use [SubjectData] in the subject creation screen so i have to convert it everytime
-  Future addSubject(SubjectCompanion entry) async {
-    db.subject.insertOne(
-      SubjectCompanion.insert(
-        label: entry.label.value,
-        location: entry.location,
-        note: entry.note,
-        color: entry.color.value,
-        rotationWeek: entry.rotationWeek.value,
-        day: entry.day.value,
-        startTime: entry.startTime.value,
-        endTime: entry.endTime.value,
-        timetable: entry.timetable.value,
-      ),
-    );
-
-    state = await getSubjects();
+  /// adds a subject ([SubjectsCompanion]) to the database ([$SubjectsTable])
+  Future addSubject(SubjectsCompanion entry) async {
+    await db.subjects.insertOne(entry);
   }
 
-  /// updates an already existing [SubjectData]
+  /// updates an already existing [Subject]
   ///
   /// also resets the overlapping subjects notifier
   /// so it refetches new data, otherwise there will be new
   /// and old data at the same time
-  Future updateSubject(SubjectData entry) async {
-    db.subject.update().replace(entry);
-    state = await getSubjects();
+  Future updateSubject(SubjectsCompanion entry) async {
+    await db.subjects.update().replace(entry);
 
     overlappingSubjectsNotifier.reset();
   }
 
-  /// deletes a [SubjectData] from db ([$SubjectTable])
-  Future deleteSubject(SubjectData entry) async {
-    db.subject.deleteWhere((t) => t.id.equals(entry.id));
-    state = await getSubjects();
+  /// deletes a [Subject] from db ([$SubjectsTable])
+  Future deleteSubject(Subject entry) async {
+    await db.subjects.deleteWhere((t) => t.id.equals(entry.id));
 
     overlappingSubjectsNotifier.reset();
   }
@@ -73,35 +56,26 @@ class SubjectNotifier extends StateNotifier<List<SubjectData>> {
   /// executed from the [TimetableNotifier] to delete all the subjects
   /// in the deleted timetable to avoid errors
   Future deleteTimetableSubjects(
-    List<TimetableData> timetables,
-    TimetableData timetable,
+    List<Timetable> timetables,
+    Timetable timetable,
   ) async {
-    var subjects = await db.subject.select().get();
+    var subjects = await db.subjects.select().get();
 
-    for (var subject in subjects.where(
-      (e) => e.timetable == timetable.name,
-    )) {
-      db.subject.deleteWhere(
-        (t) => t.id.equals(subject.id),
-      );
+    for (var subject in subjects.where((e) => e.timetable == timetable.name)) {
+      await db.subjects.deleteWhere((t) => t.id.equals(subject.id));
     }
-
-    state = await getSubjects();
   }
 
-  /// deletes all subjects from db ([$SubjectTable]) and state
-  ///
-  /// also resets the overlapping subjects notifier.
+  /// deletes [$SubjectsTable] and resets overlapping subjects and state.
   Future<void> resetData() async {
-    await db.delete($SubjectTable(db)).go();
+    await db.delete($SubjectsTable(db)).go();
     state = [];
 
     overlappingSubjectsNotifier.reset();
   }
 }
 
-final subjectProvider =
-    StateNotifierProvider<SubjectNotifier, List<SubjectData>>(
+final subjectProvider = StateNotifierProvider<SubjectNotifier, List<Subject>>(
   (ref) => SubjectNotifier(
     ref.watch(AppDatabase.databaseProvider),
     ref.watch(overlappingSubjectsProvider.notifier),

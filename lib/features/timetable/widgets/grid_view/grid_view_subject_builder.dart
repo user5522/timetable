@@ -11,7 +11,7 @@ import 'package:timetable/core/constants/grid_properties.dart';
 /// Subject builder for the grid view.
 /// also builds for the overlapping subjects with some visual tweaks
 class SubjectBuilder extends ConsumerWidget {
-  final SubjectData subject;
+  final Subject subject;
   final bool isOverlapping;
   final int startTimeOffset;
 
@@ -128,9 +128,7 @@ class SubjectBuilder extends ConsumerWidget {
           builder: (context) {
             return Wrap(
               children: [
-                SubjectManagementBottomSheet(
-                  subject: subject,
-                ),
+                SubjectManagementBottomSheet(subject: subject),
               ],
             );
           },

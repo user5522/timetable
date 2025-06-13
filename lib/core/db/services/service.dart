@@ -34,8 +34,8 @@ Future<void> exportData(AppDatabase db) async {
     if (!isGranted) return;
 
     final Map<String, List<dynamic>> allData = {
-      'subject': await db.subject.select().get(),
-      'timetable': await db.timetable.select().get(),
+      'subject': await db.subjects.select().get(),
+      'timetable': await db.timetables.select().get(),
     };
 
     final jsonData = jsonEncode(allData);
@@ -61,15 +61,15 @@ Future<void> restoreData(
     final decodedData = jsonDecode(jsonData) as Map<String, dynamic>;
 
     for (final table in decodedData.keys) {
-      final subjectsTable = db.subject;
-      final timetablesTable = db.timetable;
+      final subjectsTable = db.subjects;
+      final timetablesTable = db.timetables;
 
       if (table == 'subject') {
         subjectsTable.deleteAll();
 
         for (final element in decodedData[table]!) {
           subjectsTable.insertOne(
-            SubjectCompanion.insert(
+            SubjectsCompanion.insert(
               label: element["label"],
               location: drift.Value(element["location"]),
               note: drift.Value(element["note"]),
@@ -94,7 +94,7 @@ Future<void> restoreData(
 
         for (final element in decodedData[table]!) {
           timetablesTable.insertOne(
-            TimetableCompanion.insert(
+            TimetablesCompanion.insert(
               name: element["name"],
             ),
           );

@@ -9,7 +9,7 @@ import 'package:timetable/core/db/database.dart';
 /// lists all subjects to choose a label &
 /// color from an already existing one
 class SubjectsList extends HookWidget {
-  final List<SubjectData> subjects;
+  final List<Subject> subjects;
   final TextEditingController controller;
   final ValueNotifier<String> label;
   final ValueNotifier<String?> location;
@@ -32,8 +32,8 @@ class SubjectsList extends HookWidget {
     Set<String> uniqueSubjects = {};
 
     /// places 1 subject from duplicates in a set (filtered by label)
-    List<SubjectData> filteredSubjects = [];
-    for (SubjectData subject in subjects) {
+    List<Subject> filteredSubjects = [];
+    for (Subject subject in subjects) {
       final label = subject.label;
 
       if (!uniqueSubjects.contains(label)) {
@@ -104,7 +104,7 @@ class SubjectsList extends HookWidget {
 
   Widget buildSubjectsList({
     required NavigatorState navigator,
-    required List<SubjectData> filteredSubjects,
+    required List<Subject> filteredSubjects,
   }) {
     return ListItemGroup(
       children: List.generate(filteredSubjects.length, (i) {
