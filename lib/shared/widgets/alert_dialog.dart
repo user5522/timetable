@@ -9,6 +9,7 @@ class ShowAlertDialog extends StatelessWidget {
   final Widget? leading;
   final String approveButtonText;
   final void Function()? onApprove;
+  final void Function()? onCancel;
 
   const ShowAlertDialog({
     super.key,
@@ -16,6 +17,7 @@ class ShowAlertDialog extends StatelessWidget {
     required this.content,
     required this.approveButtonText,
     this.onApprove,
+    this.onCancel,
     this.leading,
   });
 
@@ -27,10 +29,7 @@ class ShowAlertDialog extends StatelessWidget {
         : content;
 
     return AlertDialog(
-      icon: const Icon(
-        Icons.warning_amber_outlined,
-        size: 30,
-      ),
+      icon: const Icon(Icons.warning_amber_outlined, size: 30),
       content: modifiedContent,
       contentTextStyle: TextStyle(
         fontSize: 20,
@@ -40,11 +39,8 @@ class ShowAlertDialog extends StatelessWidget {
         ListItemGroup(
           children: [
             ListItem(
-              onTap: () => Navigator.pop(context),
-              title: const Text(
-                "cancel",
-                textAlign: TextAlign.center,
-              ).tr(),
+              onTap: onCancel,
+              title: const Text("cancel", textAlign: TextAlign.center).tr(),
             ),
             ListItem(
               leading: leading,

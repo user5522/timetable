@@ -289,28 +289,33 @@ class SubjectManagementBottomSheet extends ConsumerWidget {
             try {
               if (subjects.any((s) => s.id == currentSubject.id)) {
                 navigator.pop();
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return ShowAlertDialog(
-                      content: const Text('delete_subject_dialog').tr(),
-                      approveButtonText: "delete".tr(),
-                      onApprove: () async {
-                        await subjectNotifier
-                            .deleteSubject(currentSubject)
-                            .then((_) {
-                          messenger.showSnackBar(
-                            SnackBar(
-                              content:
-                                  const Text('subject_deleted_snackbar').tr(),
-                            ),
-                          );
-                        });
-                        navigator.pop();
+                final result = await showDialog<bool>(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return ShowAlertDialog(
+                          content: const Text('delete_subject_dialog').tr(),
+                          approveButtonText: "delete".tr(),
+                          onCancel: () => Navigator.of(context).pop(false),
+                          onApprove: () => Navigator.of(context).pop(true),
+                        );
                       },
-                    );
-                  },
-                );
+                    ) ??
+                    false;
+
+                if (result) {
+                  await subjectNotifier.deleteSubject(currentSubject);
+                  messenger.showSnackBar(
+                    SnackBar(
+                      content: const Text('subject_deleted_snackbar').tr(),
+                      duration: const Duration(seconds: 3),
+                      action: SnackBarAction(
+                        label: "undo",
+                        onPressed: () => subjectNotifier
+                            .addSubject(currentSubject.toCompanion(true)),
+                      ),
+                    ),
+                  );
+                }
               }
             } catch (e) {
               messenger.showSnackBar(
