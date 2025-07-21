@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:non_uniform_border/non_uniform_border.dart';
 import 'package:timetable/core/constants/custom_times.dart';
+import 'package:timetable/core/utils/overlapping_subjects.dart';
+import 'package:timetable/features/timetable/models/subject_positions.dart';
 import 'package:timetable/features/timetable/widgets/grid_view/grid_view_subject_builder.dart';
 import 'package:timetable/core/db/database.dart';
 import 'package:timetable/features/settings/providers/settings.dart';
@@ -54,44 +56,74 @@ class OverlappingSubjBuilder extends ConsumerWidget {
     return Container(
       decoration: ShapeDecoration(shape: shape),
       height: totalHeight,
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: subjects.map((subject) {
-          final offset = subject.startTime.hour - earlierStartTimeHour;
-          final duration = subject.endTime.hour - subject.startTime.hour;
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final positions =
+              calculatePositions(subjects, earlierStartTimeHour, baseHeight);
 
-          return Expanded(
-            child: Column(
-              children: [
-                if (offset > 0) SizedBox(height: offset * baseHeight),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(1, 2, 1, 2),
-                  child: SizedBox(
-                    // we subtract 4 because it's the the top + bot padding
-                    // shape decoration is 1 pixel on top if the later end time hour is equal to the custom timetable end time hour
-                    // and is 1 pixel on the bottom if the earlier start time hour is equal to the custom timetable start time hour
-                    // so we subtract all of that if the conditions are met and everything should be perfectly aligned!
-                    height: duration * baseHeight -
-                        4 -
-                        (laterEndTimeHour ==
-                                getCustomEndTime(customEndTime, ref).hour
-                            ? 0
-                            : 1) -
-                        (earlierStartTimeHour ==
-                                getCustomStartTime(customStartTime, ref).hour
-                            ? 0
-                            : 1),
-                    child: SubjectBuilder(
-                      subject: subject,
-                      isOverlapping: true,
-                    ),
+          return Stack(
+            children: positions.map((pos) {
+              return Positioned(
+                left: pos.left * constraints.maxWidth,
+                top: pos.top,
+                width: pos.width * constraints.maxWidth,
+                height: pos.height,
+                child: Padding(
+                  padding: const EdgeInsets.all(1),
+                  child: SubjectBuilder(
+                    subject: pos.subject,
+                    isOverlapping: true,
                   ),
                 ),
-              ],
-            ),
+              );
+            }).toList(),
           );
-        }).toList(),
+        },
       ),
     );
+  }
+
+  List<SubjectPosition> calculatePositions(
+      List<Subject> subjects, int baseStartHour, double baseHeight) {
+    // sort subjects by start time then by duration
+    final sorted = subjects.toList()
+      ..sort((a, b) {
+        final startComp = a.startTime.hour.compareTo(b.startTime.hour);
+        if (startComp != 0) return startComp;
+        return (b.endTime.hour - b.startTime.hour)
+            .compareTo(a.endTime.hour - a.startTime.hour);
+      });
+
+    final positions = <SubjectPosition>[];
+    final columns = <List<Subject>>[];
+
+    for (final subject in sorted) {
+      // find first column where this subject doesn't overlap with the last subject
+      int columnIndex = 0;
+      while (columnIndex < columns.length &&
+          overlaps(columns[columnIndex].last, subject)) {
+        columnIndex++;
+      }
+
+      if (columnIndex >= columns.length) {
+        columns.add(<Subject>[]);
+      }
+
+      columns[columnIndex].add(subject);
+
+      final offset = subject.startTime.hour - baseStartHour;
+      final duration = subject.endTime.hour - subject.startTime.hour;
+
+      positions.add(SubjectPosition(
+        subject: subject,
+        left: columnIndex / columns.length,
+        top: offset * baseHeight,
+        width: 1.0 / columns.length,
+        height: duration * baseHeight,
+        column: columnIndex,
+      ));
+    }
+
+    return positions;
   }
 }

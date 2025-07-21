@@ -52,37 +52,9 @@ class SubjectValidation {
         timetable: timetable,
       );
 
-  bool get isInOverlappingList => overlappingSubjects.any(
-        (group) => group.any((subject) => _tempSubject == subject),
-      );
-
-  bool get hasMultipleOccupants =>
-      !isInOverlappingList && getConflictingSubjects().length > 1;
-
-  bool get isOccupiedByOverlapping => getOverlappingConflicts().isNotEmpty;
-
-  bool get isOccupiedByRegular => getRegularConflicts().isNotEmpty;
-
   List<Subject> getConflictingSubjects() {
     return subjectsInSameDay
         .where((s) => s != currentSubject)
-        .where((s) => s.timetable == _tempSubject.timetable)
-        .where((s) => hasTimeConflict(s))
-        .toList();
-  }
-
-  List<Subject> getOverlappingConflicts() {
-    return subjectsInSameDay
-        .where((s) => overlappingSubjects.any((group) => group.contains(s)))
-        .where((s) => s.timetable == _tempSubject.timetable)
-        .where((s) => hasTimeConflict(s))
-        .toList();
-  }
-
-  List<Subject> getRegularConflicts() {
-    return subjectsInSameDay
-        .where((s) => s != currentSubject)
-        .where((s) => !overlappingSubjects.any((group) => group.contains(s)))
         .where((s) => s.timetable == _tempSubject.timetable)
         .where((s) => hasTimeConflict(s))
         .toList();
@@ -93,7 +65,32 @@ class SubjectValidation {
     return hasTimeOverlap(subjectHours, inputHours);
   }
 
-  bool get hasConflicts => isOccupiedByOverlapping && hasMultipleOccupants;
-  bool get hasConflictsForExisting =>
-      isOccupiedByRegular || hasMultipleOccupants;
+  bool get wouldExceedMaxOverlap {
+    if (currentSubject != null) return false;
+
+    final allSubjectsInDay = subjectsInSameDay
+        .where((s) => s != currentSubject)
+        .where((s) => s.timetable == _tempSubject.timetable)
+        .toList();
+
+    if (allSubjectsInDay.isEmpty) return false;
+
+    for (final hour in inputHours) {
+      int overlapCount = 1;
+
+      for (final subject in allSubjectsInDay) {
+        final subjectHours = getHoursList(subject.startTime, subject.endTime);
+        if (subjectHours.contains(hour)) {
+          overlapCount++;
+        }
+      }
+
+      if (overlapCount > 3) return true;
+    }
+
+    return false;
+  }
+
+  bool get hasConflicts => wouldExceedMaxOverlap;
+  bool get hasConflictsForExisting => false;
 }
