@@ -91,8 +91,9 @@ class TimeConfig extends ConsumerWidget {
               final temp = endTime.value;
               endTime.value = selectedTime;
               startTime.value = temp;
+            } else {
+              showInvalidTimePeriodDialog();
             }
-            showInvalidTimePeriodDialog();
           },
           uses24HoursFormat: uses24HoursFormat,
           context: context,
@@ -115,8 +116,9 @@ class TimeConfig extends ConsumerWidget {
               final temp = startTime.value;
               startTime.value = selectedTime;
               endTime.value = temp;
+            } else {
+              showInvalidTimePeriodDialog();
             }
-            showInvalidTimePeriodDialog();
           },
           uses24HoursFormat: uses24HoursFormat,
           context: context,
