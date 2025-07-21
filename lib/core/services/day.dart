@@ -11,14 +11,14 @@ class DaysService {
     final settings = ref.watch(settingsProvider);
     var days = Day.values;
 
-    if (settings.hideSunday) {
-      days = days.where((day) => day != Day.sunday).toList();
-    }
-
-    final rotatedDays = [
+    var rotatedDays = [
       ...days.sublist(settings.weekStartDay),
       ...days.sublist(0, settings.weekStartDay),
     ];
+
+    if (settings.hideSunday) {
+      rotatedDays = rotatedDays.where((day) => day != Day.sunday).toList();
+    }
 
     return rotatedDays;
   }

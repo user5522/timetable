@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:timetable/core/constants/days.dart';
 import 'package:timetable/features/timetable/widgets/grid_view/grid.dart';
 import 'package:timetable/features/timetable/widgets/grid_view/grid_view_overlapping_subjects_builder.dart';
 import 'package:timetable/shared/providers/day.dart';
@@ -117,6 +118,7 @@ class TimetableGridView extends HookConsumerWidget {
     int totalHours,
     WidgetRef ref,
   ) {
+    final settings = ref.watch(settingsProvider);
     final overlappingSubjects = ref.watch(overlappingSubjectsProvider);
     final timetables = ref.watch(timetableProvider);
     final customStartTime = ref.watch(settingsProvider).customStartTime;
@@ -125,6 +127,10 @@ class TimetableGridView extends HookConsumerWidget {
     final dayToColumnIndex = {
       for (var i = 0; i < orderedDays.length; i++) orderedDays[i]: i
     };
+
+    final visibleSubjects = subjects.where((subject) {
+      return !settings.hideSunday || subject.day != Day.sunday;
+    }).toList();
 
     // subjects' containers
     final List<List<Tile?>> grid = List.generate(
@@ -141,26 +147,27 @@ class TimetableGridView extends HookConsumerWidget {
       ),
     );
 
-    overlappingSubjects.addAll(findOverlappingSubjects(subjects));
+    final visibleOverlappingSubjects = findOverlappingSubjects(visibleSubjects);
+    overlappingSubjects.addAll(visibleOverlappingSubjects);
 
     // overlapping subjects
-    if (overlappingSubjects.isNotEmpty &&
-        overlappingSubjects.any(
-          (e) => e.length == 2,
-        )) {
+    if (visibleOverlappingSubjects.isNotEmpty &&
+        visibleOverlappingSubjects.any((e) => e.length == 2)) {
       filterOverlappingSubjectsByRotationWeeks(
-        overlappingSubjects,
+        visibleOverlappingSubjects,
         rotationWeek,
       );
       filterOverlappingSubjectsByTimetable(
-        overlappingSubjects,
+        visibleOverlappingSubjects,
         currentTimetable,
         timetables,
       );
     }
 
-    for (final subjects in overlappingSubjects) {
-      var day = subjects[0].day.index;
+    for (final subjects in visibleOverlappingSubjects) {
+      final columnIndex = dayToColumnIndex[subjects[0].day];
+      if (columnIndex == null) continue;
+
       var earlierStartTimeHour = getEarliestSubject(subjects).startTime.hour;
       var laterEndTimeHour = getLatestSubject(subjects).endTime.hour;
 
@@ -168,7 +175,7 @@ class TimetableGridView extends HookConsumerWidget {
           getCustomStartTime(customStartTime, ref).hour;
       var endTime = getLatestSubject(subjects).endTime.hour -
           getCustomStartTime(customStartTime, ref).hour;
-      var column = grid[day];
+      var column = grid[columnIndex];
 
       column.replaceRange(
         startTime,
@@ -188,10 +195,12 @@ class TimetableGridView extends HookConsumerWidget {
 
     // normal subjects
     for (final subject in filterOverlappingSubjects(
-      subjects,
-      overlappingSubjects,
+      visibleSubjects,
+      visibleOverlappingSubjects,
     )) {
-      final columnIndex = dayToColumnIndex[subject.day]!;
+      final columnIndex = dayToColumnIndex[subject.day];
+      if (columnIndex == null) continue;
+
       var start = subject.startTime.hour -
           getCustomStartTime(customStartTime, ref).hour;
       var end =
