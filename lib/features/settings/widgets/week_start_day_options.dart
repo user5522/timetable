@@ -37,6 +37,8 @@ class WeekStartDayOptions extends StatelessWidget {
         const Text('week_start_day').tr(),
         const Spacer(),
         DropdownMenu<int>(
+          // this is needed to change the initial selection with the new locale
+          key: ValueKey(context.locale),
           width: 130,
           dropdownMenuEntries: weekStartDaysEntries(),
           label: const Text("day").plural(1),

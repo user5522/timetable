@@ -34,6 +34,8 @@ class ThemeOptions extends StatelessWidget {
         const Text('theme_mode').tr(),
         const Spacer(),
         DropdownMenu<ThemeOption>(
+          // this is needed to change the initial selection with the new locale
+          key: ValueKey(context.locale),
           width: 130,
           dropdownMenuEntries: themeEntries(),
           label: const Text("theme").tr(),

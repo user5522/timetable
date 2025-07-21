@@ -36,6 +36,8 @@ class DefaultViewOptions extends StatelessWidget {
         const Text('default_tb_view').tr(),
         const Spacer(),
         DropdownMenu<TbViews>(
+          // this is needed to change the initial selection with the new locale
+          key: ValueKey(context.locale),
           width: 130,
           dropdownMenuEntries: viewsEntries(),
           label: const Text("view").tr(),
