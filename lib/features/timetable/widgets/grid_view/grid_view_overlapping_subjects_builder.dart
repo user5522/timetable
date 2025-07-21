@@ -9,10 +9,10 @@ import 'package:timetable/shared/providers/day.dart';
 
 /// A widget that builds overlapping subjects in the grid view.
 ///
-/// takes a list of [SubjectData] and the earlier start time hour and
+/// takes a list of [Subject] and the earlier start time hour and
 /// later end time hour of the overlapping subjects.
 ///
-/// uses the [GridViewSubjectBuilder] to build each subject.
+/// uses the [SubjectBuilder] to build each subject.
 class OverlappingSubjBuilder extends ConsumerWidget {
   final List<Subject> subjects;
   final int earlierStartTimeHour;
