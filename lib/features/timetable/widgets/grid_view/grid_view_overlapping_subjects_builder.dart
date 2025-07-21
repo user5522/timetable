@@ -31,10 +31,11 @@ class OverlappingSubjBuilder extends ConsumerWidget {
     final customEndTime = ref.watch(settingsProvider).customEndTime;
     final compactMode = ref.watch(settingsProvider).compactMode;
     final orderedDays = ref.watch(orderedDaysProvider);
+    final weekStartDay = ref.watch(settingsProvider).weekStartDay;
 
     final shape = NonUniformBorder(
       // both subjects should theoretically be in the same day so it doesn't matter which one we choose
-      leftWidth: subjects[0].day.index == 0 ? 0 : 1,
+      leftWidth: subjects[0].day.index == weekStartDay ? 0 : 1,
       rightWidth: subjects[0].day.index == (orderedDays.length - 1) ? 0 : 1,
       topWidth:
           earlierStartTimeHour == getCustomStartTime(customStartTime, ref).hour
