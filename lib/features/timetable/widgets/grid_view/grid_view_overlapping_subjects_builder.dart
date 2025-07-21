@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:non_uniform_border/non_uniform_border.dart';
-import 'package:timetable/features/timetable/widgets/grid_view/grid_view_subject_builder.dart';
 import 'package:timetable/core/constants/custom_times.dart';
-import 'package:timetable/core/constants/grid_properties.dart';
+import 'package:timetable/features/timetable/widgets/grid_view/grid_view_subject_builder.dart';
 import 'package:timetable/core/db/database.dart';
 import 'package:timetable/features/settings/providers/settings.dart';
+import 'package:timetable/shared/providers/day.dart';
 
 /// A widget that builds overlapping subjects in the grid view.
 ///
@@ -30,11 +30,12 @@ class OverlappingSubjBuilder extends ConsumerWidget {
     final customStartTime = ref.watch(settingsProvider).customStartTime;
     final customEndTime = ref.watch(settingsProvider).customEndTime;
     final compactMode = ref.watch(settingsProvider).compactMode;
+    final orderedDays = ref.watch(orderedDaysProvider);
 
     final shape = NonUniformBorder(
       // both subjects should theoretically be in the same day so it doesn't matter which one we choose
       leftWidth: subjects[0].day.index == 0 ? 0 : 1,
-      rightWidth: subjects[0].day.index == (columns(ref) - 1) ? 0 : 1,
+      rightWidth: subjects[0].day.index == (orderedDays.length - 1) ? 0 : 1,
       topWidth:
           earlierStartTimeHour == getCustomStartTime(customStartTime, ref).hour
               ? 0

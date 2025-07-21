@@ -1,23 +1,17 @@
 /// The week's days.
-enum Days {
-  monday,
-  tuesday,
-  wednesday,
-  thursday,
-  friday,
-  saturday,
-  sunday,
+enum Day {
+  sunday('sunday', 7),
+  monday('monday', 1),
+  tuesday('tuesday', 2),
+  wednesday('wednesday', 3),
+  thursday('thursday', 4),
+  friday('friday', 5),
+  saturday('saturday', 6);
+
+  final String name;
+  final int isoValue;
+  const Day(this.name, this.isoValue);
+
+  String get shortened => name.substring(0, 3);
+  String get initial => name[0];
 }
-
-/// The week's days as a list of strings.
-List<String> days = [
-  'monday',
-  'tuesday',
-  'wednesday',
-  'thursday',
-  'friday',
-  'saturday',
-  'sunday'
-];
-
-const List<Days> daysList = Days.values;

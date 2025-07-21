@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:timetable/features/settings/widgets/default_view_options.dart';
 import 'package:timetable/features/settings/providers/settings.dart';
+import 'package:timetable/features/settings/widgets/week_start_day_options.dart';
 
 /// All the settings that allow for customizing the timetable.
 class CustomizeTimetableOptions extends ConsumerWidget {
@@ -19,6 +20,7 @@ class CustomizeTimetableOptions extends ConsumerWidget {
         ref.watch(settingsProvider).hideTransparentSubject;
     final defaultTimetableView =
         ref.watch(settingsProvider).defaultTimetableView;
+    final defaultWeekStartDay = ref.watch(settingsProvider).weekStartDay;
 
     final switchItems = [
       {
@@ -61,6 +63,15 @@ class CustomizeTimetableOptions extends ConsumerWidget {
           title: DefaultViewOptions(
             settings: settings,
             defaultTimetableView: defaultTimetableView,
+          ),
+          onTap: () {},
+        ),
+        ListTile(
+          horizontalTitleGap: 8,
+          leading: const Icon(Icons.calendar_month_outlined, size: 20),
+          title: WeekStartDayOptions(
+            settings: settings,
+            defaultWeekStartDay: defaultWeekStartDay,
           ),
           onTap: () {},
         ),

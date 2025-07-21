@@ -15,7 +15,7 @@ class Subjects extends Table {
   // to maintain the Color type instead of using int.
   IntColumn get color => integer().map(const ColorConverter())();
   IntColumn get rotationWeek => intEnum<RotationWeeks>()();
-  IntColumn get day => intEnum<Days>()();
+  IntColumn get day => intEnum<Day>()();
   TextColumn get startTime => text().map(const TimeOfDayConverter())();
   TextColumn get endTime => text().map(const TimeOfDayConverter())();
   // added in v3

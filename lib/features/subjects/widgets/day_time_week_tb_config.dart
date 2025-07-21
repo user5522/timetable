@@ -17,7 +17,7 @@ import 'package:timetable/features/timetable/providers/timetables.dart';
 class TimeDayRotationWeekTimetableConfig extends ConsumerWidget {
   final ValueNotifier<TimeOfDay> startTime;
   final ValueNotifier<TimeOfDay> endTime;
-  final ValueNotifier<Days> day;
+  final ValueNotifier<Day> day;
   final ValueNotifier<RotationWeeks> rotationWeek;
   final ValueNotifier<Timetable?> timetable;
 

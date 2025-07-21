@@ -38,6 +38,7 @@
   "auto_complete_colors": "Auto Complete Colors",
   "auto_complete_colors_description": "auto assigns colors from previously made subjects that have matching names",
   "default_tb_view": "Default View",
+  "week_start_day": "Initial Day",
   "view": "View",
   "grid": "Grid",
   "default_subject_duration": "Default Subject Duration",

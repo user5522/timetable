@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:non_uniform_border/non_uniform_border.dart';
+import 'package:timetable/shared/providers/day.dart';
 import 'package:timetable/shared/widgets/bottom_sheets/subject_management.dart';
 import 'package:timetable/core/constants/custom_times.dart';
 import 'package:timetable/core/utils/rotation_weeks.dart';
 import 'package:timetable/core/db/database.dart';
 import 'package:timetable/features/settings/providers/settings.dart';
-import 'package:timetable/core/constants/grid_properties.dart';
 
 /// Subject builder for the grid view.
 /// also builds for the overlapping subjects with some visual tweaks
@@ -31,6 +31,8 @@ class SubjectBuilder extends ConsumerWidget {
     final hideTransparentSubject =
         ref.watch(settingsProvider).hideTransparentSubject;
     final compactMode = ref.watch(settingsProvider).compactMode;
+    final weekStartDay = ref.watch(settingsProvider).weekStartDay;
+    final orderedDays = ref.watch(orderedDaysProvider);
     final bool isPortrait =
         MediaQuery.of(context).orientation == Orientation.portrait;
 
@@ -49,8 +51,8 @@ class SubjectBuilder extends ConsumerWidget {
         : Colors.white.withValues(alpha: .75);
 
     final shape = NonUniformBorder(
-      leftWidth: subject.day.index == 0 ? 0 : 1,
-      rightWidth: subject.day.index == (columns(ref) - 1) ? 0 : 1,
+      leftWidth: subject.day.index == weekStartDay ? 0 : 1,
+      rightWidth: subject.day.index == (orderedDays.length - 1) ? 0 : 1,
       topWidth: subject.startTime.hour ==
               getCustomStartTime(customStartTime, ref).hour
           ? 0

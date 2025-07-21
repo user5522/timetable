@@ -21,6 +21,7 @@ class Settings {
   final TbViews defaultTimetableView;
   final Color appThemeColor;
   final Duration defaultSubjectDuration;
+  final int weekStartDay;
 
   // settings defaults
   Settings({
@@ -41,6 +42,7 @@ class Settings {
     this.defaultTimetableView = TbViews.grid,
     this.appThemeColor = Colors.deepPurple,
     this.defaultSubjectDuration = const Duration(minutes: 60),
+    this.weekStartDay = 1,
   });
 
   Settings copyWith({
@@ -61,6 +63,7 @@ class Settings {
     TbViews? defaultTimetableView,
     Color? appThemeColor,
     Duration? defaultSubjectDuration,
+    int? weekStartDay,
   }) =>
       Settings(
         customTimePeriod: customTimePeriod ?? this.customTimePeriod,
@@ -82,6 +85,7 @@ class Settings {
         appThemeColor: appThemeColor ?? this.appThemeColor,
         defaultSubjectDuration:
             defaultSubjectDuration ?? this.defaultSubjectDuration,
+        weekStartDay: weekStartDay ?? this.weekStartDay,
       );
 
   Map<String, dynamic> toJson() => {
@@ -104,6 +108,7 @@ class Settings {
         'defaultTimetableView': defaultTimetableView.name,
         'appThemeColorValue': appThemeColor.toInt(),
         'defaultSubjectDuration': defaultSubjectDuration.inMinutes,
+        'weekStartDay': weekStartDay,
       };
 
   factory Settings.fromJson(Map<String, dynamic> json) {
@@ -147,6 +152,8 @@ class Settings {
       defaultSubjectDuration: json['defaultSubjectDuration'] != null
           ? Duration(minutes: json['defaultSubjectDuration'] as int)
           : null,
+      weekStartDay:
+          json['weekStartDay'] != null ? json['weekStartDay'] as int : null,
     );
   }
 }

@@ -38,6 +38,7 @@
   "auto_complete_colors": "Saisie Automatique des Couleurs",
   "auto_complete_colors_description": "attribue automatiquement les couleurs des matières créés précédemment qui portent des noms correspondants",
   "default_tb_view": "Vue par défaut",
+  "week_start_day": "Jour initial",
   "view": "Vue",
   "grid": "Grille",
   "default_subject_duration": "Durée par défaut d'une matière",

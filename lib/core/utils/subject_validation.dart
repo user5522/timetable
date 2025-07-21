@@ -15,7 +15,7 @@ class SubjectValidation {
   final Color color;
   final TimeOfDay startTime;
   final TimeOfDay endTime;
-  final Days day;
+  final Day day;
   final RotationWeeks rotationWeek;
   final String? note;
   final String timetable;

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:timetable/features/timetable/widgets/grid_view/grid.dart';
 import 'package:timetable/features/timetable/widgets/grid_view/grid_view_overlapping_subjects_builder.dart';
+import 'package:timetable/shared/providers/day.dart';
 import 'package:timetable/shared/widgets/time_column.dart';
 import 'package:timetable/core/constants/custom_times.dart';
 import 'package:timetable/core/constants/grid_properties.dart';
@@ -32,12 +33,11 @@ class TimetableGridView extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final bool compactMode = ref.watch(settingsProvider).compactMode;
-    final bool multipleTimetables =
-        ref.watch(settingsProvider).multipleTimetables;
-    final bool twentyFourHoursMode =
-        ref.watch(settingsProvider).twentyFourHours;
-    final List<Timetable> timetables = ref.watch(timetableProvider);
+    final compactMode = ref.watch(settingsProvider).compactMode;
+    final multipleTimetables = ref.watch(settingsProvider).multipleTimetables;
+    final twentyFourHoursMode = ref.watch(settingsProvider).twentyFourHours;
+    final timetables = ref.watch(timetableProvider);
+    final orderedDays = ref.watch(orderedDaysProvider);
 
     final TimeOfDay chosenCustomStartTime =
         ref.watch(settingsProvider).customStartTime;
@@ -71,10 +71,11 @@ class TimetableGridView extends HookConsumerWidget {
 
     final double tileHeight = compactMode ? 125 : 100;
     final double tileWidth = compactMode
-        ? (screenWidth / columns(ref) - ((timeColumnWidth + 10) / 10))
+        ? (screenWidth / orderedDays.length - ((timeColumnWidth + 10) / 10))
         : isPortrait
             ? 100
-            : (screenWidth / columns(ref) - ((timeColumnWidth + 10) / 10));
+            : (screenWidth / orderedDays.length -
+                ((timeColumnWidth + 10) / 10));
 
     return SingleChildScrollView(
       scrollDirection: Axis.vertical,
@@ -94,10 +95,9 @@ class TimetableGridView extends HookConsumerWidget {
                     tileHeight: tileHeight,
                     tileWidth: tileWidth,
                     rows: rows(ref),
-                    columns: columns(ref),
+                    columns: orderedDays.length,
                     grid: generate(
                       subjects,
-                      columns(ref),
                       rows(ref),
                       ref,
                     ),
@@ -114,17 +114,21 @@ class TimetableGridView extends HookConsumerWidget {
   /// generates the grid
   List<List<Tile?>> generate(
     List<Subject> subjects,
-    int totalDays,
     int totalHours,
     WidgetRef ref,
   ) {
     final overlappingSubjects = ref.watch(overlappingSubjectsProvider);
     final timetables = ref.watch(timetableProvider);
     final customStartTime = ref.watch(settingsProvider).customStartTime;
+    final orderedDays = ref.watch(orderedDaysProvider);
+
+    final dayToColumnIndex = {
+      for (var i = 0; i < orderedDays.length; i++) orderedDays[i]: i
+    };
 
     // subjects' containers
     final List<List<Tile?>> grid = List.generate(
-      totalDays,
+      orderedDays.length,
       (columnIndex) => List.generate(
         totalHours,
         (rowIndex) => Tile(
@@ -187,13 +191,13 @@ class TimetableGridView extends HookConsumerWidget {
       subjects,
       overlappingSubjects,
     )) {
-      var day = subject.day.index;
+      final columnIndex = dayToColumnIndex[subject.day]!;
       var start = subject.startTime.hour -
           getCustomStartTime(customStartTime, ref).hour;
       var end =
           subject.endTime.hour - getCustomStartTime(customStartTime, ref).hour;
 
-      var column = grid[day];
+      var column = grid[columnIndex];
 
       column.replaceRange(
         start,

@@ -6,7 +6,6 @@ import 'package:timetable/features/timetable/widgets/day_view/day_view_subject_b
 import 'package:timetable/core/constants/custom_times.dart';
 import 'package:timetable/core/constants/days.dart';
 import 'package:timetable/core/constants/error_emoticons.dart';
-import 'package:timetable/core/constants/grid_properties.dart';
 import 'package:timetable/core/constants/rotation_weeks.dart';
 import 'package:timetable/core/utils/rotation_weeks.dart';
 import 'package:timetable/core/db/database.dart';
@@ -14,6 +13,7 @@ import 'package:timetable/core/utils/subjects.dart';
 import 'package:timetable/core/utils/timetables.dart';
 import 'package:timetable/features/settings/providers/settings.dart';
 import 'package:timetable/features/timetable/providers/timetables.dart';
+import 'package:timetable/shared/providers/day.dart';
 
 /// Timetable view that shows each day's subjects in a single screen each.
 class TimetableDayView extends HookConsumerWidget {
@@ -37,6 +37,8 @@ class TimetableDayView extends HookConsumerWidget {
     final twentyFourHoursMode = ref.watch(settingsProvider).twentyFourHours;
     final chosenCustomStartTime = ref.watch(settingsProvider).customStartTime;
     final chosenCustomEndTime = ref.watch(settingsProvider).customEndTime;
+    final weekStartDay = ref.watch(settingsProvider).weekStartDay;
+    final orderedDays = ref.watch(orderedDaysProvider);
 
     final customStartTime = getCustomStartTime(chosenCustomStartTime, ref);
     final customEndTime = getCustomEndTime(chosenCustomEndTime, ref);
@@ -44,7 +46,7 @@ class TimetableDayView extends HookConsumerWidget {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          int day = controller.page?.toInt() ?? 0;
+          int day = controller.page?.toInt() ?? weekStartDay;
 
           Navigator.push(
             context,
@@ -61,11 +63,13 @@ class TimetableDayView extends HookConsumerWidget {
         child: const Icon(Icons.add),
       ),
       body: PageView.builder(
-        itemCount: columns(ref),
+        itemCount: orderedDays.length,
         pageSnapping: true,
         controller: controller,
         itemBuilder: (context, index) {
-          int startDay = ((DateTime.monday + index - 1) % 7 + 1);
+          int dayIndex = (weekStartDay + index) % 7;
+          int startDay = dayIndex;
+
           final filteredSubjects = sortSubjects(
             getFilteredByTimetablesSubjects(
               currentTimetable,
@@ -76,7 +80,7 @@ class TimetableDayView extends HookConsumerWidget {
                 subject,
               ),
             ),
-          ).where((s) => s.day.index == index).where(
+          ).where((s) => s.day.index == dayIndex).where(
             (e) {
               if (!twentyFourHoursMode) return true;
 
@@ -90,7 +94,7 @@ class TimetableDayView extends HookConsumerWidget {
               padding: const EdgeInsets.all(10),
               children: [
                 Text(
-                  days[startDay - 1],
+                  Day.values[startDay].name,
                   style: const TextStyle(
                     fontWeight: FontWeight.w400,
                     fontSize: 20,

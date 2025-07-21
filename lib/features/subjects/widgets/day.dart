@@ -7,7 +7,7 @@ import 'package:timetable/core/constants/days.dart';
 /// Day configuration part of the Subject creation screen.
 class DayConfig extends StatelessWidget {
   /// the subject day that will be manipulated
-  final ValueNotifier<Days> day;
+  final ValueNotifier<Day> day;
 
   const DayConfig({super.key, required this.day});
 
@@ -30,7 +30,7 @@ class DayConfig extends StatelessWidget {
               },
             );
           },
-          label: Text(days[day.value.index]).tr(),
+          label: Text(Day.values[day.value.index].name.tr()),
         ),
       ],
     );

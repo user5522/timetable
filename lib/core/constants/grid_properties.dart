@@ -4,14 +4,6 @@ import 'package:timetable/features/settings/providers/settings.dart';
 /// Width of the time column.
 const double timeColumnWidth = 22.5;
 
-/// Number of columns in the grid view of the timetable.
-int columns(WidgetRef ref) {
-  final hideSunday = ref.watch(settingsProvider).hideSunday;
-
-  if (!hideSunday) return 7;
-  return 6;
-}
-
 /// Number of rows in the grid view based on the custom start time and custom end time (if customTimePeriod is true),
 /// otherwise uses the default time period. (8:00 -> 18:00)
 /// if hour difference is 0, there will be 24 rows
