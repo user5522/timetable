@@ -66,8 +66,6 @@ class SubjectValidation {
   }
 
   bool get wouldExceedMaxOverlap {
-    if (currentSubject != null) return false;
-
     final allSubjectsInDay = subjectsInSameDay
         .where((s) => s != currentSubject)
         .where((s) => s.timetable == _tempSubject.timetable)
@@ -85,7 +83,7 @@ class SubjectValidation {
         }
       }
 
-      if (overlapCount > 3) return true;
+      if (overlapCount > 2) return true;
     }
 
     return false;
