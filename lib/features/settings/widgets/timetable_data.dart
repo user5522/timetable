@@ -38,6 +38,7 @@ class TimetableDataOptions extends ConsumerWidget {
                     "${"restore_backup_dialog.dialog_1".tr()}\n${"restore_backup_dialog.dialog_2".tr()}",
                   ),
                   approveButtonText: "proceed".tr(),
+                  onCancel: () => Navigator.of(context).pop(),
                   onApprove: () async {
                     final nav = Navigator.of(context);
 
@@ -65,6 +66,7 @@ class TimetableDataOptions extends ConsumerWidget {
                 return ShowAlertDialog(
                   content: const Text("remove_all_subjects_dialog").tr(),
                   approveButtonText: "delete".tr(),
+                  onCancel: () => Navigator.of(context).pop(),
                   onApprove: () async {
                     final navigator = Navigator.of(context);
                     await subjNotifier.resetData().then((_) => navigator.pop());
