@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:timetable/features/subjects/screens/subject_screen.dart';
 import 'package:timetable/features/timetable/widgets/day_view/day_view_subject_builder.dart';
-import 'package:timetable/core/constants/custom_times.dart';
+import 'package:timetable/core/utils/custom_times.dart';
 import 'package:timetable/core/constants/days.dart';
 import 'package:timetable/core/constants/error_emoticons.dart';
 import 'package:timetable/core/constants/rotation_weeks.dart';

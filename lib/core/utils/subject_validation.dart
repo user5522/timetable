@@ -39,36 +39,10 @@ class SubjectValidation {
     required this.overlappingSubjects,
   });
 
-  Subject get _tempSubject => Subject(
-        id: subjectId,
-        label: label,
-        location: location,
-        color: color,
-        startTime: startTime,
-        endTime: endTime,
-        day: day,
-        rotationWeek: rotationWeek,
-        note: note,
-        timetable: timetable,
-      );
-
-  List<Subject> getConflictingSubjects() {
-    return subjectsInSameDay
-        .where((s) => s != currentSubject)
-        .where((s) => s.timetable == _tempSubject.timetable)
-        .where((s) => hasTimeConflict(s))
-        .toList();
-  }
-
-  bool hasTimeConflict(Subject subject) {
-    final subjectHours = getHoursList(subject.startTime, subject.endTime);
-    return hasTimeOverlap(subjectHours, inputHours);
-  }
-
   bool get wouldExceedMaxOverlap {
     final allSubjectsInDay = subjectsInSameDay
         .where((s) => s != currentSubject)
-        .where((s) => s.timetable == _tempSubject.timetable)
+        .where((s) => s.timetable == timetable)
         .toList();
 
     if (allSubjectsInDay.isEmpty) return false;

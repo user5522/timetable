@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:timetable/core/utils/rotation_weeks.dart';
 import 'package:timetable/core/db/database.dart';
 import 'package:timetable/features/settings/providers/settings.dart';
 import 'package:timetable/features/subjects/screens/subject_screen.dart';
@@ -82,7 +81,7 @@ class DayViewSubjectBuilder extends ConsumerWidget {
                       ),
                       if (rotationWeeks)
                         Text(
-                          getSubjectRotationWeekLabel(subject),
+                          subject.rotationWeek.displayName,
                           style: TextStyle(
                             color: labelColor,
                             fontSize: 20,

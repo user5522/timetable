@@ -1,6 +1,9 @@
 /// Theme options.
 enum ThemeOption {
-  dark,
-  light,
-  auto,
+  dark("dark"),
+  light("light"),
+  auto("system");
+
+  final String name;
+  const ThemeOption(this.name);
 }

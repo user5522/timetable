@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:non_uniform_border/non_uniform_border.dart';
-import 'package:timetable/core/constants/custom_times.dart';
+import 'package:timetable/core/utils/custom_times.dart';
 import 'package:timetable/core/utils/overlapping_subjects.dart';
 import 'package:timetable/features/timetable/models/subject_positions.dart';
 import 'package:timetable/features/timetable/widgets/grid_view/grid_view_subject_builder.dart';

@@ -2,7 +2,6 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:timetable/core/constants/theme_options.dart';
 import 'package:timetable/shared/providers/themes.dart';
-import 'package:timetable/core/utils/themes.dart';
 
 /// app theme me options dropdown menu.
 class ThemeOptions extends StatelessWidget {
@@ -20,10 +19,9 @@ class ThemeOptions extends StatelessWidget {
       final themeEntries = <DropdownMenuEntry<ThemeOption>>[];
 
       for (final ThemeOption option in ThemeOption.values) {
-        final label = getThemeLabel(option).tr();
-
         themeEntries.add(
-          DropdownMenuEntry<ThemeOption>(value: option, label: label),
+          DropdownMenuEntry<ThemeOption>(
+              value: option, label: option.name.tr()),
         );
       }
       return themeEntries.toList();

@@ -3,8 +3,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:non_uniform_border/non_uniform_border.dart';
 import 'package:timetable/shared/providers/day.dart';
 import 'package:timetable/shared/widgets/bottom_sheets/subject_management.dart';
-import 'package:timetable/core/constants/custom_times.dart';
-import 'package:timetable/core/utils/rotation_weeks.dart';
+import 'package:timetable/core/utils/custom_times.dart';
 import 'package:timetable/core/db/database.dart';
 import 'package:timetable/features/settings/providers/settings.dart';
 
@@ -204,7 +203,7 @@ class SubjectBuilder extends ConsumerWidget {
                 child: RotatedBox(
                   quarterTurns: quarterTurns,
                   child: Text(
-                    getSubjectRotationWeekLabel(subject),
+                    subject.rotationWeek.displayName,
                     style: TextStyle(
                       color: subLabelsColor,
                       fontWeight: FontWeight.bold,

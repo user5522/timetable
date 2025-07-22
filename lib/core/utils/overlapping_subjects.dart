@@ -49,8 +49,6 @@ void filterOverlappingSubjectsByRotationWeeks(
             return e.rotationWeek == RotationWeeks.b;
           case RotationWeeks.b:
             return e.rotationWeek == RotationWeeks.a;
-          case RotationWeeks.all:
-            return false;
           case RotationWeeks.none:
             return false;
         }

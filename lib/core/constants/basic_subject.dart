@@ -13,7 +13,7 @@ const basicSubject = Subject(
   startTime: TimeOfDay(hour: 8, minute: 0),
   endTime: TimeOfDay(hour: 9, minute: 0),
   day: Day.sunday,
-  rotationWeek: RotationWeeks.all,
+  rotationWeek: RotationWeeks.none,
   note: "",
   timetable: "1",
 );

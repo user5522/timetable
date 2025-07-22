@@ -1,7 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:timetable/core/constants/timetable_views.dart';
-import 'package:timetable/core/utils/views.dart';
 import 'package:timetable/features/settings/providers/settings.dart';
 
 /// default timetable view options dropdown menu.
@@ -22,10 +21,9 @@ class DefaultViewOptions extends StatelessWidget {
       final viewEntries = <DropdownMenuEntry<TbViews>>[];
 
       for (final TbViews option in TbViews.values) {
-        final label = getViewLabel(option);
-
         viewEntries.add(
-          DropdownMenuEntry<TbViews>(value: option, label: label),
+          DropdownMenuEntry<TbViews>(
+              value: option, label: option.name.plural(1)),
         );
       }
       return viewEntries.toList();

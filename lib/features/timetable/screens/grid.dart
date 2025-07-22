@@ -5,7 +5,7 @@ import 'package:timetable/features/timetable/widgets/grid_view/grid.dart';
 import 'package:timetable/features/timetable/widgets/grid_view/grid_view_overlapping_subjects_builder.dart';
 import 'package:timetable/shared/providers/day.dart';
 import 'package:timetable/shared/widgets/time_column.dart';
-import 'package:timetable/core/constants/custom_times.dart';
+import 'package:timetable/core/utils/custom_times.dart';
 import 'package:timetable/core/constants/grid_properties.dart';
 import 'package:timetable/core/utils/overlapping_subjects.dart';
 import 'package:timetable/core/constants/rotation_weeks.dart';

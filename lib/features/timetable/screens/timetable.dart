@@ -30,7 +30,7 @@ class TimetableScreen extends HookConsumerWidget {
     final timetables = ref.watch(timetableProvider);
 
     final isGridView = useState(defaultTimetableView == TbViews.grid);
-    final rotationWeek = useState(RotationWeeks.all);
+    final rotationWeek = useState(RotationWeeks.none);
     final currentTimetable = useState(timetables[0]);
 
     final PageController controller;
