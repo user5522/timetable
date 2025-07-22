@@ -200,7 +200,7 @@ class SubjectBuilder extends ConsumerWidget {
             if (rotationWeeks) const Spacer(),
             if (rotationWeeks && !hideTransparentSubjects)
               Align(
-                alignment: Alignment.bottomRight,
+                alignment: Alignment.bottomLeft,
                 child: RotatedBox(
                   quarterTurns: quarterTurns,
                   child: Text(
