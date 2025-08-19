@@ -26,17 +26,24 @@
 ## Some Screenshots
 <table>
   <tr>
-    <td><img src="https://github.com/user5522/timetable/assets/65370936/a2964797-9f4d-4fb0-86ff-3f7145fbd969" alt="grid view screen in compact mode" style="max-width: 100%; height: auto;" /></td>
-    <td><img src="https://github.com/user5522/timetable/assets/65370936/0c4f8060-d9ee-4078-9768-82d5ea5ebfba" alt="day view screen" style="max-width: 100%; height: auto;" /></td>
+    <td><img src="https://github.com/user-attachments/assets/ccf2e30e-c45b-4171-9fd3-4e24a813d27b" alt="empty grid view screen in compact mode" style="max-width: 100%; height: auto;" /></td>
+    <td><img src="https://github.com/user-attachments/assets/7ab13d25-2ecf-4da4-938a-930b7ec7e3a1" alt="empty day view screen" style="max-width: 100%; height: auto;" /></td>
   </tr>
   <tr>
-    <td><img src="https://github.com/user5522/timetable/assets/65370936/9ae21d59-a489-47a3-866a-995d872af136" alt="grid view in compact mode with example subjects placed" style="max-width: 100%; height: auto;" /></td>
-    <td><img src="https://github.com/user5522/timetable/assets/65370936/a345fcae-aaf0-4a64-ace8-aebac7dd7242" alt="day view in monday with example subjects" style="max-width: 100%; height: auto;" /></td>
+    <td><img src="https://github.com/user-attachments/assets/4571c54e-1101-41bf-ac6a-0085a5190c00" alt="grid view in compact & dark mode with example subjects placed" style="max-width: 100%; height: auto;" /></td>
+    <td><img src="https://github.com/user-attachments/assets/2d41fc83-2349-45fd-a4a6-889372051c59" alt="grid view in compact & light mode with example subjects placed" style="max-width: 100%; height: auto;" /></td>
   </tr>
   <tr>  
-    <td><img src="https://github.com/user5522/timetable/assets/65370936/e8213475-2b75-444a-8e85-9a71a0d23123" alt="subject creation/editing screen" style="max-width: 100%; height: auto;" /></td>
-    <td><img src="https://github.com/user5522/timetable/assets/65370936/e95309f0-c2e0-452e-ac5f-802ae99dd526" alt="settings screen" style="max-width: 100%; height: auto;" /></td>
+    <td><img src="https://github.com/user-attachments/assets/91ebd940-3330-45fb-a971-e047a16fbccb" alt="subject properties preview bottom sheet" style="max-width: 100%; height: auto;" /></td>
+    <td><img src="https://github.com/user-attachments/assets/92730f53-0fc6-4cfc-8270-3687318f2537" alt="day view in monday with example subjects" style="max-width: 100%; height: auto;" /></td>
   </tr>
+  <tr>  
+    <td><img src="https://github.com/user-attachments/assets/3907e578-0a53-465f-8d5e-de92bff9d03e" alt="subject creation screen with subject label, location and note fields filled" style="max-width: 100%; height: auto;" /></td>
+    <td><img src="https://github.com/user-attachments/assets/4b1587d6-00cf-472e-bc74-e06c2837ff35" alt="settings screen" style="max-width: 100%; height: auto;" /></td>
+  </tr>
+
 </table>
 
+
 found a bug? please create [an issue](https://github.com/user5522/timetable/issues/new) and I'll do my best to resolve it :)
+
