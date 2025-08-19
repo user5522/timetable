@@ -12,8 +12,6 @@ String getRotationWeekLabel(RotationWeeks rotationWeek) {
       return "${"week".tr()} A";
     case RotationWeeks.b:
       return "${"week".tr()} B";
-    default:
-      return "all_weeks".tr();
   }
 }
 
@@ -26,8 +24,6 @@ String getRotationWeekButtonLabel(RotationWeeks rotationWeek) {
       return "A";
     case RotationWeeks.b:
       return "B";
-    default:
-      return "all".tr();
   }
 }
 
@@ -37,7 +33,7 @@ List<Subject> getFilteredByRotationWeeksSubjects(
   List<Subject> allSubjects,
 ) {
   switch (rotationWeek.value) {
-    case RotationWeeks.all:
+    case RotationWeeks.none:
       return allSubjects
           .where(
             (s) =>
@@ -62,28 +58,5 @@ List<Subject> getFilteredByRotationWeeksSubjects(
                 s.rotationWeek == RotationWeeks.b,
           )
           .toList();
-    default:
-      return allSubjects
-          .where(
-            (s) =>
-                s.rotationWeek == RotationWeeks.none ||
-                s.rotationWeek == RotationWeeks.a ||
-                s.rotationWeek == RotationWeeks.b,
-          )
-          .toList();
-  }
-}
-
-/// Returns rotation week label of a Subject.
-String getSubjectRotationWeekLabel(Subject subject) {
-  switch (subject.rotationWeek) {
-    case RotationWeeks.a:
-      return "A";
-    case RotationWeeks.b:
-      return "B";
-    case RotationWeeks.none:
-      return "";
-    default:
-      return "";
   }
 }

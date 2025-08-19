@@ -1,7 +1,7 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:timetable/core/constants/rotation_weeks.dart';
-import 'package:timetable/core/utils/rotation_weeks.dart';
 import 'package:timetable/core/utils/subjects.dart';
 
 /// Toggles between all rotation weeks.
@@ -18,7 +18,7 @@ class RotationWeekToggle extends HookWidget {
   Widget build(BuildContext context) {
     final clickCount = useState(0);
     List<RotationWeeks> labels = [
-      RotationWeeks.all,
+      RotationWeeks.none,
       RotationWeeks.a,
       RotationWeeks.b,
     ];
@@ -34,7 +34,7 @@ class RotationWeekToggle extends HookWidget {
         height: 40,
         child: Center(
           child: Text(
-            getRotationWeekButtonLabel(labels[clickCount.value]),
+            labels[clickCount.value].name.tr(),
             overflow: TextOverflow.clip,
             softWrap: false,
             style: const TextStyle(

@@ -11,6 +11,14 @@ class SettingsNotifier extends StateNotifier<Settings> {
     loadSettings();
   }
 
+  void updateWeekStartDay(int weekStartDay) {
+    final newState = state.copyWith(
+      weekStartDay: weekStartDay,
+    );
+    state = newState;
+    saveSettings();
+  }
+
   void updateDefaultSubjectDuration(Duration defaultSubjectDuration) {
     final newState = state.copyWith(
       defaultSubjectDuration: defaultSubjectDuration,

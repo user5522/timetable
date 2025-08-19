@@ -15,7 +15,7 @@ class SubjectValidation {
   final Color color;
   final TimeOfDay startTime;
   final TimeOfDay endTime;
-  final Days day;
+  final Day day;
   final RotationWeeks rotationWeek;
   final String? note;
   final String timetable;
@@ -39,61 +39,30 @@ class SubjectValidation {
     required this.overlappingSubjects,
   });
 
-  Subject get _tempSubject => Subject(
-        id: subjectId,
-        label: label,
-        location: location,
-        color: color,
-        startTime: startTime,
-        endTime: endTime,
-        day: day,
-        rotationWeek: rotationWeek,
-        note: note,
-        timetable: timetable,
-      );
-
-  bool get isInOverlappingList => overlappingSubjects.any(
-        (group) => group.any((subject) => _tempSubject == subject),
-      );
-
-  bool get hasMultipleOccupants =>
-      !isInOverlappingList && getConflictingSubjects().length > 1;
-
-  bool get isOccupiedByOverlapping => getOverlappingConflicts().isNotEmpty;
-
-  bool get isOccupiedByRegular => getRegularConflicts().isNotEmpty;
-
-  List<Subject> getConflictingSubjects() {
-    return subjectsInSameDay
+  bool get wouldExceedMaxOverlap {
+    final allSubjectsInDay = subjectsInSameDay
         .where((s) => s != currentSubject)
-        .where((s) => s.timetable == _tempSubject.timetable)
-        .where((s) => hasTimeConflict(s))
+        .where((s) => s.timetable == timetable)
         .toList();
+
+    if (allSubjectsInDay.isEmpty) return false;
+
+    for (final hour in inputHours) {
+      int overlapCount = 1;
+
+      for (final subject in allSubjectsInDay) {
+        final subjectHours = getHoursList(subject.startTime, subject.endTime);
+        if (subjectHours.contains(hour)) {
+          overlapCount++;
+        }
+      }
+
+      if (overlapCount > 2) return true;
+    }
+
+    return false;
   }
 
-  List<Subject> getOverlappingConflicts() {
-    return subjectsInSameDay
-        .where((s) => overlappingSubjects.any((group) => group.contains(s)))
-        .where((s) => s.timetable == _tempSubject.timetable)
-        .where((s) => hasTimeConflict(s))
-        .toList();
-  }
-
-  List<Subject> getRegularConflicts() {
-    return subjectsInSameDay
-        .where((s) => s != currentSubject)
-        .where((s) => !overlappingSubjects.any((group) => group.contains(s)))
-        .where((s) => s.timetable == _tempSubject.timetable)
-        .where((s) => hasTimeConflict(s))
-        .toList();
-  }
-
-  bool hasTimeConflict(Subject subject) {
-    final subjectHours = getHoursList(subject.startTime, subject.endTime);
-    return hasTimeOverlap(subjectHours, inputHours);
-  }
-
-  bool get hasConflicts => isOccupiedByOverlapping && hasMultipleOccupants;
-  bool get hasConflictsForExisting =>
-      isOccupiedByRegular || hasMultipleOccupants;
+  bool get hasConflicts => wouldExceedMaxOverlap;
+  bool get hasConflictsForExisting => false;
 }

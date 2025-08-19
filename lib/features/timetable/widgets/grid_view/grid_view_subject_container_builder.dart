@@ -4,6 +4,7 @@ import 'package:non_uniform_border/non_uniform_border.dart';
 import 'package:timetable/core/constants/grid_properties.dart';
 import 'package:timetable/features/subjects/screens/subject_screen.dart';
 import 'package:timetable/core/db/database.dart';
+import 'package:timetable/shared/providers/day.dart';
 
 /// Subject container tile builder.
 /// (the one you click on to create a Subject in the grid view.)
@@ -21,9 +22,11 @@ class SubjectContainerBuilder extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final orderedDays = ref.watch(orderedDaysProvider);
+
     final shape = NonUniformBorder(
       leftWidth: columnIndex == 0 ? 0 : 1,
-      rightWidth: columnIndex == (columns(ref) - 1) ? 0 : 1,
+      rightWidth: columnIndex == (orderedDays.length - 1) ? 0 : 1,
       topWidth: rowIndex == 0 ? 0 : 1,
       bottomWidth: rowIndex == (rows(ref) - 1) ? 0 : 1,
       strokeAlign: BorderSide.strokeAlignCenter,

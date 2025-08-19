@@ -75,7 +75,7 @@ Future<void> restoreData(
               note: drift.Value(element["note"]),
               color: Color(element["color"]),
               rotationWeek: RotationWeeks.values[element["rotationWeek"]],
-              day: Days.values[element["day"]],
+              day: Day.values[element["day"]],
               startTime: TimeOfDay(
                   hour: element["startTimeHour"],
                   minute: element["startTimeMinute"]),

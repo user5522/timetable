@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:timetable/core/constants/days.dart';
 import 'package:timetable/features/timetable/widgets/grid_view/grid.dart';
 import 'package:timetable/features/timetable/widgets/grid_view/grid_view_overlapping_subjects_builder.dart';
+import 'package:timetable/shared/providers/day.dart';
 import 'package:timetable/shared/widgets/time_column.dart';
-import 'package:timetable/core/constants/custom_times.dart';
+import 'package:timetable/core/utils/custom_times.dart';
 import 'package:timetable/core/constants/grid_properties.dart';
 import 'package:timetable/core/utils/overlapping_subjects.dart';
 import 'package:timetable/core/constants/rotation_weeks.dart';
@@ -32,12 +34,11 @@ class TimetableGridView extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final bool compactMode = ref.watch(settingsProvider).compactMode;
-    final bool multipleTimetables =
-        ref.watch(settingsProvider).multipleTimetables;
-    final bool twentyFourHoursMode =
-        ref.watch(settingsProvider).twentyFourHours;
-    final List<Timetable> timetables = ref.watch(timetableProvider);
+    final compactMode = ref.watch(settingsProvider).compactMode;
+    final multipleTimetables = ref.watch(settingsProvider).multipleTimetables;
+    final twentyFourHoursMode = ref.watch(settingsProvider).twentyFourHours;
+    final timetables = ref.watch(timetableProvider);
+    final orderedDays = ref.watch(orderedDaysProvider);
 
     final TimeOfDay chosenCustomStartTime =
         ref.watch(settingsProvider).customStartTime;
@@ -71,10 +72,11 @@ class TimetableGridView extends HookConsumerWidget {
 
     final double tileHeight = compactMode ? 125 : 100;
     final double tileWidth = compactMode
-        ? (screenWidth / columns(ref) - ((timeColumnWidth + 10) / 10))
+        ? (screenWidth / orderedDays.length - ((timeColumnWidth + 10) / 10))
         : isPortrait
             ? 100
-            : (screenWidth / columns(ref) - ((timeColumnWidth + 10) / 10));
+            : (screenWidth / orderedDays.length -
+                ((timeColumnWidth + 10) / 10));
 
     return SingleChildScrollView(
       scrollDirection: Axis.vertical,
@@ -94,10 +96,9 @@ class TimetableGridView extends HookConsumerWidget {
                     tileHeight: tileHeight,
                     tileWidth: tileWidth,
                     rows: rows(ref),
-                    columns: columns(ref),
+                    columns: orderedDays.length,
                     grid: generate(
                       subjects,
-                      columns(ref),
                       rows(ref),
                       ref,
                     ),
@@ -114,17 +115,26 @@ class TimetableGridView extends HookConsumerWidget {
   /// generates the grid
   List<List<Tile?>> generate(
     List<Subject> subjects,
-    int totalDays,
     int totalHours,
     WidgetRef ref,
   ) {
+    final settings = ref.watch(settingsProvider);
     final overlappingSubjects = ref.watch(overlappingSubjectsProvider);
     final timetables = ref.watch(timetableProvider);
     final customStartTime = ref.watch(settingsProvider).customStartTime;
+    final orderedDays = ref.watch(orderedDaysProvider);
+
+    final dayToColumnIndex = {
+      for (var i = 0; i < orderedDays.length; i++) orderedDays[i]: i
+    };
+
+    final visibleSubjects = subjects.where((subject) {
+      return !settings.hideSunday || subject.day != Day.sunday;
+    }).toList();
 
     // subjects' containers
     final List<List<Tile?>> grid = List.generate(
-      totalDays,
+      orderedDays.length,
       (columnIndex) => List.generate(
         totalHours,
         (rowIndex) => Tile(
@@ -137,26 +147,27 @@ class TimetableGridView extends HookConsumerWidget {
       ),
     );
 
-    overlappingSubjects.addAll(findOverlappingSubjects(subjects));
+    final visibleOverlappingSubjects = findOverlappingSubjects(visibleSubjects);
+    overlappingSubjects.addAll(visibleOverlappingSubjects);
 
     // overlapping subjects
-    if (overlappingSubjects.isNotEmpty &&
-        overlappingSubjects.any(
-          (e) => e.length == 2,
-        )) {
+    if (visibleOverlappingSubjects.isNotEmpty &&
+        visibleOverlappingSubjects.any((e) => e.length == 2)) {
       filterOverlappingSubjectsByRotationWeeks(
-        overlappingSubjects,
+        visibleOverlappingSubjects,
         rotationWeek,
       );
       filterOverlappingSubjectsByTimetable(
-        overlappingSubjects,
+        visibleOverlappingSubjects,
         currentTimetable,
         timetables,
       );
     }
 
-    for (final subjects in overlappingSubjects) {
-      var day = subjects[0].day.index;
+    for (final subjects in visibleOverlappingSubjects) {
+      final columnIndex = dayToColumnIndex[subjects[0].day];
+      if (columnIndex == null) continue;
+
       var earlierStartTimeHour = getEarliestSubject(subjects).startTime.hour;
       var laterEndTimeHour = getLatestSubject(subjects).endTime.hour;
 
@@ -164,7 +175,7 @@ class TimetableGridView extends HookConsumerWidget {
           getCustomStartTime(customStartTime, ref).hour;
       var endTime = getLatestSubject(subjects).endTime.hour -
           getCustomStartTime(customStartTime, ref).hour;
-      var column = grid[day];
+      var column = grid[columnIndex];
 
       column.replaceRange(
         startTime,
@@ -184,16 +195,18 @@ class TimetableGridView extends HookConsumerWidget {
 
     // normal subjects
     for (final subject in filterOverlappingSubjects(
-      subjects,
-      overlappingSubjects,
+      visibleSubjects,
+      visibleOverlappingSubjects,
     )) {
-      var day = subject.day.index;
+      final columnIndex = dayToColumnIndex[subject.day];
+      if (columnIndex == null) continue;
+
       var start = subject.startTime.hour -
           getCustomStartTime(customStartTime, ref).hour;
       var end =
           subject.endTime.hour - getCustomStartTime(customStartTime, ref).hour;
 
-      var column = grid[day];
+      var column = grid[columnIndex];
 
       column.replaceRange(
         start,

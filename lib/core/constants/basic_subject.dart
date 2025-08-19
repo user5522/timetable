@@ -11,9 +11,9 @@ const basicSubject = Subject(
   location: "",
   color: Colors.black,
   startTime: TimeOfDay(hour: 8, minute: 0),
-  endTime: TimeOfDay(hour: 18, minute: 0),
-  day: Days.monday,
-  rotationWeek: RotationWeeks.all,
+  endTime: TimeOfDay(hour: 9, minute: 0),
+  day: Day.sunday,
+  rotationWeek: RotationWeeks.none,
   note: "",
   timetable: "1",
 );

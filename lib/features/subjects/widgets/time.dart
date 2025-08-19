@@ -4,7 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:timetable/core/utils/time_formatter.dart';
 import 'package:timetable/shared/widgets/act_chip.dart';
 import 'package:timetable/core/utils/time_management.dart';
-import 'package:timetable/core/constants/custom_times.dart';
+import 'package:timetable/core/utils/custom_times.dart';
 import 'package:timetable/features/settings/providers/settings.dart';
 
 /// Time configuration part of the Subject creation screen.
@@ -91,8 +91,9 @@ class TimeConfig extends ConsumerWidget {
               final temp = endTime.value;
               endTime.value = selectedTime;
               startTime.value = temp;
+            } else {
+              showInvalidTimePeriodDialog();
             }
-            showInvalidTimePeriodDialog();
           },
           uses24HoursFormat: uses24HoursFormat,
           context: context,
@@ -115,8 +116,9 @@ class TimeConfig extends ConsumerWidget {
               final temp = startTime.value;
               startTime.value = selectedTime;
               endTime.value = temp;
+            } else {
+              showInvalidTimePeriodDialog();
             }
-            showInvalidTimePeriodDialog();
           },
           uses24HoursFormat: uses24HoursFormat,
           context: context,

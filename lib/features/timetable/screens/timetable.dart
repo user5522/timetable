@@ -4,7 +4,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:timetable/features/timetable/screens/day.dart';
 import 'package:timetable/features/timetable/screens/grid.dart';
-import 'package:timetable/features/timetable/widgets/day_view/days_bar.dart';
+import 'package:timetable/features/timetable/widgets/days_bar.dart';
 import 'package:timetable/features/timetable/widgets/view_toggle.dart';
 import 'package:timetable/features/navigation/widgets/navigation_bar_toggle.dart';
 import 'package:timetable/shared/widgets/rotation_week_toggle.dart';
@@ -30,7 +30,7 @@ class TimetableScreen extends HookConsumerWidget {
     final timetables = ref.watch(timetableProvider);
 
     final isGridView = useState(defaultTimetableView == TbViews.grid);
-    final rotationWeek = useState(RotationWeeks.all);
+    final rotationWeek = useState(RotationWeeks.none);
     final currentTimetable = useState(timetables[0]);
 
     final PageController controller;

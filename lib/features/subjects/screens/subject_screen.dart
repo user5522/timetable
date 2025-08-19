@@ -16,6 +16,7 @@ import 'package:timetable/features/subjects/providers/overlapping_subjects.dart'
 import 'package:timetable/features/settings/providers/settings.dart';
 import 'package:timetable/features/subjects/providers/subjects.dart';
 import 'package:timetable/features/timetable/providers/timetables.dart';
+import 'package:timetable/shared/providers/day.dart';
 
 /// Subject creation/modification UI.
 class SubjectScreen extends HookConsumerWidget {
@@ -40,6 +41,7 @@ class SubjectScreen extends HookConsumerWidget {
     final overlappingSubjects = ref.watch(overlappingSubjectsProvider);
     final autoCompleteColor = ref.watch(settingsProvider).autoCompleteColor;
     final timetables = ref.watch(timetableProvider);
+    final orderedDays = ref.watch(orderedDaysProvider);
     final tfHours = ref.watch(settingsProvider).twentyFourHours;
     final customStartTimeHour =
         ref.watch(settingsProvider).customStartTime.hour;
@@ -76,8 +78,8 @@ class SubjectScreen extends HookConsumerWidget {
     final ValueNotifier<String> label = useState(subject?.label ?? "");
     final ValueNotifier<String?> location = useState(subject?.location ?? "");
     final ValueNotifier<String?> note = useState(subject?.note ?? "");
-    final ValueNotifier<Days> day =
-        useState(Days.values[subject?.day.index ?? columnIndex!]);
+    final ValueNotifier<Day> day =
+        useState(subject?.day ?? orderedDays[columnIndex ?? 0]);
     final ValueNotifier<Color> color = useState(subject?.color ?? Colors.black);
     final ValueNotifier<RotationWeeks> rotationWeek =
         useState(subject?.rotationWeek ?? RotationWeeks.none);

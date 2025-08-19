@@ -17,13 +17,10 @@ class RotationWeekModalBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    /// actual usable rotation weeks
-    final rws = rotationWeeks.where((r) => r != RotationWeeks.all).toList();
-
     return SubjectDataBottomSheet(
       title: "rotation_week".plural(2),
-      children: List.generate(rws.length, (i) {
-        final rw = rws[i];
+      children: List.generate(rotationWeeks.length, (i) {
+        final rw = rotationWeeks[i];
         bool isSelected = (rw == rotationWeek.value);
 
         return ListTile(

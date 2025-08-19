@@ -225,10 +225,10 @@ class $SubjectsTable extends Subjects with TableInfo<$SubjectsTable, Subject> {
           .withConverter<RotationWeeks>($SubjectsTable.$converterrotationWeek);
   static const VerificationMeta _dayMeta = const VerificationMeta('day');
   @override
-  late final GeneratedColumnWithTypeConverter<Days, int> day =
+  late final GeneratedColumnWithTypeConverter<Day, int> day =
       GeneratedColumn<int>('day', aliasedName, false,
               type: DriftSqlType.int, requiredDuringInsert: true)
-          .withConverter<Days>($SubjectsTable.$converterday);
+          .withConverter<Day>($SubjectsTable.$converterday);
   static const VerificationMeta _startTimeMeta =
       const VerificationMeta('startTime');
   @override
@@ -345,8 +345,8 @@ class $SubjectsTable extends Subjects with TableInfo<$SubjectsTable, Subject> {
       const ColorConverter();
   static JsonTypeConverter2<RotationWeeks, int, int> $converterrotationWeek =
       const EnumIndexConverter<RotationWeeks>(RotationWeeks.values);
-  static JsonTypeConverter2<Days, int, int> $converterday =
-      const EnumIndexConverter<Days>(Days.values);
+  static JsonTypeConverter2<Day, int, int> $converterday =
+      const EnumIndexConverter<Day>(Day.values);
   static TypeConverter<material.TimeOfDay, String> $converterstartTime =
       const TimeOfDayConverter();
   static TypeConverter<material.TimeOfDay, String> $converterendTime =
@@ -360,7 +360,7 @@ class Subject extends DataClass implements Insertable<Subject> {
   final String? note;
   final material.Color color;
   final RotationWeeks rotationWeek;
-  final Days day;
+  final Day day;
   final material.TimeOfDay startTime;
   final material.TimeOfDay endTime;
   final String timetable;
@@ -480,7 +480,7 @@ class Subject extends DataClass implements Insertable<Subject> {
           Value<String?> note = const Value.absent(),
           material.Color? color,
           RotationWeeks? rotationWeek,
-          Days? day,
+          Day? day,
           material.TimeOfDay? startTime,
           material.TimeOfDay? endTime,
           String? timetable}) =>
@@ -556,7 +556,7 @@ class SubjectsCompanion extends UpdateCompanion<Subject> {
   final Value<String?> note;
   final Value<material.Color> color;
   final Value<RotationWeeks> rotationWeek;
-  final Value<Days> day;
+  final Value<Day> day;
   final Value<material.TimeOfDay> startTime;
   final Value<material.TimeOfDay> endTime;
   final Value<String> timetable;
@@ -579,7 +579,7 @@ class SubjectsCompanion extends UpdateCompanion<Subject> {
     this.note = const Value.absent(),
     required material.Color color,
     required RotationWeeks rotationWeek,
-    required Days day,
+    required Day day,
     required material.TimeOfDay startTime,
     required material.TimeOfDay endTime,
     required String timetable,
@@ -623,7 +623,7 @@ class SubjectsCompanion extends UpdateCompanion<Subject> {
       Value<String?>? note,
       Value<material.Color>? color,
       Value<RotationWeeks>? rotationWeek,
-      Value<Days>? day,
+      Value<Day>? day,
       Value<material.TimeOfDay>? startTime,
       Value<material.TimeOfDay>? endTime,
       Value<String>? timetable}) {
@@ -832,7 +832,7 @@ typedef $$SubjectsTableCreateCompanionBuilder = SubjectsCompanion Function({
   Value<String?> note,
   required material.Color color,
   required RotationWeeks rotationWeek,
-  required Days day,
+  required Day day,
   required material.TimeOfDay startTime,
   required material.TimeOfDay endTime,
   required String timetable,
@@ -844,7 +844,7 @@ typedef $$SubjectsTableUpdateCompanionBuilder = SubjectsCompanion Function({
   Value<String?> note,
   Value<material.Color> color,
   Value<RotationWeeks> rotationWeek,
-  Value<Days> day,
+  Value<Day> day,
   Value<material.TimeOfDay> startTime,
   Value<material.TimeOfDay> endTime,
   Value<String> timetable,
@@ -881,7 +881,7 @@ class $$SubjectsTableFilterComposer
           column: $table.rotationWeek,
           builder: (column) => ColumnWithTypeConverterFilters(column));
 
-  ColumnWithTypeConverterFilters<Days, Days, int> get day => $composableBuilder(
+  ColumnWithTypeConverterFilters<Day, Day, int> get day => $composableBuilder(
       column: $table.day,
       builder: (column) => ColumnWithTypeConverterFilters(column));
 
@@ -968,7 +968,7 @@ class $$SubjectsTableAnnotationComposer
       $composableBuilder(
           column: $table.rotationWeek, builder: (column) => column);
 
-  GeneratedColumnWithTypeConverter<Days, int> get day =>
+  GeneratedColumnWithTypeConverter<Day, int> get day =>
       $composableBuilder(column: $table.day, builder: (column) => column);
 
   GeneratedColumnWithTypeConverter<material.TimeOfDay, String> get startTime =>
@@ -1010,7 +1010,7 @@ class $$SubjectsTableTableManager extends RootTableManager<
             Value<String?> note = const Value.absent(),
             Value<material.Color> color = const Value.absent(),
             Value<RotationWeeks> rotationWeek = const Value.absent(),
-            Value<Days> day = const Value.absent(),
+            Value<Day> day = const Value.absent(),
             Value<material.TimeOfDay> startTime = const Value.absent(),
             Value<material.TimeOfDay> endTime = const Value.absent(),
             Value<String> timetable = const Value.absent(),
@@ -1034,7 +1034,7 @@ class $$SubjectsTableTableManager extends RootTableManager<
             Value<String?> note = const Value.absent(),
             required material.Color color,
             required RotationWeeks rotationWeek,
-            required Days day,
+            required Day day,
             required material.TimeOfDay startTime,
             required material.TimeOfDay endTime,
             required String timetable,

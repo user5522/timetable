@@ -49,8 +49,6 @@ void filterOverlappingSubjectsByRotationWeeks(
             return e.rotationWeek == RotationWeeks.b;
           case RotationWeeks.b:
             return e.rotationWeek == RotationWeeks.a;
-          case RotationWeeks.all:
-            return false;
           case RotationWeeks.none:
             return false;
         }
@@ -140,4 +138,9 @@ List<List<Subject>> findOverlappingSubjects(List<Subject> subjects) {
   }
 
   return overlappingSubjects.where((e) => e.length > 1).toList();
+}
+
+/// checks if 2 subjects overlap in hours
+bool overlaps(Subject a, Subject b) {
+  return a.startTime.hour < b.endTime.hour && b.startTime.hour < a.endTime.hour;
 }

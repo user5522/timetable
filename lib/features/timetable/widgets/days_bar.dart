@@ -8,28 +8,25 @@ import 'package:timetable/core/constants/days.dart';
 import 'package:timetable/core/constants/grid_properties.dart';
 import 'package:timetable/core/constants/theme_options.dart';
 import 'package:timetable/features/settings/providers/settings.dart';
+import 'package:timetable/shared/providers/day.dart';
 import 'package:timetable/shared/providers/themes.dart';
 
 /// Top navigation bar in the day view that allows to switch between days quickly
-/// merged with the days row in the grid view.
+/// also acts as the days row in the grid view.
 class DaysBar extends ConsumerWidget {
   final PageController controller;
   final bool? isGridView;
-  final int currentDay;
 
   const DaysBar({
     super.key,
     required this.controller,
     this.isGridView = false,
-    required this.currentDay,
   });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     double screenWidth = MediaQuery.of(context).size.width;
-    final hideSunday = ref.watch(settingsProvider).hideSunday;
     final singleLetterDays = ref.watch(settingsProvider).singleLetterDays;
-    int daysLength = hideSunday ? days.length - 1 : days.length;
     final bool isPortrait =
         MediaQuery.of(context).orientation == Orientation.portrait;
 
@@ -40,6 +37,8 @@ class DaysBar extends ConsumerWidget {
         Theme.of(context).colorScheme.onInverseSurface;
     final lightCurrentDayColorScheme =
         Theme.of(context).colorScheme.outlineVariant;
+    final days = ref.watch(orderedDaysProvider);
+    final currentDay = ref.watch(currentDayIndexProvider);
 
     return SizedBox(
       height: 48,
@@ -51,7 +50,7 @@ class DaysBar extends ConsumerWidget {
             padding: EdgeInsets.only(left: isGridView! ? 20 : 0),
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
-              itemCount: daysLength,
+              itemCount: days.length,
               shrinkWrap: true,
               itemBuilder: (context, index) {
                 return buildDayButton(
@@ -67,8 +66,9 @@ class DaysBar extends ConsumerWidget {
                   singleLetterDays: singleLetterDays,
                   isPortrait: isPortrait,
                   isGridView: isGridView!,
-                  daysLength: daysLength,
+                  daysLength: days.length,
                   screenWidth: screenWidth,
+                  orderedDays: days,
                   colorScheme: Theme.of(context).colorScheme,
                   onTap: () {
                     if (isGridView!) return;
@@ -99,14 +99,17 @@ class DaysBar extends ConsumerWidget {
     required Color currentDayColor,
     required VoidCallback? onTap,
     required ColorScheme colorScheme,
+    required List<Day> orderedDays,
   }) {
+    if (index == -1) return const SizedBox.shrink();
     final isCurrentDay = isGridView && (currentDay == index);
+    final day = orderedDays[index];
 
     final dayText = singleLetterDays
-        ? days[index].tr()[0]
+        ? day.initial.tr()
         : isPortrait
-            ? days[index].tr().substring(0, 3)
-            : days[index].tr();
+            ? day.name.tr().substring(0, 3)
+            : day.name.tr();
 
     return SizedBox(
       width: isGridView
@@ -136,30 +139,21 @@ class DayBarUpdater extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final currentDay = useState(DateTime.now().weekday - 1);
+    final currentDay = ref.watch(currentDayIndexProvider);
 
     useEffect(() {
-      Timer? timer;
-
-      void updateTimer() {
-        final now = DateTime.now();
-        final nextMidnight = DateTime(now.year, now.month, now.day + 1);
-
-        timer = Timer(nextMidnight.difference(now), () {
-          currentDay.value = DateTime.now().weekday - 1;
-          updateTimer();
-        });
-      }
-
-      updateTimer();
-
-      return () => timer?.cancel();
+      final timer = Timer.periodic(const Duration(minutes: 1), (_) {
+        final newDay = ref.read(dayServiceProvider).currentDayIndex;
+        if (newDay != currentDay) {
+          ref.read(currentDayIndexProvider.notifier).state = newDay;
+        }
+      });
+      return timer.cancel;
     }, []);
 
     return DaysBar(
       controller: controller,
       isGridView: isGridView,
-      currentDay: currentDay.value,
     );
   }
 }
