@@ -1,36 +1,53 @@
 name: Android Build and Artifact
 on:
+  pull_request:
+    branches:
+      - dev
   push:
     branches:
       - main
       - dev
+
 jobs:
   build:
     name: Android Build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - name: Set up JDK 17
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set Up Java
         uses: actions/setup-java@v4
         with:
+          distribution: "oracle"
           java-version: "17"
-          distribution: "zulu"
           cache: "gradle"
-      - uses: subosito/flutter-action@v2
+
+      - name: Set Up Flutter
+        uses: subosito/flutter-action@v2
         with:
           channel: "stable"
           cache: true
-      - name: Set up Flutter
+
+      - name: Install Dependencies
         run: flutter pub get
-      - name: Build APKs
-        run: flutter build apk --release --split-per-abi
-      - name: Setup Android SDK
+
+      - name: Set Up Android SDK
         uses: android-actions/setup-android@v3
-      - name: Install build tools
-        run: |
-          echo "y" | sdkmanager "build-tools;33.0.0" "platforms;android-33"
-      - uses: ilharp/sign-android-release@v1
-        name: Sign app APK
+
+      - name: Cache Android SDK
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.android/sdk
+            ~/.gradle/caches
+          key: android-sdk-${{ runner.os }}-${{ hashFiles('android/app/build.gradle') }}
+
+      - name: Build APK
+        run: flutter build apk --release
+
+      - name: Sign app APK
+        uses: ilharp/sign-android-release@v1
         with:
           releaseDir: build/app/outputs/flutter-apk/
           signingKey: ${{ secrets.SIGNING_KEYSTORE }}
@@ -38,18 +55,21 @@ jobs:
           keyStorePassword: ${{ secrets.SIGNING_KEYSTORE_PASSWORD }}
           keyPassword: ${{ secrets.SIGNING_KEY_PASSWORD }}
           buildToolsVersion: 33.0.0
+
       - name: Archive arm64-v8a
         uses: actions/upload-artifact@v4
         with:
           name: android-arm64-v8a
           path: |
             build/app/outputs/flutter-apk/app-arm64-v8a-release-signed.apk
+
       - name: Archive armeabi-v7a
         uses: actions/upload-artifact@v4
         with:
           name: android-armeabi-v7a
           path: |
             build/app/outputs/flutter-apk/*-armeabi-v7a-release-signed.apk
+
       - name: Archive x86_64
         uses: actions/upload-artifact@v4
         with:
